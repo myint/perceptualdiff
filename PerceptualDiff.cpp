@@ -35,11 +35,11 @@ const char *usage =
 "PeceptualDiff image1.tif image2.tif\n\n\
    Compares image1.tif and image2.tif using a perceptually based image metric\n\
    Options:\n\
-      -verbose       : Turns on verbose mode\n\
-      -fov deg       : Field of view in degrees (0.1 to 89.9)\n\
-      -threshold p	 : Number of pixels p below which differences are ignored\n\
-	  -gamma g       : Value to convert rgb into linear space (default 2.2)\n\
-      -luminance l   : Luminance of brightest white on monitor (default 100.0 candela per meter squared)\n\
+\t-verbose       : Turns on verbose mode\n\
+\t-fov deg       : Field of view in degrees (0.1 to 89.9)\n\
+\t-threshold p	 : #pixels p below which differences are ignored\n\
+\t-gamma g       : Value to convert rgb into linear space (default 2.2)\n\
+\t-luminance l   : White luminance (default 100.0 cdm^-2)\n\
 \n";
 
 // assumes data is in the ABGR format
