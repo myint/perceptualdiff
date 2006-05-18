@@ -27,7 +27,7 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 * This version comes from Ward Larson Siggraph 1997
 */ 
 
-float TVI(float adaptation_luminance)
+float tvi(float adaptation_luminance)
 {
       // returns the threshold luminance given the adaptation luminance
       // units are candelas per meter squared
@@ -149,6 +149,64 @@ bool Yee_Compare(CompareArgs &args)
 	LPyramid *la = new LPyramid(aLum, w, h);
 	LPyramid *lb = new LPyramid(bLum, w, h);
 	
+	float num_one_degree_pixels = 2 * tan( args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI;
+	float pixels_per_degree = w / num_one_degree_pixels;
+	
+	if (args.Verbose) printf("Performing test\n");
+	
+	float num_pixels = 1;
+	unsigned int adaptation_level = 0;
+	for (i = 0; i < MAX_PYR_LEVELS; i++) {
+		adaptation_level = i;
+		if (num_pixels > num_one_degree_pixels) break;
+		num_pixels *= 2;
+	}
+	
+	float cpd[MAX_PYR_LEVELS];
+	cpd[0] = 0.5 * pixels_per_degree;
+	for (i = 1; i < MAX_PYR_LEVELS; i++) cpd[i] = 0.5 * cpd[i - 1];
+	float csf_max = csf(3.248, 100.0);
+	
+	float F_freq[MAX_PYR_LEVELS - 2];
+	for (i = 0; i < MAX_PYR_LEVELS - 2; i++) F_freq[i] = csf_max / csf( cpd[i], 100.0);
+	
+	unsigned int pixels_failed = 0;
+	for (y = 0; y < h; y++) {
+	  for (x = 0; x < w; x++) {
+		float contrast[MAX_PYR_LEVELS - 2];
+		float sum_contrast = 0;
+		for (i = 0; i < MAX_PYR_LEVELS - 2; i++) {
+			float n1 = fabsf(la->Get_Value(x,y,i) - la->Get_Value(x,y,i + 1));
+			float n2 = fabsf(lb->Get_Value(x,y,i) - lb->Get_Value(x,y,i + 1));
+			float numerator = (n1 > n2) ? n1 : n2;
+			float d1 = fabsf(la->Get_Value(x,y,i+2));
+			float d2 = fabsf(lb->Get_Value(x,y,i+2));
+			float denominator = (d1 > d2) ? d1 : d2;
+			if (denominator < 1e-5) denominator = 1e-5;
+			contrast[i] = numerator / denominator;
+			sum_contrast += contrast[i];
+		}
+		if (sum_contrast < 1e-5) sum_contrast = 1e-5;
+		float F_mask[MAX_PYR_LEVELS - 2];
+		float adapt = la->Get_Value(x,y,adaptation_level) + lb->Get_Value(x,y,adaptation_level);
+		adapt *= 0.5;
+		if (adapt < 1e-5) adapt = 1e-5;
+		for (i = 0; i < MAX_PYR_LEVELS - 2; i++) {
+			F_mask[i] = mask(contrast[i] * csf(cpd[i], adapt)); 
+		}
+		float factor = 0;
+		for (i = 0; i < MAX_PYR_LEVELS - 2; i++) {
+			factor += contrast[i] * F_freq[i] * F_mask[i] / sum_contrast;
+		}
+		if (factor < 1) factor = 1;
+		if (factor > 10) factor = 10;
+		float delta = fabsf(la->Get_Value(x,y,0) - lb->Get_Value(x,y,0));
+		if (delta > factor * tvi(adapt)) {
+			pixels_failed++;
+		}
+	  }
+	}
+	
 	if (aX) delete[] aX;
 	if (aY) delete[] aY;
 	if (aZ) delete[] aZ;
@@ -159,7 +217,16 @@ bool Yee_Compare(CompareArgs &args)
 	if (bLum) delete[] bLum;
 	if (la) delete la;
 	if (lb) delete lb;
+	
+	if (pixels_failed < args.ThresholdPixels) {
+		args.ErrorStr = "Images are perceptually indistinguishable\n";
+		return true;
+	}
+	
+	char different[100];
+	sprintf(different, "%d pixels are different\n", pixels_failed);
 
 	args.ErrorStr = "Images are visibly different\n";
+	args.ErrorStr += different;
 	return false;
 }
