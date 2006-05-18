@@ -21,8 +21,8 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #include <math.h>
 #include <string>
 #include "LPyramid.h"
-#include "tiff.h"
-#include "tiffio.h"
+#include "RGBAImage.h"
+
 
 const char* copyright = 
 "PerceptualDiff version 0.1, Copyright (C) 2006 Yangli Hector Yee\n\
@@ -42,33 +42,7 @@ const char *usage =
 \t-luminance l   : White luminance (default 100.0 cdm^-2)\n\
 \n";
 
-// assumes data is in the ABGR format
-class RGBAImage
-{
-public:
-	RGBAImage(int w, int h)
-	{
-		Width = w;
-		Height = h;
-		Data = new unsigned int[w * h];
-	};
-	~RGBAImage() { if (Data) delete[] Data; }
-	unsigned char Get_Red(unsigned int i) { return (Data[i] & 0xFF); }
-	unsigned char Get_Green(unsigned int i) { return ((Data[i]>>8) & 0xFF); }
-	unsigned char Get_Blue(unsigned int i) { return ((Data[i]>>16) & 0xFF); }
-	unsigned char Get_Alpha(unsigned int i) { return ((Data[i]>>24) & 0xFF); }
-	int Get_Width(void) const { return Width; }
-	int Get_Height(void) const { return Height; }
-	void Set(int x, int y, unsigned int d) { Data[x + y * Width] = d; }
-	unsigned int Get(int x, int y) const { return Data[x + y * Width]; }
-	unsigned int Get(int i) const { return Data[i]; }
-protected:
-	int Width;
-	int Height;
-	unsigned int *Data;
-};
 
-RGBAImage* ReadImage(char *filename);
 
 // Args to pass into the comparison function
 struct Compare_Args
@@ -92,7 +66,7 @@ struct Compare_Args
 		}
 		for (int i = 0; i < argc; i++) {
 			if (i == 1) {
-				ImgA = ReadImage(argv[1]);
+				ImgA = RGBAImage::ReadTiff(argv[1]);
 				if (!ImgA) {
 					ErrorStr = "FAIL: Cannot open ";
 					ErrorStr += argv[1];
@@ -100,7 +74,7 @@ struct Compare_Args
 					return false;
 				}
 			} else if (i == 2) {			
-				ImgB = ReadImage(argv[2]);
+				ImgB = RGBAImage::ReadTiff(argv[2]);
 				if (!ImgB) {
 					ErrorStr = "FAIL: Cannot open ";
 					ErrorStr += argv[2];
@@ -153,40 +127,7 @@ struct Compare_Args
 	std::string		ErrorStr;			// Error string
 };
 
-RGBAImage* ReadImage(char *filename)
-{
-	RGBAImage *fimg = 0;
-	
-    TIFF* tif = TIFFOpen(filename, "r");
-    char emsg[1024];
-    if (tif) {
-		TIFFRGBAImage img;
-		
-		if (TIFFRGBAImageBegin(&img, tif, 0, emsg)) {
-			size_t npixels;
-			uint32* raster;
 
-			npixels = img.width * img.height;
-			raster = (uint32*) _TIFFmalloc(npixels * sizeof (uint32));
-			if (raster != NULL) {
-				if (TIFFRGBAImageGet(&img, raster, img.width, img.height)) {
-					// result is in ABGR
-					fimg = new RGBAImage(img.width, img.height);
-					for (int y = 0; y < img.height; y++) {
-						for (int x = 0; x < img.width; x++) {
-						   fimg->Set(x,y, raster[x + y * img.width]);
-						}
-					}
-				}
-			_TIFFfree(raster);
-			}
-	    }
-	    TIFFRGBAImageEnd(&img);
-	} else {
-	    TIFFError(filename, emsg);
-	}
-	return fimg;
-}
 
 float tviWard97(float luminance)
 // combines both photopic and scotopic TVI functions

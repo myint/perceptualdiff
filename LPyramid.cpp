@@ -78,3 +78,11 @@ void LPyramid::Convolve(float *a, float *b)
 	}
 }
 
+float LPyramid::Get_Value(int x, int y, int level)
+{
+	int index = x + y * Width;
+	int l = level;
+	if (l > MAX_PYR_LEVELS) l = MAX_PYR_LEVELS;
+	return Levels[level][index];
+}
+
