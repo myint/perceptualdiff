@@ -1,5 +1,6 @@
 PROJECT (PerceptualDiff)
-SET(DIFF_SRC PerceptualDiff.cpp LPyramid.cpp RGBAImage.cpp)
+SET(DIFF_SRC PerceptualDiff.cpp LPyramid.cpp RGBAImage.cpp
+CompareArgs.cpp Metric.cpp)
 
 ADD_EXECUTABLE (pdiff ${DIFF_SRC})
 

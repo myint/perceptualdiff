@@ -1,7 +1,5 @@
 /*
-PerceptualDiff - a program that compares two images using a perceptual metric
-based on the paper :
-A perceptual metric for production testing. Journal of graphics tools, 9(4):33-40, 2004, Hector Yee
+Comapre Args
 Copyright (C) 2006 Yangli Hector Yee
 
 This program is free software; you can redistribute it and/or modify it under the terms of the
@@ -16,30 +14,30 @@ You should have received a copy of the GNU General Public License along with thi
 if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <stdio.h>
-#include <string.h>
-#include <math.h>
-#include <string>
-#include "LPyramid.h"
-#include "RGBAImage.h"
-#include "CompareArgs.h"
-#include "Metric.h"
+#ifndef _COMPAREARGS_H
+#define _COMPAREARGS_H
 
-int main(int argc, char **argv)
+#include <string>
+
+class RGBAImage;
+
+// Args to pass into the comparison function
+class CompareArgs
 {
-	CompareArgs args;
+public:
+	CompareArgs();
+	~CompareArgs();
+	bool Parse_Args(int argc, char **argv);	
+	void Print_Args();
 	
-	if (!args.Parse_Args(argc, argv)) {
-		printf("%s", args.ErrorStr.c_str());
-		return -1;
-	} else {
-		if (args.Verbose) args.Print_Args();
-	}
-	int result = Yee_Compare(args) == true;
-	if (result) {
-		printf("PASS: %s\n", args.ErrorStr.c_str());
-	} else {
-		printf("FAIL: %s\n", args.ErrorStr.c_str());
-	}
-	return result;
-}
+	RGBAImage		*ImgA;				// Image A
+	RGBAImage		*ImgB;				// Image B
+	bool			Verbose;			// Print lots of text or not
+	float			FieldOfView;		// Field of view in degrees
+	float			Gamma;				// The gamma to convert to linear color space
+	float			Luminance;			// the display's luminance
+	unsigned int	ThresholdPixels;	// How many pixels different to ignore
+	std::string		ErrorStr;			// Error string
+};
+
+#endif
