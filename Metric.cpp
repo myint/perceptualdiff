@@ -17,23 +17,69 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #include "Metric.h"
 #include "CompareArgs.h"
 #include "RGBAImage.h"
+#include "LPyramid.h"
 #include <math.h>
 
-// Threshold vs intensity function
-// combines both photopic and scotopic TVI functions
-// in Ward and Rushmeier 97
-float tviWard97(float luminance)
-{
-	if (luminance< 1.14815e-4) return (float) 1.38038426e-3;
+/*
+* Given the adaptation luminance, this function returns the
+* threshold of visibility in cd per m^2
+* TVI means Threshold vs Intensity function
+* This version comes from Ward Larson Siggraph 1997
+*/ 
 
-	double loglum=log10(luminance);
+float TVI(float adaptation_luminance)
+{
+      // returns the threshold luminance given the adaptation luminance
+      // units are candelas per meter squared
+
+      float log_a, r, result; 
+      log_a = log10(adaptation_luminance);
+
+      if (log_a < -3.94) {
+            r = -2.86;
+      } else if (log_a < -1.44) {
+            r = powf(0.405 * log_a + 1.6 , 2.18) - 2.86;
+      } else if (log_a < -0.0184) {
+            r = log_a - 0.395;
+      } else if (log_a < 1.9) {
+            r = powf(0.249 * log_a + 0.65, 2.7) - 0.72;
+      } else {
+            r = log_a - 1.255;
+      }
+
+      result = powf(10.0 , r); 
+
+      return result;
+
+} 
+
+// computes the contrast sensitivity function (Barten SPIE 1989)
+// given the cycles per degree (cpd) and luminance (lum)
+float csf(float cpd, float lum)
+{
+	float a, b, result; 
 	
-	if (loglum<-1.44) return (float) (pow(10.0, pow(0.405*loglum+1.6,2.18) - 2.86) );
-	if (loglum<-0.0184) return (float) (pow(10.0,loglum-0.395));
-	if (loglum<1.9) return (float) (pow(10.0, pow(0.249*loglum + 0.65,2.7) - 0.72) );
-	return luminance*5.559e-2f;
+	a = 440 * powf((1 + 0.7 / lum), -0.2);
+	b = 0.3 * powf((1 + 100.0 / lum), 0.15);
+		
+	result = a * cpd * expf(-b * cpd) * sqrtf(1 + 0.06 * expf(b * cpd)); 
+	
+	return result;	
 }
 
+/*
+* Visual Masking Function
+* from Daly 1993
+*/
+float mask(float contrast)
+{
+      float a, b, result;
+      a = pow(392.498 * contrast,  0.7);
+      b = pow(0.0153 * a, 4);
+      result = pow (1 + b, 0.25); 
+
+      return result;
+} 
 
 // convert Adobe RGB (1998) with reference white D65 to XYZ
 void AdobeRGBToXYZ(float r, float g, float b, float &x, float &y, float &z)
@@ -98,6 +144,11 @@ bool Yee_Compare(CompareArgs &args)
 		}
 	}
 	
+	if (args.Verbose) printf("Constructing Laplacian Pyramids\n");
+	
+	LPyramid *la = new LPyramid(aLum, w, h);
+	LPyramid *lb = new LPyramid(bLum, w, h);
+	
 	if (aX) delete[] aX;
 	if (aY) delete[] aY;
 	if (aZ) delete[] aZ;
@@ -106,6 +157,8 @@ bool Yee_Compare(CompareArgs &args)
 	if (bZ) delete[] bZ;
 	if (aLum) delete[] aLum;
 	if (bLum) delete[] bLum;
+	if (la) delete la;
+	if (lb) delete lb;
 
 	args.ErrorStr = "Images are visibly different\n";
 	return false;
