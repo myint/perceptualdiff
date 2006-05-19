@@ -20,6 +20,10 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #include "LPyramid.h"
 #include <math.h>
 
+#ifndef M_PI
+#define M_PI 3.14159265f
+#endif
+
 /*
 * Given the adaptation luminance, this function returns the
 * threshold of visibility in cd per m^2
@@ -33,21 +37,21 @@ float tvi(float adaptation_luminance)
       // units are candelas per meter squared
 
       float log_a, r, result; 
-      log_a = log10(adaptation_luminance);
+      log_a = log10f(adaptation_luminance);
 
-      if (log_a < -3.94) {
-            r = -2.86;
-      } else if (log_a < -1.44) {
-            r = powf(0.405 * log_a + 1.6 , 2.18) - 2.86;
-      } else if (log_a < -0.0184) {
-            r = log_a - 0.395;
-      } else if (log_a < 1.9) {
-            r = powf(0.249 * log_a + 0.65, 2.7) - 0.72;
+      if (log_a < -3.94f) {
+            r = -2.86f;
+      } else if (log_a < -1.44f) {
+            r = powf(0.405f * log_a + 1.6f , 2.18f) - 2.86f;
+      } else if (log_a < -0.0184f) {
+            r = log_a - 0.395f;
+      } else if (log_a < 1.9f) {
+            r = powf(0.249f * log_a + 0.65f, 2.7f) - 0.72f;
       } else {
-            r = log_a - 1.255;
+            r = log_a - 1.255f;
       }
 
-      result = powf(10.0 , r); 
+      result = powf(10.0f , r); 
 
       return result;
 
@@ -59,10 +63,10 @@ float csf(float cpd, float lum)
 {
 	float a, b, result; 
 	
-	a = 440 * powf((1 + 0.7 / lum), -0.2);
-	b = 0.3 * powf((1 + 100.0 / lum), 0.15);
+	a = 440.0f * powf((1.0f + 0.7f / lum), -0.2f);
+	b = 0.3f * powf((1.0f + 100.0f / lum), 0.15f);
 		
-	result = a * cpd * expf(-b * cpd) * sqrtf(1 + 0.06 * expf(b * cpd)); 
+	result = a * cpd * expf(-b * cpd) * sqrtf(1.0f + 0.06f * expf(b * cpd)); 
 	
 	return result;	
 }
@@ -74,9 +78,9 @@ float csf(float cpd, float lum)
 float mask(float contrast)
 {
       float a, b, result;
-      a = pow(392.498 * contrast,  0.7);
-      b = pow(0.0153 * a, 4);
-      result = pow (1 + b, 0.25); 
+      a = powf(392.498f * contrast,  0.7f);
+      b = powf(0.0153f * a, 4.0f);
+      result = powf(1.0f + b, 0.25f); 
 
       return result;
 } 
