@@ -2,7 +2,7 @@ PROJECT (PerceptualDiff)
 SET(DIFF_SRC PerceptualDiff.cpp LPyramid.cpp RGBAImage.cpp
 CompareArgs.cpp Metric.cpp)
 
-ADD_EXECUTABLE (pdiff ${DIFF_SRC})
+ADD_EXECUTABLE (perceptualdiff ${DIFF_SRC})
 
 # look for libtiff
 FIND_PATH(TIFF_INCLUDE_DIR tiff.h
@@ -26,5 +26,5 @@ ENDIF(TIFF_INCLUDE_DIR)
 
 IF(TIFF_FOUND)
   INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIR})
-  TARGET_LINK_LIBRARIES(pdiff ${TIFF_LIBRARY})
+  TARGET_LINK_LIBRARIES(perceptualdiff ${TIFF_LIBRARY})
 ENDIF(TIFF_FOUND)
