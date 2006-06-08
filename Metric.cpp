@@ -153,7 +153,7 @@ bool Yee_Compare(CompareArgs &args)
 	LPyramid *la = new LPyramid(aLum, w, h);
 	LPyramid *lb = new LPyramid(bLum, w, h);
 	
-	float num_one_degree_pixels = 2 * tan( args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI;
+	float num_one_degree_pixels = (float) (2 * tan( args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI);
 	float pixels_per_degree = w / num_one_degree_pixels;
 	
 	if (args.Verbose) printf("Performing test\n");
@@ -167,12 +167,12 @@ bool Yee_Compare(CompareArgs &args)
 	}
 	
 	float cpd[MAX_PYR_LEVELS];
-	cpd[0] = 0.5 * pixels_per_degree;
-	for (i = 1; i < MAX_PYR_LEVELS; i++) cpd[i] = 0.5 * cpd[i - 1];
-	float csf_max = csf(3.248, 100.0);
+	cpd[0] = 0.5f * pixels_per_degree;
+	for (i = 1; i < MAX_PYR_LEVELS; i++) cpd[i] = 0.5f * cpd[i - 1];
+	float csf_max = csf(3.248f, 100.0f);
 	
 	float F_freq[MAX_PYR_LEVELS - 2];
-	for (i = 0; i < MAX_PYR_LEVELS - 2; i++) F_freq[i] = csf_max / csf( cpd[i], 100.0);
+	for (i = 0; i < MAX_PYR_LEVELS - 2; i++) F_freq[i] = csf_max / csf( cpd[i], 100.0f);
 	
 	unsigned int pixels_failed = 0;
 	for (y = 0; y < h; y++) {
@@ -186,15 +186,15 @@ bool Yee_Compare(CompareArgs &args)
 			float d1 = fabsf(la->Get_Value(x,y,i+2));
 			float d2 = fabsf(lb->Get_Value(x,y,i+2));
 			float denominator = (d1 > d2) ? d1 : d2;
-			if (denominator < 1e-5) denominator = 1e-5;
+			if (denominator < 1e-5f) denominator = 1e-5f;
 			contrast[i] = numerator / denominator;
 			sum_contrast += contrast[i];
 		}
-		if (sum_contrast < 1e-5) sum_contrast = 1e-5;
+		if (sum_contrast < 1e-5) sum_contrast = 1e-5f;
 		float F_mask[MAX_PYR_LEVELS - 2];
 		float adapt = la->Get_Value(x,y,adaptation_level) + lb->Get_Value(x,y,adaptation_level);
-		adapt *= 0.5;
-		if (adapt < 1e-5) adapt = 1e-5;
+		adapt *= 0.5f;
+		if (adapt < 1e-5) adapt = 1e-5f;
 		for (i = 0; i < MAX_PYR_LEVELS - 2; i++) {
 			F_mask[i] = mask(contrast[i] * csf(cpd[i], adapt)); 
 		}
