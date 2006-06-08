@@ -19,7 +19,7 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #include <stdio.h>
 
 static const char* copyright = 
-"PerceptualDiff version 0.1, Copyright (C) 2006 Yangli Hector Yee\n\
+"PerceptualDiff version 0.9b, Copyright (C) 2006 Yangli Hector Yee\n\
 PerceptualDiff comes with ABSOLUTELY NO WARRANTY;\n\
 This is free software, and you are welcome\n\
 to redistribute it under certain conditions;\n\
