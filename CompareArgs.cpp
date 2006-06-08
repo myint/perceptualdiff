@@ -80,7 +80,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		} else {
 			if (strstr(argv[i], "-fov")) {
 				if (i + 1 < argc) {
-					FieldOfView = atof(argv[i + 1]);
+					FieldOfView = (float) atof(argv[i + 1]);
 				}
 			} else if (strstr(argv[i], "-verbose")) {
 				Verbose = true;
@@ -90,11 +90,11 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 				}
 			} else 	if (strstr(argv[i], "-gamma")) {
 				if (i + 1 < argc) {
-					Gamma = atof(argv[i + 1]);
+					Gamma = (float) atof(argv[i + 1]);
 				}
 			}else 	if (strstr(argv[i], "-luminance")) {
 				if (i + 1 < argc) {
-					Luminance = atof(argv[i + 1]);
+					Luminance = (float) atof(argv[i + 1]);
 				}
 			}
 		}

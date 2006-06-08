@@ -94,6 +94,34 @@ void AdobeRGBToXYZ(float r, float g, float b, float &x, float &y, float &z)
 	z = r * 0.0270328f + g * 0.0706879f + b * 0.991248f;
 }
 
+void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
+{
+	static float xw = -1;
+	static float yw;
+	static float zw;
+	// reference white
+	if (xw < 0) {
+		AdobeRGBToXYZ(1, 1, 1, xw, yw, zw);
+	}
+	const float epsilon  = 216.0f / 24389.0f;
+	const float kappa = 24389.0f / 27.0f;
+	float f[3];
+	float r[3];
+	r[0] = x / xw;
+	r[1] = y / yw;
+	r[2] = z / zw;
+	for (int i = 0; i < 3; i++) {
+		if (r[i] > epsilon) {
+			f[i] = powf(r[i], 1.0f / 3.0f);
+		} else {
+			f[i] = (kappa * r[i] + 16.0f) / 116.0f;
+		}
+	}
+	L = 116.0f * f[1] - 16.0f;
+	A = 500.0f * (f[0] - f[1]);
+	B = 200.0f * (f[1] - f[2]);
+}
+
 bool Yee_Compare(CompareArgs &args)
 {
 	if ((args.ImgA->Get_Width() != args.ImgB->Get_Width()) ||
@@ -126,6 +154,11 @@ bool Yee_Compare(CompareArgs &args)
 	float *aLum = new float[dim];
 	float *bLum = new float[dim];
 	
+	float *aA = new float[dim];
+	float *bA = new float[dim];
+	float *aB = new float[dim];
+	float *bB = new float[dim];
+
 	if (args.Verbose) printf("Converting RGB to XYZ\n");
 	
 	unsigned int x, y, w, h;
@@ -133,16 +166,18 @@ bool Yee_Compare(CompareArgs &args)
 	h = args.ImgA->Get_Height();
 	for (y = 0; y < h; y++) {
 		for (x = 0; x < w; x++) {
-			float r, g, b;
+			float r, g, b, l;
 			i = x + y * w;
 			r = powf(args.ImgA->Get_Red(i) / 255.0f, args.Gamma);
 			g = powf(args.ImgA->Get_Green(i) / 255.0f, args.Gamma);
 			b = powf(args.ImgA->Get_Blue(i) / 255.0f, args.Gamma);						
-			AdobeRGBToXYZ(r,g,b,aX[i],aY[i],aZ[i]);
+			AdobeRGBToXYZ(r,g,b,aX[i],aY[i],aZ[i]);			
+			XYZToLAB(aX[i], aY[i], aZ[i], l, aA[i], aB[i]);
 			r = powf(args.ImgB->Get_Red(i) / 255.0f, args.Gamma);
 			g = powf(args.ImgB->Get_Green(i) / 255.0f, args.Gamma);
 			b = powf(args.ImgB->Get_Blue(i) / 255.0f, args.Gamma);						
 			AdobeRGBToXYZ(r,g,b,bX[i],bY[i],bZ[i]);
+			XYZToLAB(bX[i], bY[i], bZ[i], l, bA[i], bB[i]);
 			aLum[i] = aY[i] * args.Luminance;
 			bLum[i] = bY[i] * args.Luminance;
 		}
@@ -177,6 +212,7 @@ bool Yee_Compare(CompareArgs &args)
 	unsigned int pixels_failed = 0;
 	for (y = 0; y < h; y++) {
 	  for (x = 0; x < w; x++) {
+		int index = x + y * w;
 		float contrast[MAX_PYR_LEVELS - 2];
 		float sum_contrast = 0;
 		for (i = 0; i < MAX_PYR_LEVELS - 2; i++) {
@@ -205,8 +241,23 @@ bool Yee_Compare(CompareArgs &args)
 		if (factor < 1) factor = 1;
 		if (factor > 10) factor = 10;
 		float delta = fabsf(la->Get_Value(x,y,0) - lb->Get_Value(x,y,0));
+		// pure luminance test
 		if (delta > factor * tvi(adapt)) {
 			pixels_failed++;
+		} else {
+			// CIE delta E test with modifications
+			float color_scale = 1.0f;
+			// ramp down the color test in scotopic regions
+			if (adapt < 10.0f) {
+				color_scale = 1.0f - (10.0f - color_scale) / 10.0f;
+				color_scale = color_scale * color_scale;
+			}
+			float da = aA[index] - bA[index];
+			float db = aB[index] - bB[index];
+			da = da * da;
+			db = db * db;
+			float delta_e = (da + db) * color_scale;
+			if (delta_e > factor) pixels_failed++;
 		}
 	  }
 	}
@@ -221,6 +272,10 @@ bool Yee_Compare(CompareArgs &args)
 	if (bLum) delete[] bLum;
 	if (la) delete la;
 	if (lb) delete lb;
+	if (aA) delete aA;
+	if (bA) delete bA;
+	if (aB) delete aB;
+	if (bB) delete bB;
 	
 	if (pixels_failed < args.ThresholdPixels) {
 		args.ErrorStr = "Images are perceptually indistinguishable\n";
