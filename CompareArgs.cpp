@@ -34,7 +34,7 @@ static const char *usage =
 \t-threshold p	 : #pixels p below which differences are ignored\n\
 \t-gamma g       : Value to convert rgb into linear space (default 2.2)\n\
 \t-luminance l   : White luminance (default 100.0 cdm^-2)\n\
-\t-output o.tif  : Write difference to the file o.tif\n\
+\t-output o.ppm  : Write difference to the file o.ppm\n\
 \n";
 
 CompareArgs::CompareArgs()

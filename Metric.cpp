@@ -241,9 +241,10 @@ bool Yee_Compare(CompareArgs &args)
 		if (factor < 1) factor = 1;
 		if (factor > 10) factor = 10;
 		float delta = fabsf(la->Get_Value(x,y,0) - lb->Get_Value(x,y,0));
+		bool pass = true;
 		// pure luminance test
 		if (delta > factor * tvi(adapt)) {
-			pixels_failed++;
+			pass = false;
 		} else {
 			// CIE delta E test with modifications
 			float color_scale = 1.0f;
@@ -257,7 +258,19 @@ bool Yee_Compare(CompareArgs &args)
 			da = da * da;
 			db = db * db;
 			float delta_e = (da + db) * color_scale;
-			if (delta_e > factor) pixels_failed++;
+			if (delta_e > factor) {
+				pass = false;
+			}
+		}
+		if (!pass) {
+			pixels_failed++;
+			if (args.ImgDiff) {
+				args.ImgDiff->Set(255, 0, 0, 255, index);
+			}
+		} else {
+			if (args.ImgDiff) {
+				args.ImgDiff->Set(0, 0, 0, 255, index);
+			}
 		}
 	  }
 	}
@@ -289,9 +302,15 @@ bool Yee_Compare(CompareArgs &args)
 	args.ErrorStr += different;
 	
 	if (args.ImgDiff) {
-		args.ErrorStr += "Wrote difference image to ";
-		args.ErrorStr+= args.ImgDiff->Get_Name();
-		args.ErrorStr += "\n";
+		if (args.ImgDiff->WritePPM()) {
+			args.ErrorStr += "Wrote difference image to ";
+			args.ErrorStr+= args.ImgDiff->Get_Name();
+			args.ErrorStr += "\n";
+		} else {
+			args.ErrorStr += "Could not write difference image to ";
+			args.ErrorStr+= args.ImgDiff->Get_Name();
+			args.ErrorStr += "\n";
+		}
 	}
 	return false;
 }
