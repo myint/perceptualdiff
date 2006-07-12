@@ -287,5 +287,11 @@ bool Yee_Compare(CompareArgs &args)
 
 	args.ErrorStr = "Images are visibly different\n";
 	args.ErrorStr += different;
+	
+	if (args.ImgDiff) {
+		args.ErrorStr += "Wrote difference image to ";
+		args.ErrorStr+= args.ImgDiff->Get_Name();
+		args.ErrorStr += "\n";
+	}
 	return false;
 }

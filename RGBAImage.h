@@ -17,14 +17,17 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #ifndef _RGAIMAGE_H
 #define _RGBAIMAGE_H
 
+#include<string>
+
 // assumes data is in the ABGR format
 class RGBAImage
 {
 public:
-	RGBAImage(int w, int h)
+	RGBAImage(int w, int h, const char *name = 0)
 	{
 		Width = w;
 		Height = h;
+		if (name) Name = name;
 		Data = new unsigned int[w * h];
 	};
 	~RGBAImage() { if (Data) delete[] Data; }
@@ -37,11 +40,13 @@ public:
 	void Set(int x, int y, unsigned int d) { Data[x + y * Width] = d; }
 	unsigned int Get(int x, int y) const { return Data[x + y * Width]; }
 	unsigned int Get(int i) const { return Data[i]; }
+	const std::string &Get_Name(void) const { return Name; }
 	
 	static RGBAImage* ReadTiff(char *filename);
 protected:
 	int Width;
 	int Height;
+	std::string Name;
 	unsigned int *Data;
 };
 

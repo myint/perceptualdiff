@@ -34,12 +34,14 @@ static const char *usage =
 \t-threshold p	 : #pixels p below which differences are ignored\n\
 \t-gamma g       : Value to convert rgb into linear space (default 2.2)\n\
 \t-luminance l   : White luminance (default 100.0 cdm^-2)\n\
+\t-output o.tif  : Write difference to the file o.tif\n\
 \n";
 
 CompareArgs::CompareArgs()
 {
 	ImgA = NULL;
 	ImgB = NULL;
+	ImgDiff = NULL;
 	Verbose = false;
 	FieldOfView = 45.0f;
 	Gamma = 2.2f;
@@ -51,6 +53,7 @@ CompareArgs::~CompareArgs()
 {
 	if (ImgA) delete ImgA;
 	if (ImgB) delete ImgB;
+	if (ImgDiff) delete ImgDiff;
 }
 
 bool CompareArgs::Parse_Args(int argc, char **argv)
@@ -95,6 +98,10 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			}else 	if (strstr(argv[i], "-luminance")) {
 				if (i + 1 < argc) {
 					Luminance = (float) atof(argv[i + 1]);
+				}
+			}else 	if (strstr(argv[i], "-output")) {
+				if (i + 1 < argc) {
+					ImgDiff = new RGBAImage(ImgA->Get_Width(), ImgA->Get_Height(), argv[i+1]);
 				}
 			}
 		}
