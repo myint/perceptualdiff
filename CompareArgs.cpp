@@ -19,7 +19,7 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #include <stdio.h>
 
 static const char* copyright = 
-"PerceptualDiff version 0.9b, Copyright (C) 2006 Yangli Hector Yee\n\
+"PerceptualDiff version 1.0, Copyright (C) 2006 Yangli Hector Yee\n\
 PerceptualDiff comes with ABSOLUTELY NO WARRANTY;\n\
 This is free software, and you are welcome\n\
 to redistribute it under certain conditions;\n\
@@ -35,6 +35,8 @@ static const char *usage =
 \t-gamma g       : Value to convert rgb into linear space (default 2.2)\n\
 \t-luminance l   : White luminance (default 100.0 cdm^-2)\n\
 \t-output o.ppm  : Write difference to the file o.ppm\n\
+\n\
+\n Note: Input files can also be in the PNG format\
 \n";
 
 CompareArgs::CompareArgs()
@@ -67,18 +69,26 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		if (i == 1) {
 			ImgA = RGBAImage::ReadTiff(argv[1]);
 			if (!ImgA) {
-				ErrorStr = "FAIL: Cannot open ";
-				ErrorStr += argv[1];
-				ErrorStr += "\n";
-				return false;
+				ImgA = RGBAImage::ReadPNG(argv[1]);
+				if (!ImgA)
+				{
+					ErrorStr = "FAIL: Cannot open ";
+					ErrorStr += argv[1];
+					ErrorStr += "\n";
+					return false;
+				}
 			}
 		} else if (i == 2) {			
 			ImgB = RGBAImage::ReadTiff(argv[2]);
 			if (!ImgB) {
-				ErrorStr = "FAIL: Cannot open ";
-				ErrorStr += argv[2];
-				ErrorStr += "\n";
-				return false;
+				ImgB = RGBAImage::ReadPNG(argv[2]);
+				if (!ImgB)
+				{
+					ErrorStr = "FAIL: Cannot open ";
+					ErrorStr += argv[2];
+					ErrorStr += "\n";
+					return false;
+				}
 			}
 		} else {
 			if (strstr(argv[i], "-fov")) {

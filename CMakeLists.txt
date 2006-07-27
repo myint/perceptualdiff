@@ -28,3 +28,28 @@ IF(TIFF_FOUND)
   INCLUDE_DIRECTORIES(${TIFF_INCLUDE_DIR})
   TARGET_LINK_LIBRARIES(perceptualdiff ${TIFF_LIBRARY})
 ENDIF(TIFF_FOUND)
+
+# look for libpng
+FIND_PATH(PNG_INCLUDE_DIR png.h
+  /usr/local/include
+  /usr/include
+  /opt/local/include
+)
+
+FIND_LIBRARY(PNG_LIBRARY png
+  /usr/lib
+  /usr/local/lib
+  /opt/local/lib
+)
+
+IF(PNG_INCLUDE_DIR)
+  IF(PNG_LIBRARY)
+    SET( PNG_FOUND "YES" )
+    SET( PNG_LIBRARIES ${PNG_LIBRARY} )
+  ENDIF(PNG_LIBRARY)
+ENDIF(PNG_INCLUDE_DIR)
+
+IF(PNG_FOUND)
+  INCLUDE_DIRECTORIES(${PNG_INCLUDE_DIR})
+  TARGET_LINK_LIBRARIES(perceptualdiff ${PNG_LIBRARY})
+ENDIF(PNG_FOUND)

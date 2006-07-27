@@ -46,6 +46,7 @@ public:
 	
 	bool WritePPM();
 	static RGBAImage* ReadTiff(char *filename);
+	static RGBAImage* ReadPNG(char *filename);
 protected:
 	int Width;
 	int Height;
