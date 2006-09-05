@@ -21,6 +21,7 @@ Build Instructions
 4. Type cmake .
 5. Type make . (or on Windows systems cmake makes a Visual Studio
 Project file)
+6. To specify the install directory, use make install DESTDIR="/home/me/mydist"
 
 Usage
 
@@ -37,4 +38,8 @@ a theatre has a field of view of around 25 degrees. Back row has a field of
  is 100 candela per meter squared
 -output foo.ppm : Saves the difference image to foo.ppm
 
-thanks to Scott Corley for png file IO code
+Credits
+
+Hector Yee, project administrator and originator - hectorgon.blogspot.com
+Scott Corley, for png file IO code
+Mick Weiss, Linux build and release & QA
