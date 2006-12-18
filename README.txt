@@ -1,4 +1,4 @@
-pdiff - a program that compares two images using
+perceptualdiff - a program that compares two images using
 a perceptually based image metric.
 Copyright (C) 2006 Yangli Hector Yee
 yeehector@users.sourceforge.net
@@ -17,7 +17,7 @@ See the GNU General Public License for more details in the file gpl.txt.
 Build Instructions
 1. Download cross platform make from http://www.cmake.org
 2. Download libtiff from http://www.libtiff.org. Download libpng from http://www.libpng.org
-3. Edit CMakeLists.txt to tell it where to find your tiff library
+3. Edit CMakeLists.txt to tell it where to find your libtiff and libpng library
 4. Type cmake .
 5. Type make . (or on Windows systems cmake makes a Visual Studio
 Project file)
@@ -25,7 +25,7 @@ Project file)
 
 Usage
 
-pdiff image1.(tif | png) image2.(tif | png) [options]
+perceptualdiff image1.(tif | png) image2.(tif | png) [options]
 -verbose : Turns on verbose mode
 -fov deg: field of view, deg, in degrees. Usually between 10.0 to 85.0. 
 This controls how much of the screen the oberserver is seeing. Front row of 
@@ -42,4 +42,4 @@ Credits
 
 Hector Yee, project administrator and originator - hectorgon.blogspot.com
 Scott Corley, for png file IO code
-Mick Weiss, Linux build and release & QA
+Tobias Sauerwein, for make install, package_source Cmake configuration
