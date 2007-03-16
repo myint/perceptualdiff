@@ -43,3 +43,9 @@ Credits
 Hector Yee, project administrator and originator - hectorgon.blogspot.com
 Scott Corley, for png file IO code
 Tobias Sauerwein, for make install, package_source Cmake configuration
+Cairo Team for bugfixes
+
+Version History
+
+1.0   - Initial distribution
+1.0.1 - Fixed off by one convolution error and libpng interface to 1.2.8
