@@ -82,7 +82,7 @@ RGBAImage* RGBAImage::ReadPNG(char *filename)
     if (!info_ptr)
     {
         png_destroy_read_struct(&png_ptr,
-           (png_infopp)NULL, (png_infopp)NULL);
+				(png_infopp)NULL, (png_infopp)NULL);
         return (NULL);
     }
 
@@ -90,7 +90,7 @@ RGBAImage* RGBAImage::ReadPNG(char *filename)
     if (!end_info)
     {
         png_destroy_read_struct(&png_ptr, &info_ptr,
-          (png_infopp)NULL);
+				(png_infopp)NULL);
         return (NULL);
     }
 
@@ -114,7 +114,7 @@ RGBAImage* RGBAImage::ReadPNG(char *filename)
 		}
 	}
 
-	png_read_destroy(png_ptr, info_ptr, end_info);
+	png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
 	return fimg;
 }
 		   
