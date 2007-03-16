@@ -69,8 +69,8 @@ void LPyramid::Convolve(float *a, float *b)
 					ny=y+j;
 					if (nx<0) nx=-nx;
 					if (ny<0) ny=-ny;
-					if (nx>=Width) nx=2*(Width-1)-nx;
-					if (ny>=Height) ny=2*(Height-1)-ny;
+					if (nx>=Width) nx=2*Width-nx-1;
+					if (ny>=Height) ny=2*Height-ny-1;
 					a[index] += Kernel[i+2] * Kernel[j+2] * b[ny * Width + nx];
 				} 
 			}
