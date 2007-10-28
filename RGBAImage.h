@@ -45,6 +45,7 @@ public:
 	const std::string &Get_Name(void) const { return Name; }
 	
 	bool WritePPM();
+	static RGBAImage* ReadImageFile(char *filename);
 	static RGBAImage* ReadTiff(char *filename);
 	static RGBAImage* ReadPNG(char *filename);
 protected:

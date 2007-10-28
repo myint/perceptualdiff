@@ -18,6 +18,31 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #include "png.h"
 #include "tiff.h"
 #include "tiffio.h"
+#include <string.h>  // for memcmp
+
+// Detects file type based on magic numbers & calls the appropriate file
+// loading function.
+RGBAImage* RGBAImage::ReadImageFile(char *filename)
+{
+	// Get the first few bytes of the file to serve as a magic number for file
+	// type detection.
+	FILE *inFile = fopen(filename, "r");
+	if(!inFile)
+		return NULL;
+	const size_t numBytes = 8;
+	unsigned char magicNum[numBytes];
+	fread(magicNum, sizeof(unsigned char), numBytes, inFile);
+	fclose(inFile);
+
+	// Detect TIFF format
+	if(memcmp(magicNum, "II\x2A\0", 4) == 0 || memcmp(magicNum, "MM\0\x2A", 4) == 0)
+		return ReadTiff(filename);
+	// Detect PNG format
+	else if(png_check_sig(magicNum, numBytes))
+		return ReadPNG(filename);
+
+	return NULL;
+}
 
 // Reads Tiff Images
 RGBAImage* RGBAImage::ReadTiff(char *filename)

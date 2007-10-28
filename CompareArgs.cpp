@@ -66,30 +66,18 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		return false;
 	}
 	for (int i = 0; i < argc; i++) {
-		if (i == 1) {
-			ImgA = RGBAImage::ReadTiff(argv[1]);
-			if (!ImgA) {
-				ImgA = RGBAImage::ReadPNG(argv[1]);
-				if (!ImgA)
-				{
-					ErrorStr = "FAIL: Cannot open ";
-					ErrorStr += argv[1];
-					ErrorStr += "\n";
-					return false;
-				}
+		if (i == 1 || i == 2) {
+			RGBAImage* img = RGBAImage::ReadImageFile(argv[i]);
+			if (!img) {
+				ErrorStr = "FAIL: Cannot open ";
+				ErrorStr += argv[i];
+				ErrorStr += "\n";
+				return false;
 			}
-		} else if (i == 2) {			
-			ImgB = RGBAImage::ReadTiff(argv[2]);
-			if (!ImgB) {
-				ImgB = RGBAImage::ReadPNG(argv[2]);
-				if (!ImgB)
-				{
-					ErrorStr = "FAIL: Cannot open ";
-					ErrorStr += argv[2];
-					ErrorStr += "\n";
-					return false;
-				}
-			}
+			if(i == 1)
+				ImgA = img;
+			else
+				ImgB = img;
 		} else {
 			if (strstr(argv[i], "-fov")) {
 				if (i + 1 < argc) {
