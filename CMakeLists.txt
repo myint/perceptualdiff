@@ -4,7 +4,7 @@ CompareArgs.cpp Metric.cpp)
 
 ADD_EXECUTABLE (perceptualdiff ${DIFF_SRC})
 
-INSTALL(FILES perceptualdiff DESTINATION bin)
+INSTALL(TARGETS perceptualdiff DESTINATION bin)
 
 # look for libtiff
 FIND_PATH(TIFF_INCLUDE_DIR tiff.h
