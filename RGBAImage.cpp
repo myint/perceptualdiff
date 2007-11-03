@@ -124,6 +124,12 @@ RGBAImage* RGBAImage::ReadPNG(char *filename)
 
 	png_read_png(png_ptr, info_ptr, 0, NULL);
 
+	if( !(png_ptr->color_type == PNG_COLOR_TYPE_RGB_ALPHA
+			| png_ptr->color_type == PNG_COLOR_TYPE_RGB) ) {
+		fprintf(stderr, "Non-RGB PNG images not currently supported\n");
+		return NULL;
+	}
+
 	png_bytep *row_pointers;
 	row_pointers = png_get_rows(png_ptr, info_ptr);
 
@@ -131,11 +137,25 @@ RGBAImage* RGBAImage::ReadPNG(char *filename)
 	for (int y = 0; y < (int) png_ptr->height; y++) {
 		for (int x = 0; x < (int) png_ptr->width; x++) {
 			uint32 value = 0;
-			if (png_ptr->color_type == PNG_COLOR_TYPE_RGB_ALPHA)
-				value = ((uint32)row_pointers[y][x*4]) | (((uint32)row_pointers[y][x*4+1])<<8) | (((uint32)row_pointers[y][x*4+2])<<16) |(((uint32)row_pointers[y][x*4+3])<<24);
-			else if (png_ptr->color_type == PNG_COLOR_TYPE_RGB)
-				value = ((uint32)row_pointers[y][x*3] /*B*/) | (((uint32)row_pointers[y][x*3+1] /*G*/)<<8) | (((uint32)row_pointers[y][x*3+2]/*R*/)<<16) | (0xFFUL << 24);
-		   fimg->Set(x,y, value);
+			if (png_ptr->color_type == PNG_COLOR_TYPE_RGB_ALPHA) {
+				// PNG uses "unassociated alpha" (see http://www.libpng.org/pub/png/spec/1.2/PNG-DataRep.html#DR.Alpha-channel)
+				// whereas TIFF uses associated alpha.  Therefore we multiply
+				// the colours by the alpha value here for consistency with the
+				// data format expected by RGBAImage.h which is the TIFF native
+				// format.
+				float alpha = row_pointers[y][x*4+3] / 255.0f;
+				value = static_cast<uint32>(alpha * row_pointers[y][x*4])         // B
+					| (static_cast<uint32>(alpha * row_pointers[y][x*4+1]) << 8)  // G
+					| (static_cast<uint32>(alpha * row_pointers[y][x*4+2]) << 16) // R
+					| (static_cast<uint32>(alpha*255.0f) << 24);                  // A
+			}
+			else if (png_ptr->color_type == PNG_COLOR_TYPE_RGB) {
+				value = ((uint32)row_pointers[y][x*3])          // B
+					| (((uint32)row_pointers[y][x*3+1])<<8)     // G
+					| (((uint32)row_pointers[y][x*3+2])<<16)    // R
+					| (0xFFUL << 24);                           // A
+			}
+			fimg->Set(x,y, value);
 		}
 	}
 
