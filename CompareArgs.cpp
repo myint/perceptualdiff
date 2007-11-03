@@ -34,6 +34,7 @@ static const char *usage =
 \t-threshold p	 : #pixels p below which differences are ignored\n\
 \t-gamma g       : Value to convert rgb into linear space (default 2.2)\n\
 \t-luminance l   : White luminance (default 100.0 cdm^-2)\n\
+\t-luminanceonly : Only consider luminance; ignore chroma (color) in the comparison\n\
 \t-output o.ppm  : Write difference to the file o.ppm\n\
 \n\
 \n Note: Input files can also be in the PNG format\
@@ -45,6 +46,7 @@ CompareArgs::CompareArgs()
 	ImgB = NULL;
 	ImgDiff = NULL;
 	Verbose = false;
+	LuminanceOnly = false;
 	FieldOfView = 45.0f;
 	Gamma = 2.2f;
 	ThresholdPixels = 100;
@@ -65,8 +67,8 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		ErrorStr += usage;
 		return false;
 	}
-	int imageCount = 0;
-	const char* outputFileName = NULL;
+	int image_count = 0;
+	const char* output_file_name = NULL;
 	for (int i = 1; i < argc; i++) {
 		if (strcmp(argv[i], "-fov") == 0) {
 			if (++i < argc) {
@@ -86,11 +88,13 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			if (++i < argc) {
 				Luminance = (float) atof(argv[i]);
 			}
+		} else if (strcmp(argv[i], "-luminanceonly") == 0) {
+			LuminanceOnly = true;
 		} else if (strcmp(argv[i], "-output") == 0) {
 			if (++i < argc) {
-				outputFileName = argv[i];
+				output_file_name = argv[i];
 			}
-		} else if (imageCount < 2) {
+		} else if (image_count < 2) {
 			RGBAImage* img = RGBAImage::ReadImageFile(argv[i]);
 			if (!img) {
 				ErrorStr = "FAIL: Cannot open ";
@@ -98,8 +102,8 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 				ErrorStr += "\n";
 				return false;
 			} else {
-				++imageCount;
-				if(imageCount == 1)
+				++image_count;
+				if(image_count == 1)
 					ImgA = img;
 				else
 					ImgB = img;
@@ -112,8 +116,8 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		ErrorStr = "FAIL: Not enough image files specified\n";
 		return false;
 	}
-	if(outputFileName) {
-		ImgDiff = new RGBAImage(ImgA->Get_Width(), ImgA->Get_Height(), outputFileName);
+	if(output_file_name) {
+		ImgDiff = new RGBAImage(ImgA->Get_Width(), ImgA->Get_Height(), output_file_name);
 	}
 	return true;
 }

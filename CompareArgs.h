@@ -34,6 +34,7 @@ public:
 	RGBAImage		*ImgB;				// Image B
 	RGBAImage		*ImgDiff;			// Diff image
 	bool			Verbose;			// Print lots of text or not
+	bool			LuminanceOnly;		// Only consider luminance; ignore chroma channels in the comparison.
 	float			FieldOfView;		// Field of view in degrees
 	float			Gamma;				// The gamma to convert to linear color space
 	float			Luminance;			// the display's luminance
