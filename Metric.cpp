@@ -245,7 +245,7 @@ bool Yee_Compare(CompareArgs &args)
 		// pure luminance test
 		if (delta > factor * tvi(adapt)) {
 			pass = false;
-		} else if (!args.LuminanceOnly) {
+		} else {
 			// CIE delta E test with modifications
 			float color_scale = 1.0f;
 			// ramp down the color test in scotopic regions
@@ -302,7 +302,7 @@ bool Yee_Compare(CompareArgs &args)
 	args.ErrorStr += different;
 	
 	if (args.ImgDiff) {
-		if (args.ImgDiff->WritePPM()) {
+		if (args.ImgDiff->WriteToFile(args.ImgDiff->Get_Name().c_str())) {
 			args.ErrorStr += "Wrote difference image to ";
 			args.ErrorStr+= args.ImgDiff->Get_Name();
 			args.ErrorStr += "\n";

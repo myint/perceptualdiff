@@ -35,11 +35,14 @@ int main(int argc, char **argv)
 	} else {
 		if (args.Verbose) args.Print_Args();
 	}
-	int result = Yee_Compare(args) == true;
-	if (result) {
-		printf("PASS: %s\n", args.ErrorStr.c_str());
+	
+	const bool passed = Yee_Compare(args);
+	if (passed) {
+		if(args.Verbose)
+			printf("PASS: %s\n", args.ErrorStr.c_str());
 	} else {
 		printf("FAIL: %s\n", args.ErrorStr.c_str());
 	}
-	return result;
+
+	return passed ? 0 : 1;
 }

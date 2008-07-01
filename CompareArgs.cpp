@@ -19,7 +19,7 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #include <stdio.h>
 
 static const char* copyright = 
-"PerceptualDiff version 1.0.1, Copyright (C) 2006 Yangli Hector Yee\n\
+"PerceptualDiff version 1.0.2, Copyright (C) 2006 Yangli Hector Yee\n\
 PerceptualDiff comes with ABSOLUTELY NO WARRANTY;\n\
 This is free software, and you are welcome\n\
 to redistribute it under certain conditions;\n\
@@ -37,7 +37,8 @@ static const char *usage =
 \t-luminanceonly : Only consider luminance; ignore chroma (color) in the comparison\n\
 \t-output o.ppm  : Write difference to the file o.ppm\n\
 \n\
-\n Note: Input files can also be in the PNG format\
+\n Note: Input or Output files can also be in the PNG or JPG format or any format\
+\n that FreeImage supports.\
 \n";
 
 CompareArgs::CompareArgs()
@@ -95,7 +96,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 				output_file_name = argv[i];
 			}
 		} else if (image_count < 2) {
-			RGBAImage* img = RGBAImage::ReadImageFile(argv[i]);
+			RGBAImage* img = RGBAImage::ReadFromFile(argv[i]);
 			if (!img) {
 				ErrorStr = "FAIL: Cannot open ";
 				ErrorStr += argv[i];

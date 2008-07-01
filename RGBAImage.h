@@ -17,18 +17,13 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #ifndef _RGAIMAGE_H
 #define _RGBAIMAGE_H
 
-#include<string>
+#include <string>
 
-/** Class encapsulating an image containing R,G,B,A channels.
- *
- * Internal representation assumes data is in the ABGR format, with the RGB
- * color channels premultiplied by the alpha value.  Premultiplied alpha is
- * often also called "associated alpha" - see the tiff 6 specification for some
- * discussion - http://partners.adobe.com/asn/developer/PDFS/TN/TIFF6.pdf
- *
- */
+// assumes data is in the ABGR format
 class RGBAImage
 {
+	RGBAImage(const RGBAImage&);
+	RGBAImage& operator=(const RGBAImage&);
 public:
 	RGBAImage(int w, int h, const char *name = 0)
 	{
@@ -51,10 +46,9 @@ public:
 	unsigned int Get(int i) const { return Data[i]; }
 	const std::string &Get_Name(void) const { return Name; }
 	
-	bool WritePPM();
-	static RGBAImage* ReadImageFile(char *filename);
-	static RGBAImage* ReadTiff(char *filename);
-	static RGBAImage* ReadPNG(char *filename);
+	bool WriteToFile(const char* filename);
+	static RGBAImage* ReadFromFile(const char* filename);
+	
 protected:
 	int Width;
 	int Height;

@@ -2,6 +2,8 @@
 RGBAImage.cpp
 Copyright (C) 2006 Yangli Hector Yee
 
+(This entire file was rewritten by Jim Tilander)
+
 This program is free software; you can redistribute it and/or modify it under the terms of the
 GNU General Public License as published by the Free Software Foundation; either version 2 of the License,
 or (at your option) any later version.
@@ -15,172 +17,79 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 */
 
 #include "RGBAImage.h"
-#include "png.h"
-#include "tiff.h"
-#include "tiffio.h"
-#include <string.h>  // for memcmp
+#include "FreeImage.h"
 
-// Detects file type based on magic numbers & calls the appropriate file
-// loading function.
-RGBAImage* RGBAImage::ReadImageFile(char *filename)
+bool RGBAImage::WriteToFile(const char* filename)
 {
-	// Get the first few bytes of the file to serve as a magic number for file
-	// type detection.
-	FILE *inFile = fopen(filename, "r");
-	if(!inFile)
-		return NULL;
-	const size_t numBytes = 8;
-	unsigned char magicNum[numBytes];
-	fread(magicNum, sizeof(unsigned char), numBytes, inFile);
-	fclose(inFile);
+	const FREE_IMAGE_FORMAT fileType = FreeImage_GetFIFFromFilename(filename);
+	if(FIF_UNKNOWN == fileType)
+	{
+		printf("Can't save to unknown filetype %s\n", filename);
+		return false;
+	}
 
-	// Detect TIFF format
-	if(memcmp(magicNum, "II\x2A\0", 4) == 0 || memcmp(magicNum, "MM\0\x2A", 4) == 0)
-		return ReadTiff(filename);
-	// Detect PNG format
-	else if(png_check_sig(magicNum, numBytes))
-		return ReadPNG(filename);
+	FIBITMAP* bitmap = FreeImage_Allocate(Width, Height, 32, 0x000000ff, 0x0000ff00, 0x00ff0000);
+	if(!bitmap)
+	{
+		printf("Failed to create freeimage for %s\n", filename);
+		return false;
+	}
 
-	return NULL;
-}
-
-// Reads Tiff Images
-RGBAImage* RGBAImage::ReadTiff(char *filename)
-{
-	RGBAImage *fimg = 0;
+	const unsigned int* source = Data;
+	for( int y=0; y < Height; y++, source += Width )
+	{
+		unsigned int* scanline = (unsigned int*)FreeImage_GetScanLine(bitmap, Height - y - 1 );
+		memcpy(scanline, source, sizeof(source[0]) * Width);
+	}	
 	
-    TIFF* tif = TIFFOpen(filename, "r");
-	char emsg[1024];
-	emsg[0] = 0;
-    if (tif) {
-		TIFFRGBAImage img;
-		
-		if (TIFFRGBAImageBegin(&img, tif, 0, emsg)) {
-			size_t npixels;
-			uint32* raster;
-
-			npixels = img.width * img.height;
-			raster = (uint32*) _TIFFmalloc(npixels * sizeof (uint32));
-			if (raster != NULL) {
-				if (TIFFRGBAImageGet(&img, raster, img.width, img.height)) {
-					// result is in ABGR
-					fimg = new RGBAImage(img.width, img.height);
-					for (int y = img.height - 1; y >= 0; y--) {
-						for (int x = 0; x < (int) img.width; x++) {
-						   fimg->Set(x,img.height - (y+1), raster[x + y * img.width]);
-						}
-					}
-				}
-			_TIFFfree(raster);
-			}
-	    }
-	    TIFFRGBAImageEnd(&img);
-	}
-	return fimg;
+	FreeImage_SetTransparent(bitmap, false);
+	FIBITMAP* converted = FreeImage_ConvertTo24Bits(bitmap);
+	
+	
+	const bool result = !!FreeImage_Save(fileType, converted, filename);
+	if(!result)
+		printf("Failed to save to %s\n", filename);
+	
+	FreeImage_Unload(converted);
+	FreeImage_Unload(bitmap);
+	return result;
 }
 
-// This portion was written by Scott Corley
-RGBAImage* RGBAImage::ReadPNG(char *filename)
+RGBAImage* RGBAImage::ReadFromFile(const char* filename)
 {
-	RGBAImage *fimg = 0;
-	FILE *fp=fopen(filename, "rb");
-	if (!fp)
+	const FREE_IMAGE_FORMAT fileType = FreeImage_GetFileType(filename);
+	if(FIF_UNKNOWN == fileType)
 	{
-		return NULL;
+		printf("Unknown filetype %s\n", filename);
+		return 0;
 	}
-	png_byte header[8];
-
-	fread(header, 1, 8, fp);
-	bool is_png = !png_sig_cmp(header, 0, 8);
-	if (!is_png)
+	
+	FIBITMAP* freeImage = 0;
+	if(FIBITMAP* temporary = FreeImage_Load(fileType, filename, 0))
 	{
-		return NULL;
+		freeImage = FreeImage_ConvertTo32Bits(temporary);
+		FreeImage_Unload(temporary);
+	}
+	if(!freeImage)
+	{
+		printf( "Failed to load the image %s\n", filename);
+		return 0;
 	}
 
-    png_structp png_ptr = png_create_read_struct
-       (PNG_LIBPNG_VER_STRING, (png_voidp)NULL,
-        NULL, NULL);
-    if (!png_ptr)
-        return (NULL);
+	const int w = FreeImage_GetWidth(freeImage);
+	const int h = FreeImage_GetHeight(freeImage);
 
-    png_infop info_ptr = png_create_info_struct(png_ptr);
-    if (!info_ptr)
-    {
-        png_destroy_read_struct(&png_ptr,
-				(png_infopp)NULL, (png_infopp)NULL);
-        return (NULL);
-    }
+	RGBAImage* result = new RGBAImage(w, h, filename);
+	// Copy the image over to our internal format, FreeImage has the scanlines bottom to top though.
+	unsigned int* dest = result->Data;
+	for( int y=0; y < h; y++, dest += w )
+	{
+		const unsigned int* scanline = (const unsigned int*)FreeImage_GetScanLine(freeImage, h - y - 1 );
+		memcpy(dest, scanline, sizeof(dest[0]) * w);
+	}	
 
-    png_infop end_info = png_create_info_struct(png_ptr);
-    if (!end_info)
-    {
-        png_destroy_read_struct(&png_ptr, &info_ptr,
-				(png_infopp)NULL);
-        return (NULL);
-    }
-
-	png_init_io(png_ptr, fp);
-	png_set_sig_bytes(png_ptr, 8);
-
-	png_read_png(png_ptr, info_ptr, 0, NULL);
-
-	if( !(png_ptr->color_type == PNG_COLOR_TYPE_RGB_ALPHA
-			| png_ptr->color_type == PNG_COLOR_TYPE_RGB) ) {
-		fprintf(stderr, "Non-RGB PNG images not currently supported\n");
-		return NULL;
-	}
-
-	png_bytep *row_pointers;
-	row_pointers = png_get_rows(png_ptr, info_ptr);
-
-	fimg = new RGBAImage(png_ptr->width, png_ptr->height);
-	for (int y = 0; y < (int) png_ptr->height; y++) {
-		for (int x = 0; x < (int) png_ptr->width; x++) {
-			uint32 value = 0;
-			if (png_ptr->color_type == PNG_COLOR_TYPE_RGB_ALPHA) {
-				// PNG uses "unassociated alpha" (see http://www.libpng.org/pub/png/spec/1.2/PNG-DataRep.html#DR.Alpha-channel)
-				// whereas TIFF uses associated alpha.  Therefore we multiply
-				// the colours by the alpha value here for consistency with the
-				// data format expected by RGBAImage.h which is the TIFF native
-				// format.
-				float alpha = row_pointers[y][x*4+3] / 255.0f;
-				value = static_cast<uint32>(alpha * row_pointers[y][x*4])         // B
-					| (static_cast<uint32>(alpha * row_pointers[y][x*4+1]) << 8)  // G
-					| (static_cast<uint32>(alpha * row_pointers[y][x*4+2]) << 16) // R
-					| (static_cast<uint32>(alpha*255.0f) << 24);                  // A
-			}
-			else if (png_ptr->color_type == PNG_COLOR_TYPE_RGB) {
-				value = ((uint32)row_pointers[y][x*3])          // B
-					| (((uint32)row_pointers[y][x*3+1])<<8)     // G
-					| (((uint32)row_pointers[y][x*3+2])<<16)    // R
-					| (0xFFUL << 24);                           // A
-			}
-			fimg->Set(x,y, value);
-		}
-	}
-
-	png_destroy_read_struct(&png_ptr, &info_ptr, &end_info);
-	return fimg;
+	FreeImage_Unload(freeImage);
+	return result;
 }
-		   
-bool RGBAImage::WritePPM()
-{	
-	if (Width <= 0) return false;
-	if (Height <=0 ) return false;
-	FILE *out = fopen(Name.c_str(), "wb");
-	if (!out) return false;
-	fprintf(out, "P6\n%d %d 255\n", Width, Height);
-	for (int y = 0; y < Height; y++) {
-		for (int x = 0; x < Width; x++) {
-			int i = x + y * Width;
-			unsigned char r = Get_Red(i);
-			unsigned char g = Get_Green(i);
-			unsigned char b = Get_Blue(i);
-			fwrite(&r, 1, 1, out);
-			fwrite(&g, 1, 1, out);
-			fwrite(&b, 1, 1, out);
-		}
-	}
-	fclose(out);
-	return true;
-}
+
+

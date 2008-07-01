@@ -86,3 +86,4 @@ float LPyramid::Get_Value(int x, int y, int level)
 	return Levels[level][index];
 }
 
+

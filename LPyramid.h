@@ -36,3 +36,4 @@ protected:
 };
 
 #endif // _LPYRAMID_H
+

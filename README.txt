@@ -16,8 +16,8 @@ See the GNU General Public License for more details in the file gpl.txt.
 
 Build Instructions
 1. Download cross platform make from http://www.cmake.org
-2. Download libtiff from http://www.libtiff.org. Download libpng from http://www.libpng.org
-3. Edit CMakeLists.txt to tell it where to find your libtiff and libpng library
+2. Download freeimage from https://sourceforge.net/projects/freeimage
+3. Edit CMakeLists.txt to tell it where to find your free image build
 4. Type cmake .
 5. Type make . (or on Windows systems cmake makes a Visual Studio
 Project file)
@@ -44,8 +44,10 @@ Hector Yee, project administrator and originator - hectorgon.blogspot.com
 Scott Corley, for png file IO code
 Tobias Sauerwein, for make install, package_source Cmake configuration
 Cairo Team for bugfixes
+Jim Tilander, Rewrote the IO to use FreeImage.
 
 Version History
 
 1.0   - Initial distribution
 1.0.1 - Fixed off by one convolution error and libpng interface to 1.2.8
+1.0.2 - [jt] Converted the loading and saving routines to use FreeImage
