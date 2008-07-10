@@ -245,7 +245,7 @@ bool Yee_Compare(CompareArgs &args)
 		// pure luminance test
 		if (delta > factor * tvi(adapt)) {
 			pass = false;
-		} else {
+		} else if (!args.LuminanceOnly) {
 			// CIE delta E test with modifications
 			float color_scale = 1.0f;
 			// ramp down the color test in scotopic regions

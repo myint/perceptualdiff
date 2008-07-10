@@ -19,7 +19,14 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 
 #include <string>
 
-// assumes data is in the ABGR format
+/** Class encapsulating an image containing R,G,B,A channels.
+ *
+ * Internal representation assumes data is in the ABGR format, with the RGB
+ * color channels premultiplied by the alpha value.  Premultiplied alpha is
+ * often also called "associated alpha" - see the tiff 6 specification for some
+ * discussion - http://partners.adobe.com/asn/developer/PDFS/TN/TIFF6.pdf
+ *
+ */
 class RGBAImage
 {
 	RGBAImage(const RGBAImage&);
