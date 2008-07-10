@@ -18,7 +18,7 @@ EOF
 }
 
 # Modify pdiffBinary to point to your compiled pdiff executable if desired.
-pdiffBinary=perceptualdiff
+pdiffBinary=../perceptualdiff
 
 #------------------------------------------------------------------------------
 
@@ -27,7 +27,7 @@ numTestsFailed=0
 
 # Run all tests.
 while read expectedResult image1 image2 ; do
-	if $pdiffBinary $image1 $image2 | grep -q "^$expectedResult" ; then
+	if $pdiffBinary -verbose $image1 $image2 | grep -q "^$expectedResult" ; then
 		totalTests=$(($totalTests+1))
 	else
 		numTestsFailed=$(($numTestsFailed+1))
