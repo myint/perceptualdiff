@@ -1,4 +1,7 @@
 PROJECT (PerceptualDiff)
+
+CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
+
 SET(DIFF_SRC PerceptualDiff.cpp LPyramid.cpp RGBAImage.cpp
 CompareArgs.cpp Metric.cpp)
 
