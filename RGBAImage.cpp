@@ -18,6 +18,8 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 
 #include "RGBAImage.h"
 #include "FreeImage.h"
+#include <cstdio>
+#include <cstring>
 
 bool RGBAImage::WriteToFile(const char* filename)
 {
