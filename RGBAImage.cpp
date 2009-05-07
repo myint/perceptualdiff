@@ -21,6 +21,35 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #include <cstdio>
 #include <cstring>
 
+RGBAImage* RGBAImage::DownSample() const {
+   if (Width <=1 || Height <=1) return NULL;
+   int nw = Width / 2;
+   int nh = Height / 2;
+   RGBAImage* img = new RGBAImage(nw, nh, Name.c_str());
+   for (int y = 0; y < nh; y++) {
+      for (int x = 0; x < nw; x++) {
+         int d[4];
+         // Sample a 2x2 patch from the parent image.
+         d[0] = Get(2 * x + 0, 2 * y + 0);
+         d[1] = Get(2 * x + 1, 2 * y + 0);
+         d[2] = Get(2 * x + 0, 2 * y + 1);
+         d[3] = Get(2 * x + 1, 2 * y + 1);
+         int rgba = 0;
+         // Find the average color.
+         for (int i = 0; i < 4; i++) {
+            int c = (d[0] >> (8 * i)) & 0xFF;
+            c += (d[1] >> (8 * i)) & 0xFF;
+            c += (d[2] >> (8 * i)) & 0xFF;
+            c += (d[3] >> (8 * i)) & 0xFF;
+            c /= 4;
+            rgba |= (c & 0xFF) << (8 * i);
+         }
+         img->Set(x, y, rgba);
+      }
+   }
+   return img;
+}
+
 bool RGBAImage::WriteToFile(const char* filename)
 {
 	const FREE_IMAGE_FORMAT fileType = FreeImage_GetFIFFromFilename(filename);

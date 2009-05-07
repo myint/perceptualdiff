@@ -38,6 +38,7 @@ static const char *usage =
 \t-luminance l   : White luminance (default 100.0 cdm^-2)\n\
 \t-luminanceonly : Only consider luminance; ignore chroma (color) in the comparison\n\
 \t-colorfactor   : How much of color to use, 0.0 to 1.0, 0.0 = ignore color.\n\
+\t-downsample    : How many powers of two to downssample the image.\n\
 \t-output o.ppm  : Write difference to the file o.ppm\n\
 \n\
 \n Note: Input or Output files can also be in the PNG or JPG format or any format\
@@ -55,7 +56,8 @@ CompareArgs::CompareArgs()
 	Gamma = 2.2f;
 	ThresholdPixels = 100;
 	Luminance = 100.0f;
-        ColorFactor = 1.0f;
+   ColorFactor = 1.0f;
+   DownSample = 0;
 }
 
 CompareArgs::~CompareArgs()
@@ -99,6 +101,10 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			if (++i < argc) {
 				ColorFactor = (float) atof(argv[i]);
 			}
+		} else if (strcmp(argv[i], "-downsample") == 0) {
+			if (++i < argc) {
+				DownSample = (int) atoi(argv[i]);
+			}
 		} else if (strcmp(argv[i], "-output") == 0) {
 			if (++i < argc) {
 				output_file_name = argv[i];
@@ -125,6 +131,19 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		ErrorStr = "FAIL: Not enough image files specified\n";
 		return false;
 	}
+   for (int i = 0; i < DownSample; i++) {
+      if (Verbose) printf("Downsampling by %d\n", 1 << (i+1));
+      RGBAImage *tmp = ImgA->DownSample();
+      if (tmp) {
+         delete ImgA;
+         ImgA = tmp;
+      }
+      tmp = ImgB->DownSample();
+      if (tmp) {
+         delete ImgB;
+         ImgB = tmp;
+      }
+   }
 	if(output_file_name) {
 		ImgDiff = new RGBAImage(ImgA->Get_Width(), ImgA->Get_Height(), output_file_name);
 	}

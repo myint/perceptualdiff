@@ -44,6 +44,8 @@ public:
   // 0.0 is the same as LuminanceOnly = true,
   // 1.0 means full strength.
   float ColorFactor;
+  // How much to down sample image before comparing, in powers of 2.
+  int DownSample;
 };
 
 #endif

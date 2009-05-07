@@ -52,6 +52,7 @@ public:
 	unsigned int Get(int x, int y) const { return Data[x + y * Width]; }
 	unsigned int Get(int i) const { return Data[i]; }
 	const std::string &Get_Name(void) const { return Name; }
+   RGBAImage* DownSample() const;
 	
 	bool WriteToFile(const char* filename);
 	static RGBAImage* ReadFromFile(const char* filename);
