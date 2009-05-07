@@ -38,7 +38,7 @@ static const char *usage =
 \t-luminance l   : White luminance (default 100.0 cdm^-2)\n\
 \t-luminanceonly : Only consider luminance; ignore chroma (color) in the comparison\n\
 \t-colorfactor   : How much of color to use, 0.0 to 1.0, 0.0 = ignore color.\n\
-\t-downsample    : How many powers of two to downssample the image.\n\
+\t-downsample    : How many powers of two to down sample the image.\n\
 \t-output o.ppm  : Write difference to the file o.ppm\n\
 \n\
 \n Note: Input or Output files can also be in the PNG or JPG format or any format\

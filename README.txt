@@ -36,6 +36,8 @@ a theatre has a field of view of around 25 degrees. Back row has a field of
 -gamma g : The gamma to use to convert to RGB linear space. Default is 2.2
 -luminance l: The luminance of the display the observer is seeing. Default
  is 100 candela per meter squared
+-colorfactor   : How much of color to use, 0.0 to 1.0, 0.0 = ignore color.
+-downsample    : How many powers of two to down sample the image.
 -output foo.ppm : Saves the difference image to foo.ppm
 
 Credits
@@ -51,3 +53,5 @@ Version History
 1.0   - Initial distribution
 1.0.1 - Fixed off by one convolution error and libpng interface to 1.2.8
 1.0.2 - [jt] Converted the loading and saving routines to use FreeImage
+1.1 - Added colorfactor and downsample options. Also always output
+difference file if requested. Always print out differing pixels even if the test passes.
