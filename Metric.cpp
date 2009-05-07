@@ -290,6 +290,9 @@ bool Yee_Compare(CompareArgs &args)
 	if (aB) delete aB;
 	if (bB) delete bB;
 
+	char different[100];
+	sprintf(different, "%d pixels are different\n", pixels_failed);
+
         // Always output image difference if requested.
 	if (args.ImgDiff) {
 		if (args.ImgDiff->WriteToFile(args.ImgDiff->Get_Name().c_str())) {
@@ -305,12 +308,10 @@ bool Yee_Compare(CompareArgs &args)
 
 	if (pixels_failed < args.ThresholdPixels) {
 		args.ErrorStr = "Images are perceptually indistinguishable\n";
+                args.ErrorStr += different;
 		return true;
 	}
 	
-	char different[100];
-	sprintf(different, "%d pixels are different\n", pixels_failed);
-
 	args.ErrorStr = "Images are visibly different\n";
 	args.ErrorStr += different;
 	
