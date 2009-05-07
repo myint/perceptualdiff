@@ -40,6 +40,10 @@ public:
 	float			Luminance;			// the display's luminance
 	unsigned int	ThresholdPixels;	// How many pixels different to ignore
 	std::string		ErrorStr;			// Error string
+  // How much color to use in the metric.
+  // 0.0 is the same as LuminanceOnly = true,
+  // 1.0 means full strength.
+  float ColorFactor;
 };
 
 #endif

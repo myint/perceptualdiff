@@ -21,7 +21,7 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #include <cstring>
 
 static const char* copyright = 
-"PerceptualDiff version 1.0.2, Copyright (C) 2006 Yangli Hector Yee\n\
+"PerceptualDiff version 1.1, Copyright (C) 2006 Yangli Hector Yee\n\
 PerceptualDiff comes with ABSOLUTELY NO WARRANTY;\n\
 This is free software, and you are welcome\n\
 to redistribute it under certain conditions;\n\
@@ -37,6 +37,7 @@ static const char *usage =
 \t-gamma g       : Value to convert rgb into linear space (default 2.2)\n\
 \t-luminance l   : White luminance (default 100.0 cdm^-2)\n\
 \t-luminanceonly : Only consider luminance; ignore chroma (color) in the comparison\n\
+\t-colorfactor   : How much of color to use, 0.0 to 1.0, 0.0 = ignore color.\n\
 \t-output o.ppm  : Write difference to the file o.ppm\n\
 \n\
 \n Note: Input or Output files can also be in the PNG or JPG format or any format\
@@ -54,6 +55,7 @@ CompareArgs::CompareArgs()
 	Gamma = 2.2f;
 	ThresholdPixels = 100;
 	Luminance = 100.0f;
+        ColorFactor = 1.0f;
 }
 
 CompareArgs::~CompareArgs()
@@ -93,6 +95,10 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			}
 		} else if (strcmp(argv[i], "-luminanceonly") == 0) {
 			LuminanceOnly = true;
+		} else if (strcmp(argv[i], "-colorfactor") == 0) {
+			if (++i < argc) {
+				ColorFactor = (float) atof(argv[i]);
+			}
 		} else if (strcmp(argv[i], "-output") == 0) {
 			if (++i < argc) {
 				output_file_name = argv[i];

@@ -247,7 +247,7 @@ bool Yee_Compare(CompareArgs &args)
 			pass = false;
 		} else if (!args.LuminanceOnly) {
 			// CIE delta E test with modifications
-			float color_scale = 1.0f;
+                        float color_scale = args.ColorFactor;
 			// ramp down the color test in scotopic regions
 			if (adapt < 10.0f) {
 				color_scale = 1.0f - (10.0f - color_scale) / 10.0f;
@@ -289,18 +289,8 @@ bool Yee_Compare(CompareArgs &args)
 	if (bA) delete bA;
 	if (aB) delete aB;
 	if (bB) delete bB;
-	
-	if (pixels_failed < args.ThresholdPixels) {
-		args.ErrorStr = "Images are perceptually indistinguishable\n";
-		return true;
-	}
-	
-	char different[100];
-	sprintf(different, "%d pixels are different\n", pixels_failed);
 
-	args.ErrorStr = "Images are visibly different\n";
-	args.ErrorStr += different;
-	
+        // Always output image difference if requested.
 	if (args.ImgDiff) {
 		if (args.ImgDiff->WriteToFile(args.ImgDiff->Get_Name().c_str())) {
 			args.ErrorStr += "Wrote difference image to ";
@@ -312,5 +302,17 @@ bool Yee_Compare(CompareArgs &args)
 			args.ErrorStr += "\n";
 		}
 	}
+
+	if (pixels_failed < args.ThresholdPixels) {
+		args.ErrorStr = "Images are perceptually indistinguishable\n";
+		return true;
+	}
+	
+	char different[100];
+	sprintf(different, "%d pixels are different\n", pixels_failed);
+
+	args.ErrorStr = "Images are visibly different\n";
+	args.ErrorStr += different;
+	
 	return false;
 }
