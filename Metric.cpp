@@ -250,8 +250,8 @@ bool Yee_Compare(CompareArgs &args)
                         float color_scale = args.ColorFactor;
 			// ramp down the color test in scotopic regions
 			if (adapt < 10.0f) {
-				color_scale = 1.0f - (10.0f - adapt) / 10.0f;
-				color_scale = color_scale * color_scale;
+                          // Don't do color test at all.
+                          color_scale = 0.0;
 			}
 			float da = aA[index] - bA[index];
 			float db = aB[index] - bB[index];
