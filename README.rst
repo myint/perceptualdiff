@@ -15,6 +15,8 @@ or FITNESS FOR A PARTICULAR PURPOSE.
 See the GNU General Public License for more details in the file gpl.txt.
 
 Build Instructions
+==================
+
 1. Download cross platform make from http://www.cmake.org
 2. Download freeimage from https://sourceforge.net/projects/freeimage
 3. Edit CMakeLists.txt to tell it where to find your free image build
@@ -24,6 +26,7 @@ Project file)
 6. To specify the install directory, use make install DESTDIR="/home/me/mydist"
 
 Usage
+=====
 
 perceptualdiff image1.(tif | png) image2.(tif | png) [options]
 -verbose : Turns on verbose mode
@@ -41,6 +44,7 @@ a theatre has a field of view of around 25 degrees. Back row has a field of
 -output foo.ppm : Saves the difference image to foo.ppm
 
 Credits
+=======
 
 Hector Yee, project administrator and originator - hectorgon.blogspot.com
 Scott Corley, for png file IO code
@@ -49,6 +53,7 @@ Cairo Team for bugfixes
 Jim Tilander, Rewrote the IO to use FreeImage.
 
 Version History
+===============
 
 1.0   - Initial distribution
 1.0.1 - Fixed off by one convolution error and libpng interface to 1.2.8
