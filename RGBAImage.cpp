@@ -69,7 +69,7 @@ bool RGBAImage::WriteToFile(const char* filename)
 	const unsigned int* source = Data;
 	for( int y=0; y < Height; y++, source += Width )
 	{
-		unsigned int* scanline = (unsigned int*)FreeImage_GetScanLine(bitmap, Height - y - 1 );
+		unsigned int* scanline = reinterpret_cast<unsigned int*>(FreeImage_GetScanLine(bitmap, Height - y - 1));
 		memcpy(scanline, source, sizeof(source[0]) * Width);
 	}
 
@@ -114,7 +114,7 @@ RGBAImage* RGBAImage::ReadFromFile(const char* filename)
 	unsigned int* dest = result->Data;
 	for( int y=0; y < h; y++, dest += w )
 	{
-		const unsigned int* scanline = (const unsigned int*)FreeImage_GetScanLine(freeImage, h - y - 1 );
+		const unsigned int* scanline = reinterpret_cast<const unsigned int*>(FreeImage_GetScanLine(freeImage, h - y - 1));
 		memcpy(dest, scanline, sizeof(dest[0]) * w);
 	}
 

@@ -79,7 +79,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 	for (int i = 1; i < argc; i++) {
 		if (strcmp(argv[i], "-fov") == 0) {
 			if (++i < argc) {
-				FieldOfView = (float) atof(argv[i]);
+				FieldOfView = static_cast<float>(atof(argv[i]));
 			}
 		} else if (strcmp(argv[i], "-verbose") == 0) {
 			Verbose = true;
@@ -89,21 +89,21 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			}
 		} else if (strcmp(argv[i], "-gamma") == 0) {
 			if (++i < argc) {
-				Gamma = (float) atof(argv[i]);
+				Gamma = static_cast<float>(atof(argv[i]));
 			}
 		} else if (strcmp(argv[i], "-luminance") == 0) {
 			if (++i < argc) {
-				Luminance = (float) atof(argv[i]);
+				Luminance = static_cast<float>(atof(argv[i]));
 			}
 		} else if (strcmp(argv[i], "-luminanceonly") == 0) {
 			LuminanceOnly = true;
 		} else if (strcmp(argv[i], "-colorfactor") == 0) {
 			if (++i < argc) {
-				ColorFactor = (float) atof(argv[i]);
+				ColorFactor = static_cast<float>(atof(argv[i]));
 			}
 		} else if (strcmp(argv[i], "-downsample") == 0) {
 			if (++i < argc) {
-				DownSample = (int) atoi(argv[i]);
+				DownSample = static_cast<int>(atoi(argv[i]));
 			}
 		} else if (strcmp(argv[i], "-output") == 0) {
 			if (++i < argc) {
