@@ -56,8 +56,8 @@ CompareArgs::CompareArgs()
 	Gamma = 2.2f;
 	ThresholdPixels = 100;
 	Luminance = 100.0f;
-   ColorFactor = 1.0f;
-   DownSample = 0;
+	ColorFactor = 1.0f;
+	DownSample = 0;
 }
 
 CompareArgs::~CompareArgs()
@@ -131,19 +131,19 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		ErrorStr = "FAIL: Not enough image files specified\n";
 		return false;
 	}
-   for (int i = 0; i < DownSample; i++) {
-      if (Verbose) printf("Downsampling by %d\n", 1 << (i+1));
-      RGBAImage *tmp = ImgA->DownSample();
-      if (tmp) {
-         delete ImgA;
-         ImgA = tmp;
-      }
-      tmp = ImgB->DownSample();
-      if (tmp) {
-         delete ImgB;
-         ImgB = tmp;
-      }
-   }
+	for (int i = 0; i < DownSample; i++) {
+		if (Verbose) printf("Downsampling by %d\n", 1 << (i+1));
+		RGBAImage *tmp = ImgA->DownSample();
+		if (tmp) {
+			delete ImgA;
+			ImgA = tmp;
+		}
+		tmp = ImgB->DownSample();
+		if (tmp) {
+			delete ImgB;
+			ImgB = tmp;
+		}
+	}
 	if(output_file_name) {
 		ImgDiff = new RGBAImage(ImgA->Get_Width(), ImgA->Get_Height(), output_file_name);
 	}

@@ -34,28 +34,27 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 
 float tvi(float adaptation_luminance)
 {
-      // returns the threshold luminance given the adaptation luminance
-      // units are candelas per meter squared
-
-      float log_a, r, result;
-      log_a = log10f(adaptation_luminance);
-
-      if (log_a < -3.94f) {
-            r = -2.86f;
-      } else if (log_a < -1.44f) {
-            r = powf(0.405f * log_a + 1.6f , 2.18f) - 2.86f;
-      } else if (log_a < -0.0184f) {
-            r = log_a - 0.395f;
-      } else if (log_a < 1.9f) {
-            r = powf(0.249f * log_a + 0.65f, 2.7f) - 0.72f;
-      } else {
-            r = log_a - 1.255f;
-      }
-
-      result = powf(10.0f , r);
-
-      return result;
-
+	// returns the threshold luminance given the adaptation luminance
+	// units are candelas per meter squared
+	
+	float log_a, r, result;
+	log_a = log10f(adaptation_luminance);
+	
+	if (log_a < -3.94f) {
+		r = -2.86f;
+	} else if (log_a < -1.44f) {
+		r = powf(0.405f * log_a + 1.6f , 2.18f) - 2.86f;
+	} else if (log_a < -0.0184f) {
+		r = log_a - 0.395f;
+	} else if (log_a < 1.9f) {
+		r = powf(0.249f * log_a + 0.65f, 2.7f) - 0.72f;
+	} else {
+		r = log_a - 1.255f;
+	}
+	
+	result = powf(10.0f , r);
+	
+	return result;
 }
 
 // computes the contrast sensitivity function (Barten SPIE 1989)
@@ -78,12 +77,12 @@ float csf(float cpd, float lum)
 */
 float mask(float contrast)
 {
-      float a, b, result;
-      a = powf(392.498f * contrast,  0.7f);
-      b = powf(0.0153f * a, 4.0f);
-      result = powf(1.0f + b, 0.25f);
+	float a, b, result;
+	a = powf(392.498f * contrast, 0.7f);
+	b = powf(0.0153f * a, 4.0f);
+	result = powf(1.0f + b, 0.25f);
 
-      return result;
+	return result;
 }
 
 // convert Adobe RGB (1998) with reference white D65 to XYZ
@@ -104,7 +103,7 @@ void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
 	if (xw < 0) {
 		AdobeRGBToXYZ(1, 1, 1, xw, yw, zw);
 	}
-	const float epsilon  = 216.0f / 24389.0f;
+	const float epsilon = 216.0f / 24389.0f;
 	const float kappa = 24389.0f / 27.0f;
 	float f[3];
 	float r[3];
@@ -135,8 +134,8 @@ bool Yee_Compare(CompareArgs &args)
 	bool identical = true;
 	for (unsigned int i = 0; i < dim; i++) {
 		if (args.ImgA->Get(i) != args.ImgB->Get(i)) {
-		  identical = false;
-		  break;
+			identical = false;
+			break;
 		}
 	}
 	if (identical) {
@@ -212,68 +211,68 @@ bool Yee_Compare(CompareArgs &args)
 	unsigned int pixels_failed = 0;
 	#pragma omp parallel for reduction(+:pixels_failed)
 	for (unsigned int y = 0; y < h; y++) {
-	  for (unsigned int x = 0; x < w; x++) {
-		int index = x + y * w;
-		float contrast[MAX_PYR_LEVELS - 2];
-		float sum_contrast = 0;
-		for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
-			float n1 = fabsf(la->Get_Value(x,y,i) - la->Get_Value(x,y,i + 1));
-			float n2 = fabsf(lb->Get_Value(x,y,i) - lb->Get_Value(x,y,i + 1));
-			float numerator = (n1 > n2) ? n1 : n2;
-			float d1 = fabsf(la->Get_Value(x,y,i+2));
-			float d2 = fabsf(lb->Get_Value(x,y,i+2));
-			float denominator = (d1 > d2) ? d1 : d2;
-			if (denominator < 1e-5f) denominator = 1e-5f;
-			contrast[i] = numerator / denominator;
-			sum_contrast += contrast[i];
-		}
-		if (sum_contrast < 1e-5) sum_contrast = 1e-5f;
-		float F_mask[MAX_PYR_LEVELS - 2];
-		float adapt = la->Get_Value(x,y,adaptation_level) + lb->Get_Value(x,y,adaptation_level);
-		adapt *= 0.5f;
-		if (adapt < 1e-5) adapt = 1e-5f;
-		for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
-			F_mask[i] = mask(contrast[i] * csf(cpd[i], adapt));
-		}
-		float factor = 0;
-		for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
-			factor += contrast[i] * F_freq[i] * F_mask[i] / sum_contrast;
-		}
-		if (factor < 1) factor = 1;
-		if (factor > 10) factor = 10;
-		float delta = fabsf(la->Get_Value(x,y,0) - lb->Get_Value(x,y,0));
-		bool pass = true;
-		// pure luminance test
-		if (delta > factor * tvi(adapt)) {
-			pass = false;
-		} else if (!args.LuminanceOnly) {
-			// CIE delta E test with modifications
-                        float color_scale = args.ColorFactor;
-			// ramp down the color test in scotopic regions
-			if (adapt < 10.0f) {
-                          // Don't do color test at all.
-                          color_scale = 0.0;
+		for (unsigned int x = 0; x < w; x++) {
+			int index = x + y * w;
+			float contrast[MAX_PYR_LEVELS - 2];
+			float sum_contrast = 0;
+			for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
+				float n1 = fabsf(la->Get_Value(x,y,i) - la->Get_Value(x,y,i + 1));
+				float n2 = fabsf(lb->Get_Value(x,y,i) - lb->Get_Value(x,y,i + 1));
+				float numerator = (n1 > n2) ? n1 : n2;
+				float d1 = fabsf(la->Get_Value(x,y,i+2));
+				float d2 = fabsf(lb->Get_Value(x,y,i+2));
+				float denominator = (d1 > d2) ? d1 : d2;
+				if (denominator < 1e-5f) denominator = 1e-5f;
+				contrast[i] = numerator / denominator;
+				sum_contrast += contrast[i];
 			}
-			float da = aA[index] - bA[index];
-			float db = aB[index] - bB[index];
-			da = da * da;
-			db = db * db;
-			float delta_e = (da + db) * color_scale;
-			if (delta_e > factor) {
+			if (sum_contrast < 1e-5) sum_contrast = 1e-5f;
+			float F_mask[MAX_PYR_LEVELS - 2];
+			float adapt = la->Get_Value(x,y,adaptation_level) + lb->Get_Value(x,y,adaptation_level);
+			adapt *= 0.5f;
+			if (adapt < 1e-5) adapt = 1e-5f;
+			for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
+				F_mask[i] = mask(contrast[i] * csf(cpd[i], adapt));
+			}
+			float factor = 0;
+			for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
+				factor += contrast[i] * F_freq[i] * F_mask[i] / sum_contrast;
+			}
+			if (factor < 1) factor = 1;
+			if (factor > 10) factor = 10;
+			float delta = fabsf(la->Get_Value(x,y,0) - lb->Get_Value(x,y,0));
+			bool pass = true;
+			// pure luminance test
+			if (delta > factor * tvi(adapt)) {
 				pass = false;
+			} else if (!args.LuminanceOnly) {
+				// CIE delta E test with modifications
+				float color_scale = args.ColorFactor;
+				// ramp down the color test in scotopic regions
+				if (adapt < 10.0f) {
+					// Don't do color test at all.
+					color_scale = 0.0;
+				}
+				float da = aA[index] - bA[index];
+				float db = aB[index] - bB[index];
+				da = da * da;
+				db = db * db;
+				float delta_e = (da + db) * color_scale;
+				if (delta_e > factor) {
+					pass = false;
+				}
+			}
+			if (!pass) {
+				pixels_failed++;
+				if (args.ImgDiff) {
+					args.ImgDiff->Set(255, 0, 0, 255, index);
+				}
+			} else {
+				if (args.ImgDiff) {
+					args.ImgDiff->Set(0, 0, 0, 255, index);
+				}
 			}
 		}
-		if (!pass) {
-			pixels_failed++;
-			if (args.ImgDiff) {
-				args.ImgDiff->Set(255, 0, 0, 255, index);
-			}
-		} else {
-			if (args.ImgDiff) {
-				args.ImgDiff->Set(0, 0, 0, 255, index);
-			}
-		}
-	  }
 	}
 
 	if (aX) delete[] aX;
@@ -294,7 +293,7 @@ bool Yee_Compare(CompareArgs &args)
 	char different[100];
 	sprintf(different, "%d pixels are different\n", pixels_failed);
 
-        // Always output image difference if requested.
+	// Always output image difference if requested.
 	if (args.ImgDiff) {
 		if (args.ImgDiff->WriteToFile(args.ImgDiff->Get_Name().c_str())) {
 			args.ErrorStr += "Wrote difference image to ";
@@ -309,7 +308,7 @@ bool Yee_Compare(CompareArgs &args)
 
 	if (pixels_failed < args.ThresholdPixels) {
 		args.ErrorStr = "Images are perceptually indistinguishable\n";
-                args.ErrorStr += different;
+		args.ErrorStr += different;
 		return true;
 	}
 
