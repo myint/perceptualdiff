@@ -41,7 +41,7 @@ if(DIFF_USE_OPENMP)
   endif()
 endif()
 
-# Compiler warnings
+# Compiler options
 if(UNIX)
 	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -Wextra -ansi -pedantic -Wcast-qual -Wpointer-arith -Winit-self -Wswitch-default -Wmissing-include-dirs -Wold-style-cast -Wnon-virtual-dtor")
 endif()
@@ -77,7 +77,6 @@ set(CPACK_SOURCE_IGNORE_FILES
 "^${PROJECT_SOURCE_DIR}/CTestTestfile.cmake"
 "^${PROJECT_SOURCE_DIR}/Makefile"
 "^${PROJECT_SOURCE_DIR}/_CPack_Packages"
-"^${PROJECT_SOURCE_DIR}/test/"
 "^${PROJECT_SOURCE_DIR}/cppcheck.bash"
 "^${PROJECT_SOURCE_DIR}/cmake_install.cmake"
 "^${PROJECT_SOURCE_DIR}/install_manifest.txt"
