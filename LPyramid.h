@@ -22,7 +22,7 @@ class LPyramid
 {
 public:
 	LPyramid(float *image, int width, int height);
-	virtual ~LPyramid();
+	~LPyramid();
 	float Get_Value(int x, int y, int level) const;
 private:
 	float *Copy(float *img);
