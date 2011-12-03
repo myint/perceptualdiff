@@ -83,6 +83,7 @@ set(CPACK_SOURCE_IGNORE_FILES
 "^${PROJECT_SOURCE_DIR}/install_manifest.txt"
 "^${PROJECT_SOURCE_DIR}/perceptualdiff"
 "^${PROJECT_SOURCE_DIR}/PerceptualDiff-.*"
+"^${PROJECT_SOURCE_DIR}/Testing"
 )
 include(CPack)
 
