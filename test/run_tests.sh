@@ -25,6 +25,9 @@ pdiffBinary=../perceptualdiff
 totalTests=0
 numTestsFailed=0
 
+# Change to test directory
+cd "$(dirname $0)"
+
 # Run all tests.
 while read expectedResult image1 image2 ; do
 	if $pdiffBinary -verbose $image1 $image2 | grep -q "^$expectedResult" ; then
