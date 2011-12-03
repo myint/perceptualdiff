@@ -1,0 +1,18 @@
+#!/bin/bash
+#
+# Run tests with coverage reporting enabled.
+
+export CXXFLAGS='-coverage'
+export LDFLAGS='-coverage'
+
+rm -f CMakeCache.txt
+rm -rf CMakeFiles
+
+cmake DIFF_USE_COMPILER_OPTIMIZATIONS=FALSE DIFF_USE_COMPILER_OPTIMIZATIONS=FALSE .
+
+make check
+
+# Create HTML report
+lcov --directory='CMakeFiles/perceptualdiff.dir' --output-file='lcov_tmp.info' --capture
+lcov --output-file='lcov.info' --extract 'lcov_tmp.info' "$(pwd)/*"
+genhtml --output-directory='coverage_output' lcov.info

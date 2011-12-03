@@ -34,6 +34,7 @@ if(FREEIMAGE_FOUND)
 endif(FREEIMAGE_FOUND)
 
 option(DIFF_USE_OPENMP "Enable parallel processing via OpenMP." TRUE)
+option(DIFF_USE_COMPILER_OPTIMIZATIONS "Enable compiler optimizations." TRUE)
 
 if(DIFF_USE_OPENMP)
   if(CMAKE_COMPILER_IS_GNUCXX)
@@ -43,7 +44,10 @@ endif()
 
 # Compiler options
 if(UNIX)
-	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -Wextra -ansi -pedantic -Wcast-qual -Wpointer-arith -Winit-self -Wswitch-default -Wmissing-include-dirs -Wold-style-cast -Wnon-virtual-dtor")
+  if(DIFF_USE_COMPILER_OPTIMIZATIONS)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+  endif()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra -ansi -pedantic -Wcast-qual -Wpointer-arith -Winit-self -Wswitch-default -Wmissing-include-dirs -Wold-style-cast -Wnon-virtual-dtor")
 endif()
 
 #
