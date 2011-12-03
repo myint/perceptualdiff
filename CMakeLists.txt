@@ -85,3 +85,9 @@ set(CPACK_SOURCE_IGNORE_FILES
 "^${PROJECT_SOURCE_DIR}/PerceptualDiff-.*"
 )
 include(CPack)
+
+# Tests
+enable_testing()
+add_test(run_tests.bash, "test/run_tests.bash")
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
+                  DEPENDS "perceptualdiff")
