@@ -33,6 +33,14 @@ IF(FREEIMAGE_FOUND)
   TARGET_LINK_LIBRARIES(perceptualdiff ${FREEIMAGE_LIBRARY})
 ENDIF(FREEIMAGE_FOUND)
 
+option(DIFF_USE_OPENMP "Enable parallel processing via OpenMP." FALSE)
+
+if(DIFF_USE_OPENMP)
+  if(CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp -O3")
+  endif()
+endif()
+
 #
 # Packing stuff
 #
