@@ -40,7 +40,7 @@ LPyramid::LPyramid(float *image, int width, int height) :
 LPyramid::~LPyramid()
 {
 	for (int i=0; i<MAX_PYR_LEVELS; i++) {
-		if (Levels[i]) delete Levels[i];
+		if (Levels[i]) delete[] Levels[i];
 	}
 }
 
