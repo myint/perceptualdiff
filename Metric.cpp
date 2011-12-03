@@ -30,14 +30,14 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 * threshold of visibility in cd per m^2
 * TVI means Threshold vs Intensity function
 * This version comes from Ward Larson Siggraph 1997
-*/ 
+*/
 
 float tvi(float adaptation_luminance)
 {
       // returns the threshold luminance given the adaptation luminance
       // units are candelas per meter squared
 
-      float log_a, r, result; 
+      float log_a, r, result;
       log_a = log10f(adaptation_luminance);
 
       if (log_a < -3.94f) {
@@ -52,24 +52,24 @@ float tvi(float adaptation_luminance)
             r = log_a - 1.255f;
       }
 
-      result = powf(10.0f , r); 
+      result = powf(10.0f , r);
 
       return result;
 
-} 
+}
 
 // computes the contrast sensitivity function (Barten SPIE 1989)
 // given the cycles per degree (cpd) and luminance (lum)
 float csf(float cpd, float lum)
 {
-	float a, b, result; 
-	
+	float a, b, result;
+
 	a = 440.0f * powf((1.0f + 0.7f / lum), -0.2f);
 	b = 0.3f * powf((1.0f + 100.0f / lum), 0.15f);
-		
-	result = a * cpd * expf(-b * cpd) * sqrtf(1.0f + 0.06f * expf(b * cpd)); 
-	
-	return result;	
+
+	result = a * cpd * expf(-b * cpd) * sqrtf(1.0f + 0.06f * expf(b * cpd));
+
+	return result;
 }
 
 /*
@@ -81,10 +81,10 @@ float mask(float contrast)
       float a, b, result;
       a = powf(392.498f * contrast,  0.7f);
       b = powf(0.0153f * a, 4.0f);
-      result = powf(1.0f + b, 0.25f); 
+      result = powf(1.0f + b, 0.25f);
 
       return result;
-} 
+}
 
 // convert Adobe RGB (1998) with reference white D65 to XYZ
 void AdobeRGBToXYZ(float r, float g, float b, float &x, float &y, float &z)
@@ -130,7 +130,7 @@ bool Yee_Compare(CompareArgs &args)
 		args.ErrorStr = "Image dimensions do not match\n";
 		return false;
 	}
-	
+
 	const unsigned int dim = args.ImgA->Get_Width() * args.ImgA->Get_Height();
 	bool identical = true;
 	for (unsigned int i = 0; i < dim; i++) {
@@ -143,7 +143,7 @@ bool Yee_Compare(CompareArgs &args)
 		args.ErrorStr = "Images are binary identical\n";
 		return true;
 	}
-	
+
 	// assuming colorspaces are in Adobe RGB (1998) convert to XYZ
 	float *aX = new float[dim];
 	float *aY = new float[dim];
@@ -153,14 +153,14 @@ bool Yee_Compare(CompareArgs &args)
 	float *bZ = new float[dim];
 	float *aLum = new float[dim];
 	float *bLum = new float[dim];
-	
+
 	float *aA = new float[dim];
 	float *bA = new float[dim];
 	float *aB = new float[dim];
 	float *bB = new float[dim];
 
 	if (args.Verbose) printf("Converting RGB to XYZ\n");
-	
+
 	const unsigned int w = args.ImgA->Get_Width();
 	const unsigned int h = args.ImgA->Get_Height();
 	#pragma omp parallel for
@@ -170,29 +170,29 @@ bool Yee_Compare(CompareArgs &args)
 			const unsigned int i = x + y * w;
 			r = powf(args.ImgA->Get_Red(i) / 255.0f, args.Gamma);
 			g = powf(args.ImgA->Get_Green(i) / 255.0f, args.Gamma);
-			b = powf(args.ImgA->Get_Blue(i) / 255.0f, args.Gamma);						
-			AdobeRGBToXYZ(r,g,b,aX[i],aY[i],aZ[i]);			
+			b = powf(args.ImgA->Get_Blue(i) / 255.0f, args.Gamma);
+			AdobeRGBToXYZ(r,g,b,aX[i],aY[i],aZ[i]);
 			XYZToLAB(aX[i], aY[i], aZ[i], l, aA[i], aB[i]);
 			r = powf(args.ImgB->Get_Red(i) / 255.0f, args.Gamma);
 			g = powf(args.ImgB->Get_Green(i) / 255.0f, args.Gamma);
-			b = powf(args.ImgB->Get_Blue(i) / 255.0f, args.Gamma);						
+			b = powf(args.ImgB->Get_Blue(i) / 255.0f, args.Gamma);
 			AdobeRGBToXYZ(r,g,b,bX[i],bY[i],bZ[i]);
 			XYZToLAB(bX[i], bY[i], bZ[i], l, bA[i], bB[i]);
 			aLum[i] = aY[i] * args.Luminance;
 			bLum[i] = bY[i] * args.Luminance;
 		}
 	}
-	
+
 	if (args.Verbose) printf("Constructing Laplacian Pyramids\n");
-	
+
 	LPyramid *la = new LPyramid(aLum, w, h);
 	LPyramid *lb = new LPyramid(bLum, w, h);
-	
+
 	float num_one_degree_pixels = (float) (2 * tan( args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI);
 	float pixels_per_degree = w / num_one_degree_pixels;
-	
+
 	if (args.Verbose) printf("Performing test\n");
-	
+
 	float num_pixels = 1;
 	unsigned int adaptation_level = 0;
 	for (unsigned int i = 0; i < MAX_PYR_LEVELS; i++) {
@@ -200,15 +200,15 @@ bool Yee_Compare(CompareArgs &args)
 		if (num_pixels > num_one_degree_pixels) break;
 		num_pixels *= 2;
 	}
-	
+
 	float cpd[MAX_PYR_LEVELS];
 	cpd[0] = 0.5f * pixels_per_degree;
 	for (unsigned int i = 1; i < MAX_PYR_LEVELS; i++) cpd[i] = 0.5f * cpd[i - 1];
 	float csf_max = csf(3.248f, 100.0f);
-	
+
 	float F_freq[MAX_PYR_LEVELS - 2];
 	for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) F_freq[i] = csf_max / csf( cpd[i], 100.0f);
-	
+
 	unsigned int pixels_failed = 0;
 	#pragma omp parallel for reduction(+:pixels_failed)
 	for (unsigned int y = 0; y < h; y++) {
@@ -233,7 +233,7 @@ bool Yee_Compare(CompareArgs &args)
 		adapt *= 0.5f;
 		if (adapt < 1e-5) adapt = 1e-5f;
 		for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
-			F_mask[i] = mask(contrast[i] * csf(cpd[i], adapt)); 
+			F_mask[i] = mask(contrast[i] * csf(cpd[i], adapt));
 		}
 		float factor = 0;
 		for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
@@ -275,7 +275,7 @@ bool Yee_Compare(CompareArgs &args)
 		}
 	  }
 	}
-	
+
 	if (aX) delete[] aX;
 	if (aY) delete[] aY;
 	if (aZ) delete[] aZ;
@@ -312,9 +312,9 @@ bool Yee_Compare(CompareArgs &args)
                 args.ErrorStr += different;
 		return true;
 	}
-	
+
 	args.ErrorStr = "Images are visibly different\n";
 	args.ErrorStr += different;
-	
+
 	return false;
 }

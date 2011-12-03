@@ -71,16 +71,15 @@ bool RGBAImage::WriteToFile(const char* filename)
 	{
 		unsigned int* scanline = (unsigned int*)FreeImage_GetScanLine(bitmap, Height - y - 1 );
 		memcpy(scanline, source, sizeof(source[0]) * Width);
-	}	
-	
+	}
+
 	FreeImage_SetTransparent(bitmap, false);
 	FIBITMAP* converted = FreeImage_ConvertTo24Bits(bitmap);
-	
-	
+
 	const bool result = !!FreeImage_Save(fileType, converted, filename);
 	if(!result)
 		printf("Failed to save to %s\n", filename);
-	
+
 	FreeImage_Unload(converted);
 	FreeImage_Unload(bitmap);
 	return result;
@@ -94,7 +93,7 @@ RGBAImage* RGBAImage::ReadFromFile(const char* filename)
 		printf("Unknown filetype %s\n", filename);
 		return 0;
 	}
-	
+
 	FIBITMAP* freeImage = 0;
 	if(FIBITMAP* temporary = FreeImage_Load(fileType, filename, 0))
 	{
@@ -117,7 +116,7 @@ RGBAImage* RGBAImage::ReadFromFile(const char* filename)
 	{
 		const unsigned int* scanline = (const unsigned int*)FreeImage_GetScanLine(freeImage, h - y - 1 );
 		memcpy(dest, scanline, sizeof(dest[0]) * w);
-	}	
+	}
 
 	FreeImage_Unload(freeImage);
 	return result;

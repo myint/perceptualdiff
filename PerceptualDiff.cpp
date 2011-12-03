@@ -28,14 +28,14 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 int main(int argc, char **argv)
 {
 	CompareArgs args;
-	
+
 	if (!args.Parse_Args(argc, argv)) {
 		printf("%s", args.ErrorStr.c_str());
 		return -1;
 	} else {
 		if (args.Verbose) args.Print_Args();
 	}
-	
+
 	const bool passed = Yee_Compare(args);
 	if (passed) {
 		if(args.Verbose)

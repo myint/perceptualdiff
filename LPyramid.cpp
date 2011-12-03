@@ -49,7 +49,7 @@ float *LPyramid::Copy(float *img)
 	int max = Width * Height;
 	float *out = new float[max];
 	for (int i = 0; i < max; i++) out[i] = img[i];
-	
+
 	return out;
 }
 
@@ -71,7 +71,7 @@ void LPyramid::Convolve(float *a, float *b)
 					if (nx>=Width) nx=2*Width-nx-1;
 					if (ny>=Height) ny=2*Height-ny-1;
 					a[index] += Kernel[i+2] * Kernel[j+2] * b[ny * Width + nx];
-				} 
+				}
 			}
 		}
 	}
