@@ -87,6 +87,9 @@ set(CPACK_SOURCE_IGNORE_FILES
 "^${PROJECT_SOURCE_DIR}/perceptualdiff"
 "^${PROJECT_SOURCE_DIR}/PerceptualDiff-.*"
 "^${PROJECT_SOURCE_DIR}/Testing"
+"^${PROJECT_SOURCE_DIR}/lcov.info"
+"^${PROJECT_SOURCE_DIR}/lcov_tmp.info"
+"^${PROJECT_SOURCE_DIR}/coverage_output"
 )
 include(CPack)
 

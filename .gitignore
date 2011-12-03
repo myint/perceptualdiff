@@ -10,3 +10,7 @@ install_manifest.txt
 perceptualdiff
 Testing
 PerceptualDiff-*
+lcov.info
+lcov_tmp.info
+coverage_output
+.*.swp
