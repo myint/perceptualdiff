@@ -23,8 +23,8 @@ class LPyramid
 public:	
 	LPyramid(float *image, int width, int height);
 	virtual ~LPyramid();
-	float Get_Value(int x, int y, int level);
-protected:
+	float Get_Value(int x, int y, int level) const;
+private:
 	float *Copy(float *img);
 	void Convolve(float *a, float *b);
 	

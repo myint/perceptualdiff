@@ -77,7 +77,7 @@ void LPyramid::Convolve(float *a, float *b)
 	}
 }
 
-float LPyramid::Get_Value(int x, int y, int level)
+float LPyramid::Get_Value(int x, int y, int level) const
 {
 	int index = x + y * Width;
 	int l = level;
