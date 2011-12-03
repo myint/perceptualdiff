@@ -275,20 +275,20 @@ bool Yee_Compare(CompareArgs &args)
 		}
 	}
 
-	if (aX) delete[] aX;
-	if (aY) delete[] aY;
-	if (aZ) delete[] aZ;
-	if (bX) delete[] bX;
-	if (bY) delete[] bY;
-	if (bZ) delete[] bZ;
-	if (aLum) delete[] aLum;
-	if (bLum) delete[] bLum;
-	if (la) delete la;
-	if (lb) delete lb;
-	if (aA) delete[] aA;
-	if (bA) delete[] bA;
-	if (aB) delete[] aB;
-	if (bB) delete[] bB;
+	delete[] aX;
+	delete[] aY;
+	delete[] aZ;
+	delete[] bX;
+	delete[] bY;
+	delete[] bZ;
+	delete[] aLum;
+	delete[] bLum;
+	delete la;
+	delete lb;
+	delete[] aA;
+	delete[] bA;
+	delete[] aB;
+	delete[] bB;
 
 	char different[100];
 	sprintf(different, "%d pixels are different\n", pixels_failed);

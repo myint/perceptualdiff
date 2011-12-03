@@ -62,9 +62,9 @@ CompareArgs::CompareArgs()
 
 CompareArgs::~CompareArgs()
 {
-	if (ImgA) delete ImgA;
-	if (ImgB) delete ImgB;
-	if (ImgDiff) delete ImgDiff;
+	delete ImgA;
+	delete ImgB;
+	delete ImgDiff;
 }
 
 bool CompareArgs::Parse_Args(int argc, char **argv)
