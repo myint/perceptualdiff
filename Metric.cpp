@@ -187,7 +187,7 @@ bool Yee_Compare(CompareArgs &args)
 	LPyramid *la = new LPyramid(aLum, w, h);
 	LPyramid *lb = new LPyramid(bLum, w, h);
 
-	float num_one_degree_pixels = static_cast<float>((2 * tan( args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI));
+	float num_one_degree_pixels = 2 * tan(args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI;
 	float pixels_per_degree = w / num_one_degree_pixels;
 
 	if (args.Verbose) printf("Performing test\n");
