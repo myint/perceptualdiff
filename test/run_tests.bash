@@ -10,10 +10,10 @@
 # Edit the following lines to add additional tests.
 function all_tests {
 cat <<EOF
-FAIL	Bug1102605_ref.tif	Bug1102605.tif
-PASS	Bug1471457_ref.tif	Bug1471457.tif
-PASS	cam_mb_ref.tif		cam_mb.tif
-FAIL	fish2.png			fish1.png
+FAIL Bug1102605_ref.tif Bug1102605.tif
+PASS Bug1471457_ref.tif Bug1471457.tif
+PASS cam_mb_ref.tif cam_mb.tif
+FAIL fish2.png fish1.png
 EOF
 }
 
