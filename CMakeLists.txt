@@ -2,36 +2,36 @@ PROJECT (PerceptualDiff)
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
 
-SET(DIFF_SRC PerceptualDiff.cpp LPyramid.cpp RGBAImage.cpp
+set(DIFF_SRC PerceptualDiff.cpp LPyramid.cpp RGBAImage.cpp
 CompareArgs.cpp Metric.cpp)
 
-ADD_EXECUTABLE (perceptualdiff ${DIFF_SRC})
+add_executable (perceptualdiff ${DIFF_SRC})
 
-INSTALL(TARGETS perceptualdiff DESTINATION bin)
+install(TARGETS perceptualdiff DESTINATION bin)
 
 # look for freeimage
-FIND_PATH(FREEIMAGE_INCLUDE_DIR FreeImage.h
+find_path(FREEIMAGE_INCLUDE_DIR FreeImage.h
   /usr/local/include
   /usr/include
   /opt/local/include
 )
-FIND_LIBRARY(FREEIMAGE_LIBRARY freeimage
+find_library(FREEIMAGE_LIBRARY freeimage
   /usr/lib
   /usr/local/lib
   /opt/local/lib
 )
 
-IF(FREEIMAGE_INCLUDE_DIR)
-  IF(FREEIMAGE_LIBRARY)
-    SET( FREEIMAGE_FOUND "YES" )
-    SET( FREEIMAGE_LIBRARIES ${FREEIMAGE_LIBRARY} )
-  ENDIF(FREEIMAGE_LIBRARY)
-ENDIF(FREEIMAGE_INCLUDE_DIR)
+if(FREEIMAGE_INCLUDE_DIR)
+  if(FREEIMAGE_LIBRARY)
+    set(FREEIMAGE_FOUND "YES")
+    set(FREEIMAGE_LIBRARIES ${FREEIMAGE_LIBRARY})
+  endif(FREEIMAGE_LIBRARY)
+endif(FREEIMAGE_INCLUDE_DIR)
 
-IF(FREEIMAGE_FOUND)
-  INCLUDE_DIRECTORIES(${FREEIMAGE_INCLUDE_DIR})
-  TARGET_LINK_LIBRARIES(perceptualdiff ${FREEIMAGE_LIBRARY})
-ENDIF(FREEIMAGE_FOUND)
+if(FREEIMAGE_FOUND)
+  include_directories(${FREEIMAGE_INCLUDE_DIR})
+  target_link_libraries(perceptualdiff ${FREEIMAGE_LIBRARY})
+endif(FREEIMAGE_FOUND)
 
 option(DIFF_USE_OPENMP "Enable parallel processing via OpenMP." TRUE)
 
@@ -67,16 +67,21 @@ set(CPACK_SOURCE_GENERATOR TGZ)
 # from source tarball.
 set(CPACK_SOURCE_IGNORE_FILES
 "~$"
-"\\\\.cvsignore$"
+"/\\\\.gitignore$"
+"/\\\\..*\\\\.swp$"
+"^${PROJECT_SOURCE_DIR}/\\\\.git/"
 "^${PROJECT_SOURCE_DIR}/CMakeFiles/"
 "^${PROJECT_SOURCE_DIR}/CMakeCache.txt"
 "^${PROJECT_SOURCE_DIR}/CPackSourceConfig.cmake"
 "^${PROJECT_SOURCE_DIR}/CPackConfig.cmake"
+"^${PROJECT_SOURCE_DIR}/CTestTestfile.cmake"
 "^${PROJECT_SOURCE_DIR}/Makefile"
 "^${PROJECT_SOURCE_DIR}/_CPack_Packages"
 "^${PROJECT_SOURCE_DIR}/test/"
+"^${PROJECT_SOURCE_DIR}/cppcheck.bash"
 "^${PROJECT_SOURCE_DIR}/cmake_install.cmake"
+"^${PROJECT_SOURCE_DIR}/install_manifest.txt"
+"^${PROJECT_SOURCE_DIR}/perceptualdiff"
+"^${PROJECT_SOURCE_DIR}/PerceptualDiff-.*"
 )
 include(CPack)
-
-
