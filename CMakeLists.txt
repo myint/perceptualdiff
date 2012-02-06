@@ -9,29 +9,12 @@ add_executable (perceptualdiff ${DIFF_SRC})
 
 install(TARGETS perceptualdiff DESTINATION bin)
 
-# look for freeimage
-find_path(FREEIMAGE_INCLUDE_DIR FreeImage.h
-  /usr/local/include
-  /usr/include
-  /opt/local/include
-)
-find_library(FREEIMAGE_LIBRARY freeimage
-  /usr/lib
-  /usr/local/lib
-  /opt/local/lib
-)
+SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
-if(FREEIMAGE_INCLUDE_DIR)
-  if(FREEIMAGE_LIBRARY)
-    set(FREEIMAGE_FOUND "YES")
-    set(FREEIMAGE_LIBRARIES ${FREEIMAGE_LIBRARY})
-  endif(FREEIMAGE_LIBRARY)
-endif(FREEIMAGE_INCLUDE_DIR)
-
-if(FREEIMAGE_FOUND)
-  include_directories(${FREEIMAGE_INCLUDE_DIR})
-  target_link_libraries(perceptualdiff ${FREEIMAGE_LIBRARY})
-endif(FREEIMAGE_FOUND)
+SET(FREEIMAGE_FIND_REQUIRED, TRUE)
+FIND_PACKAGE(FreeImage)
+include_directories(${FREEIMAGE_INCLUDE_DIRS})
+target_link_libraries(perceptualdiff ${FREEIMAGE_LIBRARIES})
 
 option(DIFF_USE_OPENMP "Enable parallel processing via OpenMP." TRUE)
 option(DIFF_USE_COMPILER_OPTIMIZATIONS "Enable compiler optimizations." TRUE)
