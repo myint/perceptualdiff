@@ -17,12 +17,11 @@ See the GNU General Public License for more details in the file gpl.txt.
 Build Instructions
 ==================
 
-1. Download cross platform make from http://www.cmake.org
-2. Download freeimage from https://sourceforge.net/projects/freeimage
-3. Edit CMakeLists.txt to tell it where to find your free image build
-4. Type ``cmake .``
-5. Type ``make .``
-6. To specify the install directory, use make install DESTDIR="/home/me/mydist"
+#. Download cross platform make from http://www.cmake.org
+#. Download freeimage from https://sourceforge.net/projects/freeimage (mac: ``brew install freeimage``, ubuntu: ``apt-get install libfreeimage-dev``)
+#. Type ``cmake .``
+#. Type ``make .``
+#. To specify the install directory, use make install DESTDIR="/home/me/mydist"
 
 Usage
 =====
