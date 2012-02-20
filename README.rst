@@ -21,7 +21,7 @@ Build Instructions
 #. Download freeimage from https://sourceforge.net/projects/freeimage (mac: ``brew install freeimage``, ubuntu: ``apt-get install libfreeimage-dev``)
 #. Type ``cmake .``
 #. Type ``make .``
-#. To specify the install directory, use make install DESTDIR="/home/me/mydist"
+#. To specify the install directory, use ``make install DESTDIR="/home/me/mydist"``
 
 Usage
 =====
