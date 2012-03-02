@@ -1,8 +1,14 @@
 perceptualdiff - a program that compares two images using
 a perceptually based image metric.
+
 Copyright (C) 2006 Yangli Hector Yee
+
 yeehector@users.sourceforge.net
+
 http://pdiff.sourceforge.net
+
+`Build status <https://secure.travis-ci.org/myint/perceptualdiff>`
+.. image:: https://secure.travis-ci.org/myint/perceptualdiff.png
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
