@@ -7,7 +7,8 @@ yeehector@users.sourceforge.net
 
 http://pdiff.sourceforge.net
 
-`Build status <https://secure.travis-ci.org/myint/perceptualdiff>`
+Build status: https://secure.travis-ci.org/myint/perceptualdiff
+
 .. image:: https://secure.travis-ci.org/myint/perceptualdiff.png
 
 This program is free software; you can redistribute it and/or modify it
