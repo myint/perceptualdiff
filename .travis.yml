@@ -2,7 +2,7 @@ before_script:
   - sudo apt-get install cmake libfreeimage-dev cppcheck
 
 script:
-  - cppcheck .
+  - cppcheck --error-exitcode=2 .
   - cmake .
   - make
   - ./test/run_tests.bash
