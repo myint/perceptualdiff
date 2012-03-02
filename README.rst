@@ -2,7 +2,8 @@ perceptualdiff - a program that compares two images using
 a perceptually based image metric.
 
 .. |build_status| image:: https://secure.travis-ci.org/myint/perceptualdiff.png
-|build_status| https://secure.travis-ci.org/myint/perceptualdiff
+|build_status|
+https://secure.travis-ci.org/myint/perceptualdiff
 
 Copyright (C) 2006 Yangli Hector Yee
 
