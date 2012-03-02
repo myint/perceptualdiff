@@ -7,8 +7,8 @@ yeehector@users.sourceforge.net
 
 http://pdiff.sourceforge.net
 
-`|build_status| <https://secure.travis-ci.org/myint/perceptualdiff>`_
 .. |build_status| image:: https://secure.travis-ci.org/myint/perceptualdiff.png
+|build_status|
 
 This program is free software; you can redistribute it and/or modify it
 under the terms of the GNU General Public License as published by the
