@@ -1,1 +1,5 @@
-script: cmake .
+before_script: sudo apt-get install cmake libfreeimage-dev
+script:
+  - cmake .
+  - make
+  - ./test/run_tests.bash
