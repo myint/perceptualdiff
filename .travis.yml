@@ -1,5 +1,8 @@
-before_script: sudo apt-get install cmake libfreeimage-dev
+before_script:
+  - sudo apt-get install cmake libfreeimage-dev cppcheck
+
 script:
   - cmake .
   - make
+  - ./cppcheck.bash
   - ./test/run_tests.bash
