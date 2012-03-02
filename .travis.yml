@@ -2,7 +2,7 @@ before_script:
   - sudo apt-get install cmake libfreeimage-dev cppcheck
 
 script:
-  - cppcheck --enable=style .
+  - cppcheck .
   - cmake .
   - make
   - ./test/run_tests.bash
