@@ -1,6 +1,10 @@
 before_script:
   - sudo apt-get install cmake libfreeimage-dev cppcheck
 
+env:
+  - OMP_NUM_THREADS=1
+  - OMP_NUM_THREADS=4
+
 script:
   - cppcheck --error-exitcode=2 .
   - cmake .
