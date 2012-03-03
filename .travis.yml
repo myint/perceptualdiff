@@ -2,6 +2,7 @@ before_script:
   - sudo apt-get install cmake libfreeimage-dev cppcheck
 
 env:
+  -
   - OMP_NUM_THREADS=1
   - OMP_NUM_THREADS=4
 
