@@ -5,10 +5,10 @@ env:
   -
   - OMP_NUM_THREADS=1
   - OMP_NUM_THREADS=4
-  - CC=clang CXX=clang++ CMAKE_VERBOSE_MAKEFILE=TRUE
+  - CC=clang CXX=clang++
 
 script:
   - cppcheck --error-exitcode=2 .
   - cmake .
-  - make
+  - make VERBOSE=1
   - ./test/run_tests.bash
