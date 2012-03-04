@@ -6,7 +6,7 @@ env:
   -
   - OMP_NUM_THREADS=1
   - OMP_NUM_THREADS=4
-  - CC=clang CXX=clang++
+  - CC=clang CXX=clang++ CPATH="/usr/include/c++/4.5:${CPATH}"
 
 script:
   - cppcheck --error-exitcode=2 .
