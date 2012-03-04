@@ -38,7 +38,7 @@ public:
 		Height = h;
 		if (name) Name = name;
 		Data = new unsigned int[w * h];
-	};
+	}
 	~RGBAImage() { if (Data) delete[] Data; }
 	unsigned char Get_Red(unsigned int i) const { return (Data[i] & 0xFF); }
 	unsigned char Get_Green(unsigned int i) const { return ((Data[i]>>8) & 0xFF); }
