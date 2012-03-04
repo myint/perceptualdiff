@@ -1,5 +1,5 @@
 before_script:
-  - sudo apt-get --quiet=2 install cmake libfreeimage-dev cppcheck
+  - sudo apt-get --quiet=2 install cmake libfreeimage-dev cppcheck clang
 
 env:
   -
