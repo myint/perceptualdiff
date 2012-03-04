@@ -5,6 +5,7 @@ env:
   -
   - OMP_NUM_THREADS=1
   - OMP_NUM_THREADS=4
+  - CC=clang CXX=clang++
 
 script:
   - cppcheck --error-exitcode=2 .
