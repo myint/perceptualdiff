@@ -1,12 +1,12 @@
 before_script:
+  - ls '/usr/include/c++/4.5'
   - sudo apt-get --quiet=2 install cmake libfreeimage-dev cppcheck clang
-  - ls /usr/include/c++
 
 env:
   -
   - OMP_NUM_THREADS=1
   - OMP_NUM_THREADS=4
-  - CC=clang CXX=clang++ CMAKE_INCLUDE_PATH='/usr/include/c++/4.5'
+  - CC=clang CXX=clang++ CMAKE_CXX_FLAGS='-I/usr/include/c++/4.5'
 
 script:
   - cppcheck --error-exitcode=2 .
