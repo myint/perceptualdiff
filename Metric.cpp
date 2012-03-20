@@ -208,6 +208,7 @@ bool Yee_Compare(CompareArgs &args)
 	float F_freq[MAX_PYR_LEVELS - 2];
 	for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) F_freq[i] = csf_max / csf( cpd[i], 100.0f);
 
+	double error_sum = 0.0;
 	unsigned int pixels_failed = 0;
 	#pragma omp parallel for reduction(+:pixels_failed)
 	for (unsigned int y = 0; y < h; y++) {
@@ -241,11 +242,15 @@ bool Yee_Compare(CompareArgs &args)
 			if (factor < 1) factor = 1;
 			if (factor > 10) factor = 10;
 			float delta = fabsf(la->Get_Value(x,y,0) - lb->Get_Value(x,y,0));
+			error_sum += delta;
 			bool pass = true;
+
 			// pure luminance test
 			if (delta > factor * tvi(adapt)) {
 				pass = false;
-			} else if (!args.LuminanceOnly) {
+			}
+
+			if (!args.LuminanceOnly) {
 				// CIE delta E test with modifications
 				float color_scale = args.ColorFactor;
 				// ramp down the color test in scotopic regions
@@ -258,10 +263,12 @@ bool Yee_Compare(CompareArgs &args)
 				da = da * da;
 				db = db * db;
 				float delta_e = (da + db) * color_scale;
+				error_sum += delta_e;
 				if (delta_e > factor) {
 					pass = false;
 				}
 			}
+
 			if (!pass) {
 				pixels_failed++;
 				if (args.ImgDiff) {
@@ -290,6 +297,9 @@ bool Yee_Compare(CompareArgs &args)
 	delete[] aB;
 	delete[] bB;
 
+	char error_sum_buff[100];
+	sprintf(error_sum_buff, "%f error sum\n", error_sum);
+
 	char different[100];
 	sprintf(different, "%d pixels are different\n", pixels_failed);
 
@@ -314,6 +324,9 @@ bool Yee_Compare(CompareArgs &args)
 
 	args.ErrorStr = "Images are visibly different\n";
 	args.ErrorStr += different;
+	if (args.SumErrors) {
+		args.ErrorStr += error_sum_buff;
+	}
 
 	return false;
 }

@@ -39,6 +39,7 @@ static const char *usage =
 \t-luminanceonly : Only consider luminance; ignore chroma (color) in the comparison\n\
 \t-colorfactor   : How much of color to use, 0.0 to 1.0, 0.0 = ignore color.\n\
 \t-downsample    : How many powers of two to down sample the image.\n\
+\t-sum-errors    : Print a sum of the luminance and color differences.\n\
 \t-output o.ppm  : Write difference to the file o.ppm\n\
 \n\
 \n Note: Input or Output files can also be in the PNG or JPG format or any format\
@@ -52,6 +53,7 @@ CompareArgs::CompareArgs()
 	ImgDiff = NULL;
 	Verbose = false;
 	LuminanceOnly = false;
+	SumErrors = false;
 	FieldOfView = 45.0f;
 	Gamma = 2.2f;
 	ThresholdPixels = 100;
@@ -97,6 +99,8 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			}
 		} else if (strcmp(argv[i], "-luminanceonly") == 0) {
 			LuminanceOnly = true;
+		} else if (strcmp(argv[i], "-sum-errors") == 0) {
+			SumErrors = true;
 		} else if (strcmp(argv[i], "-colorfactor") == 0) {
 			if (++i < argc) {
 				ColorFactor = atof(argv[i]);

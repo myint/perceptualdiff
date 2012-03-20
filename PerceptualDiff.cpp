@@ -39,9 +39,9 @@ int main(int argc, char **argv)
 	const bool passed = Yee_Compare(args);
 	if (passed) {
 		if(args.Verbose)
-			printf("PASS: %s\n", args.ErrorStr.c_str());
+			printf("PASS: %s", args.ErrorStr.c_str());
 	} else {
-		printf("FAIL: %s\n", args.ErrorStr.c_str());
+		printf("FAIL: %s", args.ErrorStr.c_str());
 	}
 
 	return passed ? 0 : 1;
