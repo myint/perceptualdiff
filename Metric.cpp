@@ -208,9 +208,9 @@ bool Yee_Compare(CompareArgs &args)
 	float F_freq[MAX_PYR_LEVELS - 2];
 	for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) F_freq[i] = csf_max / csf( cpd[i], 100.0f);
 
-	double error_sum = 0.0;
 	unsigned int pixels_failed = 0;
-	#pragma omp parallel for reduction(+:pixels_failed)
+	double error_sum = 0.0;
+	#pragma omp parallel for reduction(+:pixels_failed) reduction(+:error_sum)
 	for (unsigned int y = 0; y < h; y++) {
 		for (unsigned int x = 0; x < w; x++) {
 			int index = x + y * w;
