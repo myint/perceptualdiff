@@ -34,7 +34,7 @@ while read expectedResult image1 image2 ; do
 		totalTests=$(($totalTests+1))
 	else
 		numTestsFailed=$(($numTestsFailed+1))
-		echo "Regression failure: expected $expectedResult for \"$pdiffBinary $image1 $image2\"" >&2 
+		echo "Regression failure: expected $expectedResult for \"$pdiffBinary $image1 $image2\"" >&2
 	fi
 done <<EOF
 $(all_tests)
