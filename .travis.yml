@@ -10,5 +10,4 @@ env:
 script:
   - cppcheck --error-exitcode=2 .
   - cmake .
-  - make
-  - ./test/run_tests.bash
+  - make check
