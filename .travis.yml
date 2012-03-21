@@ -11,3 +11,4 @@ script:
   - cppcheck --error-exitcode=2 .
   - cmake .
   - make check
+  - ./memcheck.bash
