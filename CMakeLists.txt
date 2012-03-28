@@ -16,13 +16,12 @@ FIND_PACKAGE(FreeImage)
 include_directories(${FREEIMAGE_INCLUDE_DIRS})
 target_link_libraries(perceptualdiff ${FREEIMAGE_LIBRARIES})
 
-option(DIFF_USE_OPENMP "Enable parallel processing via OpenMP." TRUE)
 option(DIFF_USE_COMPILER_OPTIMIZATIONS "Enable compiler optimizations." TRUE)
 
-if(DIFF_USE_OPENMP)
-  if(CMAKE_COMPILER_IS_GNUCXX)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fopenmp")
-  endif()
+FIND_PACKAGE(OpenMP)
+if(OPENMP_FOUND)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
 # Compiler options
