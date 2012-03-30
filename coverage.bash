@@ -8,7 +8,7 @@ export LDFLAGS='-coverage'
 rm -f CMakeCache.txt
 rm -rf CMakeFiles
 
-cmake DIFF_USE_COMPILER_OPTIMIZATIONS=FALSE .
+cmake -D CMAKE_BUILD_TYPE=Debug .
 
 make check
 

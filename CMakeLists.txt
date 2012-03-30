@@ -16,7 +16,7 @@ FIND_PACKAGE(FreeImage)
 include_directories(${FREEIMAGE_INCLUDE_DIRS})
 target_link_libraries(perceptualdiff ${FREEIMAGE_LIBRARIES})
 
-option(DIFF_USE_COMPILER_OPTIMIZATIONS "Enable compiler optimizations." TRUE)
+set(CMAKE_BUILD_TYPE Release)
 
 FIND_PACKAGE(OpenMP)
 if(OPENMP_FOUND)
@@ -26,9 +26,6 @@ endif()
 
 # Compiler options
 if(UNIX)
-  if(DIFF_USE_COMPILER_OPTIMIZATIONS)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-  endif()
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g -Wall -Wextra -ansi -pedantic -Wcast-qual -Wpointer-arith -Winit-self -Wswitch-default -Wmissing-include-dirs -Wold-style-cast -Wnon-virtual-dtor")
 endif()
 
