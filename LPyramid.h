@@ -25,8 +25,8 @@ public:
 	~LPyramid();
 	float Get_Value(int x, int y, int level) const;
 private:
-	float *Copy(float *img);
-	void Convolve(float *a, float *b);
+	float *Copy(const float *img);
+	void Convolve(float *a, const float *b);
 
 	// Succesively blurred versions of the original image
 	float *Levels[MAX_PYR_LEVELS];

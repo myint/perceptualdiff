@@ -44,7 +44,7 @@ LPyramid::~LPyramid()
 	}
 }
 
-float *LPyramid::Copy(float *img)
+float *LPyramid::Copy(const float *img)
 {
 	int max = Width * Height;
 	float *out = new float[max];
@@ -53,7 +53,7 @@ float *LPyramid::Copy(float *img)
 	return out;
 }
 
-void LPyramid::Convolve(float *a, float *b)
+void LPyramid::Convolve(float *a, const float *b)
 // convolves image b with the filter kernel and stores it in a
 {
 	const float Kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
