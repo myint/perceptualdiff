@@ -21,12 +21,12 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 class LPyramid
 {
 public:
-	LPyramid(float *image, int width, int height);
+	LPyramid(const float *image, int width, int height);
 	~LPyramid();
 	float Get_Value(int x, int y, int level) const;
 private:
-	float *Copy(const float *img);
-	void Convolve(float *a, const float *b);
+	float *Copy(const float *img) const;
+	void Convolve(float *a, const float *b) const;
 
 	// Succesively blurred versions of the original image
 	float *Levels[MAX_PYR_LEVELS];

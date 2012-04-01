@@ -21,7 +21,7 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-LPyramid::LPyramid(float *image, int width, int height) :
+LPyramid::LPyramid(const float *image, int width, int height) :
 	Width(width),
 	Height(height)
 {
@@ -44,7 +44,7 @@ LPyramid::~LPyramid()
 	}
 }
 
-float *LPyramid::Copy(const float *img)
+float *LPyramid::Copy(const float *img) const
 {
 	int max = Width * Height;
 	float *out = new float[max];
@@ -53,7 +53,7 @@ float *LPyramid::Copy(const float *img)
 	return out;
 }
 
-void LPyramid::Convolve(float *a, const float *b)
+void LPyramid::Convolve(float *a, const float *b) const
 // convolves image b with the filter kernel and stores it in a
 {
 	const float Kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
