@@ -50,7 +50,7 @@ RGBAImage* RGBAImage::DownSample() const {
 	return img;
 }
 
-bool RGBAImage::WriteToFile(const char* filename)
+bool RGBAImage::WriteToFile(const char* filename) const
 {
 	const FREE_IMAGE_FORMAT fileType = FreeImage_GetFIFFromFilename(filename);
 	if(FIF_UNKNOWN == fileType)

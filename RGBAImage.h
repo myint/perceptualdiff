@@ -54,7 +54,7 @@ public:
 	const std::string &Get_Name(void) const { return Name; }
 	RGBAImage* DownSample() const;
 
-	bool WriteToFile(const char* filename);
+	bool WriteToFile(const char* filename) const;
 	static RGBAImage* ReadFromFile(const char* filename);
 
 private:

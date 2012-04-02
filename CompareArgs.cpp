@@ -154,7 +154,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 	return true;
 }
 
-void CompareArgs::Print_Args()
+void CompareArgs::Print_Args() const
 {
 	printf("Field of view is %f degrees\n", FieldOfView);
 	printf("Threshold pixels is %d pixels\n", ThresholdPixels);

@@ -28,7 +28,7 @@ public:
 	CompareArgs();
 	~CompareArgs();
 	bool Parse_Args(int argc, char **argv);
-	void Print_Args();
+	void Print_Args() const;
 
 	RGBAImage *ImgA;  // Image A
 	RGBAImage *ImgB;  // Image B
