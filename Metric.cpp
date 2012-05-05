@@ -101,7 +101,7 @@ void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
 	static float zw;
 	// reference white
 	if (xw < 0) {
-		AdobeRGBToXYZ(1, 1, 1, xw, yw, zw);
+		AdobeRGBToXYZ(1.f, 1.f, 1.f, xw, yw, zw);
 	}
 	const float epsilon = 216.0f / 24389.0f;
 	const float kappa = 24389.0f / 27.0f;
