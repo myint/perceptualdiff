@@ -5,6 +5,7 @@ perceptualdiff
 A program that compares two images using a perceptually based image metric
 
 .. |build_status| image:: https://secure.travis-ci.org/myint/perceptualdiff.png
+
 `Build status <https://secure.travis-ci.org/myint/perceptualdiff>`_: |build_status|
 
 Copyright (C) 2006 Yangli Hector Yee
