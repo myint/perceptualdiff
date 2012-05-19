@@ -28,7 +28,7 @@ private:
 	float *Copy(const float *img) const;
 	void Convolve(float *a, const float *b) const;
 
-	// Succesively blurred versions of the original image
+	// Successively blurred versions of the original image
 	float *Levels[MAX_PYR_LEVELS];
 
 	int Width;
