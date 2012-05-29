@@ -1,5 +1,5 @@
 /*
-Comapre Args
+Compare Args
 Copyright (C) 2006 Yangli Hector Yee
 
 This program is free software; you can redistribute it and/or modify it under the terms of the

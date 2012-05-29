@@ -41,12 +41,12 @@ Command line::
     perceptualdiff image1.(tif | png) image2.(tif | png) [options]
     -verbose : Turns on verbose mode
     -fov deg : Field of view, deg, in degrees. Usually between 10.0 to 85.0.
-               This controls how much of the screen the oberserver is seeing.
+               This controls how much of the screen the observer is seeing.
                Front row of a theatre has a field of view of around 25 degrees.
                Back row has a field of view of around 60 degrees.
     -threshold p : Sets the number of pixels, p, to reject. For example if p is
                    100, then the test fails if 100 or more pixels are
-                   perceptably different.
+                   perceptibly different.
     -gamma g : The gamma to use to convert to RGB linear space. Default is 2.2
     -luminance l : The luminance of the display the observer is seeing. Default
                    is 100 candela per meter squared
