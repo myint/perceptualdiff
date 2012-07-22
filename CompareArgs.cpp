@@ -33,7 +33,7 @@ static const char *usage =
    Options:\n\
 \t-verbose       : Turns on verbose mode\n\
 \t-fov deg       : Field of view in degrees (0.1 to 89.9)\n\
-\t-threshold p	 : #pixels p below which differences are ignored\n\
+\t-threshold p   : #pixels p below which differences are ignored\n\
 \t-gamma g       : Value to convert rgb into linear space (default 2.2)\n\
 \t-luminance l   : White luminance (default 100.0 cdm^-2)\n\
 \t-luminanceonly : Only consider luminance; ignore chroma (color) in the comparison\n\
