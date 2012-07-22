@@ -301,7 +301,7 @@ bool Yee_Compare(CompareArgs &args)
 	sprintf(error_sum_buff, "%f error sum\n", error_sum);
 
 	char different[100];
-	sprintf(different, "%d pixels are different\n", pixels_failed);
+	sprintf(different, "%u pixels are different\n", pixels_failed);
 
 	// Always output image difference if requested.
 	if (args.ImgDiff) {

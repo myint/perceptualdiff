@@ -16,7 +16,7 @@ FIND_PACKAGE(FreeImage)
 include_directories(${FREEIMAGE_INCLUDE_DIRS})
 target_link_libraries(perceptualdiff ${FREEIMAGE_LIBRARIES})
 
-set(CMAKE_BUILD_TYPE Release)
+set(CMAKE_BUILD_TYPE Debug)
 
 FIND_PACKAGE(OpenMP)
 if(OPENMP_FOUND)
