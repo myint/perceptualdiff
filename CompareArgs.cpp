@@ -21,9 +21,6 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #include <cstring>
 #include <sstream>
 
-#ifdef _OPENMP
-#include <omp.h>
-#endif
 
 static const char* copyright =
 "PerceptualDiff version 1.1.2, Copyright (C) 2006 Yangli Hector Yee\n\
