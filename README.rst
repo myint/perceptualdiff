@@ -55,6 +55,11 @@ Command line::
     -sum-errors : Print a sum of the luminance and color differences.
     -output foo.ppm : Saves the difference image to foo.ppm
 
+Check that perceptualdiff is built with OpenMP support::
+
+   $ ./perceptualdiff | grep -i openmp
+   OpenMP status: enabled
+
 Credits
 =======
 
