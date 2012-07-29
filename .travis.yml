@@ -1,11 +1,14 @@
+compiler:
+    - clang
+    - gcc
+
 before_script:
-  - sudo apt-get --quiet=2 install cmake libfreeimage-dev cppcheck clang valgrind
+  - sudo apt-get --quiet=2 install cmake libfreeimage-dev cppcheck valgrind
 
 env:
   -
   - OMP_NUM_THREADS=1
   - OMP_NUM_THREADS=4
-  - CC=clang CXX=clang++ CXXFLAGS='-I/usr/include/c++/4.5 -I/usr/include/c++/4.5/i686-linux-gnu'
 
 script:
   - cppcheck --error-exitcode=2 .
