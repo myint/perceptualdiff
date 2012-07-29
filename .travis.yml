@@ -15,4 +15,4 @@ script:
   - cmake .
   - make check
   - ./memcheck.bash
-  - ./perceptualdiff | grep -i openmp
+  - bash -c './perceptualdiff | grep -i openmp'
