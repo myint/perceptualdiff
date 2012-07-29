@@ -19,6 +19,11 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <sstream>
+
+#ifdef _OPENMP
+#include <omp.h>
+#endif
 
 static const char* copyright =
 "PerceptualDiff version 1.1.2, Copyright (C) 2006 Yangli Hector Yee\n\
@@ -72,8 +77,16 @@ CompareArgs::~CompareArgs()
 bool CompareArgs::Parse_Args(int argc, char **argv)
 {
 	if (argc < 3) {
-		ErrorStr = copyright;
-		ErrorStr += usage;
+		std::stringstream ss;
+		ss << copyright;
+		ss << usage;
+		ss << "\n" << "OpenMP status: ";
+#ifdef _OPENMP
+		ss << "enabled\n";
+#else
+		ss << "disabled\n";
+#endif
+		ErrorStr = ss.str();
 		return false;
 	}
 	int image_count = 0;
