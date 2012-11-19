@@ -121,5 +121,3 @@ RGBAImage* RGBAImage::ReadFromFile(const char* filename)
 	FreeImage_Unload(freeImage);
 	return result;
 }
-
-

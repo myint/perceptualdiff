@@ -36,4 +36,3 @@ private:
 };
 
 #endif // _LPYRAMID_H
-

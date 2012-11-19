@@ -24,4 +24,3 @@ class CompareArgs;
 bool Yee_Compare(CompareArgs &args);
 
 #endif
-
