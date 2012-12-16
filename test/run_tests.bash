@@ -8,7 +8,7 @@
 # (PASS|FAIL) image1.(tif|png) image2.(tif|png)
 #
 # Edit the following lines to add additional tests.
-function all_tests {
+all_tests () {
 cat <<EOF
 FAIL Bug1102605_ref.tif Bug1102605.tif
 PASS Bug1471457_ref.tif Bug1471457.tif
@@ -30,10 +30,10 @@ cd "$(dirname $0)"
 
 # Run all tests.
 while read expectedResult image1 image2 ; do
-	if $pdiffBinary -verbose $image1 $image2 | grep -q "^$expectedResult" ; then
-		totalTests=$(($totalTests+1))
+	if $pdiffBinary -verbose "$image1" "$image2" | grep -q "^$expectedResult" ; then
+		totalTests=$((totalTests+1))
 	else
-		numTestsFailed=$(($numTestsFailed+1))
+		numTestsFailed=$((numTestsFailed+1))
 		echo "Regression failure: expected $expectedResult for \"$pdiffBinary $image1 $image2\"" >&2
 	fi
 done <<EOF
