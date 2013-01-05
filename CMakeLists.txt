@@ -74,6 +74,6 @@ include(CPack)
 
 # Tests
 enable_testing()
-add_test(run_tests.bash, "test/run_tests.bash")
+add_test(run_tests.bash, "${PROJECT_SOURCE_DIR}/test/run_tests.bash")
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
                   DEPENDS "perceptualdiff")
