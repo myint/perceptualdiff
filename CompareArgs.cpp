@@ -19,6 +19,7 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
+#include <cassert>
 #include <sstream>
 
 
@@ -41,6 +42,7 @@ static const char *usage =
 \t-luminanceonly : Only consider luminance; ignore chroma (color) in the comparison\n\
 \t-colorfactor   : How much of color to use, 0.0 to 1.0, 0.0 = ignore color.\n\
 \t-downsample    : How many powers of two to down sample the image.\n\
+\t-scale         : Scale images to match each other's dimensions.\n\
 \t-sum-errors    : Print a sum of the luminance and color differences.\n\
 \t-output o.ppm  : Write difference to the file o.ppm\n\
 \n\
@@ -88,6 +90,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 	}
 	int image_count = 0;
 	const char* output_file_name = NULL;
+	bool scale = false;
 	for (int i = 1; i < argc; i++) {
 		if (strcmp(argv[i], "-fov") == 0) {
 			if (++i < argc) {
@@ -119,6 +122,8 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			if (++i < argc) {
 				DownSample = atoi(argv[i]);
 			}
+		} else if (strcmp(argv[i], "-scale") == 0) {
+			scale = true;
 		} else if (strcmp(argv[i], "-output") == 0) {
 			if (++i < argc) {
 				output_file_name = argv[i];
@@ -153,6 +158,31 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			ImgA = tmp;
 		}
 		tmp = ImgB->DownSample();
+		if (tmp) {
+			delete ImgB;
+			ImgB = tmp;
+		}
+	}
+	if (scale &&
+	    (ImgA->Get_Width() != ImgB->Get_Width() ||
+	     ImgA->Get_Height() != ImgB->Get_Height())) {
+		int min_width = ImgA->Get_Width();
+		if (ImgB->Get_Width() < min_width) {
+			min_width = ImgB->Get_Width();
+		}
+
+		int min_height = ImgA->Get_Height();
+		if (ImgB->Get_Height() < min_height) {
+			min_height = ImgB->Get_Height();
+		}
+
+		if (Verbose) printf("Scaling to %d x %d\n", min_width, min_height);
+		RGBAImage *tmp = ImgA->DownSample(min_width, min_height);
+		if (tmp) {
+			delete ImgA;
+			ImgA = tmp;
+		}
+		tmp = ImgB->DownSample(min_width, min_height);
 		if (tmp) {
 			delete ImgB;
 			ImgB = tmp;

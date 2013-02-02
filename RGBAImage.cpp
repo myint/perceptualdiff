@@ -20,33 +20,73 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 #include "FreeImage.h"
 #include <cstdio>
 #include <cstring>
+#include <cassert>
 
-RGBAImage* RGBAImage::DownSample() const {
-	if (Width <=1 || Height <=1) return NULL;
-	int nw = Width / 2;
-	int nh = Height / 2;
-	RGBAImage* img = new RGBAImage(nw, nh, Name.c_str());
-	for (int y = 0; y < nh; y++) {
-		for (int x = 0; x < nw; x++) {
-			int d[4];
-			// Sample a 2x2 patch from the parent image.
-			d[0] = Get(2 * x + 0, 2 * y + 0);
-			d[1] = Get(2 * x + 1, 2 * y + 0);
-			d[2] = Get(2 * x + 0, 2 * y + 1);
-			d[3] = Get(2 * x + 1, 2 * y + 1);
-			int rgba = 0;
-			// Find the average color.
-			for (int i = 0; i < 4; i++) {
-				int c = (d[0] >> (8 * i)) & 0xFF;
-				c += (d[1] >> (8 * i)) & 0xFF;
-				c += (d[2] >> (8 * i)) & 0xFF;
-				c += (d[3] >> (8 * i)) & 0xFF;
-				c /= 4;
-				rgba |= (c & 0xFF) << (8 * i);
-			}
-			img->Set(x, y, rgba);
-		}
+
+static FIBITMAP *ToFreeImage(const RGBAImage &image)
+{
+	const unsigned int *data = image.Get_Data();
+
+	FIBITMAP* bitmap = FreeImage_Allocate(
+		image.Get_Width(), image.Get_Height(), 32,
+		0x000000ff, 0x0000ff00, 0x00ff0000);
+	assert(bitmap);
+
+	for (int y=0; y < image.Get_Height(); y++, data += image.Get_Width())
+	{
+		unsigned int* scanline = reinterpret_cast<unsigned int*>(FreeImage_GetScanLine(
+			bitmap, image.Get_Height() - y - 1));
+		memcpy(scanline, data, sizeof(data[0]) * image.Get_Width());
 	}
+
+	return bitmap;
+}
+
+
+static RGBAImage *ToRGBAImage(FIBITMAP *image, const char *filename=NULL)
+{
+	const int w = FreeImage_GetWidth(image);
+	const int h = FreeImage_GetHeight(image);
+
+	RGBAImage* result = new RGBAImage(w, h, filename);
+	// Copy the image over to our internal format, FreeImage has the scanlines bottom to top though.
+	unsigned int* dest = result->Get_Data();
+	for( int y=0; y < h; y++, dest += w )
+	{
+		const unsigned int* scanline = reinterpret_cast<const unsigned int*>(FreeImage_GetScanLine(image, h - y - 1));
+		memcpy(dest, scanline, sizeof(dest[0]) * w);
+	}
+
+	return result;
+}
+
+
+RGBAImage* RGBAImage::DownSample(int w, int h) const {
+	if (w == 0)
+	{
+	    w = Width / 2;
+	}
+
+	if (h == 0)
+	{
+	    h = Height / 2;
+	}
+
+	if (Width <= 1 || Height <= 1) return NULL;
+	if (Width == w && Height == h) return NULL;
+	assert(w <= Width);
+	assert(h <= Height);
+
+	FIBITMAP *bitmap = ToFreeImage(*this);
+	FIBITMAP *converted = FreeImage_Rescale(bitmap, w, h, FILTER_BICUBIC);
+
+	FreeImage_Unload(bitmap);
+	bitmap = NULL;
+
+	RGBAImage* img = ToRGBAImage(converted, Name.c_str());
+
+	FreeImage_Unload(converted);
+
 	return img;
 }
 
@@ -59,19 +99,7 @@ bool RGBAImage::WriteToFile(const char* filename) const
 		return false;
 	}
 
-	FIBITMAP* bitmap = FreeImage_Allocate(Width, Height, 32, 0x000000ff, 0x0000ff00, 0x00ff0000);
-	if(!bitmap)
-	{
-		printf("Failed to create freeimage for %s\n", filename);
-		return false;
-	}
-
-	const unsigned int* source = Data;
-	for( int y=0; y < Height; y++, source += Width )
-	{
-		unsigned int* scanline = reinterpret_cast<unsigned int*>(FreeImage_GetScanLine(bitmap, Height - y - 1));
-		memcpy(scanline, source, sizeof(source[0]) * Width);
-	}
+	FIBITMAP* bitmap = ToFreeImage(*this);
 
 	FreeImage_SetTransparent(bitmap, false);
 	FIBITMAP* converted = FreeImage_ConvertTo24Bits(bitmap);
@@ -106,18 +134,9 @@ RGBAImage* RGBAImage::ReadFromFile(const char* filename)
 		return 0;
 	}
 
-	const int w = FreeImage_GetWidth(freeImage);
-	const int h = FreeImage_GetHeight(freeImage);
-
-	RGBAImage* result = new RGBAImage(w, h, filename);
-	// Copy the image over to our internal format, FreeImage has the scanlines bottom to top though.
-	unsigned int* dest = result->Data;
-	for( int y=0; y < h; y++, dest += w )
-	{
-		const unsigned int* scanline = reinterpret_cast<const unsigned int*>(FreeImage_GetScanLine(freeImage, h - y - 1));
-		memcpy(dest, scanline, sizeof(dest[0]) * w);
-	}
+	RGBAImage *result = ToRGBAImage(freeImage);
 
 	FreeImage_Unload(freeImage);
+
 	return result;
 }

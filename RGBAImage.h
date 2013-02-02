@@ -52,7 +52,12 @@ public:
 	unsigned int Get(int x, int y) const { return Data[x + y * Width]; }
 	unsigned int Get(int i) const { return Data[i]; }
 	const std::string &Get_Name(void) const { return Name; }
-	RGBAImage* DownSample() const;
+	unsigned int *Get_Data() { return Data; }
+	const unsigned int *Get_Data() const { return Data; }
+
+	/** By default down sample to half of each original dimension.
+	 */
+	RGBAImage* DownSample(int w=0, int h=0) const;
 
 	bool WriteToFile(const char* filename) const;
 	static RGBAImage* ReadFromFile(const char* filename);

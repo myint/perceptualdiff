@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Script to run pdiff against a set of image file pairs, and check that the
 # PASS or FAIL status is as expected.
@@ -14,6 +14,7 @@ FAIL Bug1102605_ref.tif Bug1102605.tif
 PASS Bug1471457_ref.tif Bug1471457.tif
 PASS cam_mb_ref.tif cam_mb.tif
 FAIL fish2.png fish1.png
+PASS square.png square_scaled.png
 EOF
 }
 
@@ -30,7 +31,7 @@ cd "$(dirname $0)"
 
 # Run all tests.
 while read expectedResult image1 image2 ; do
-	if $pdiffBinary -verbose "$image1" "$image2" | grep -q "^$expectedResult" ; then
+	if $pdiffBinary -verbose -scale "$image1" "$image2" | grep -q "^$expectedResult" ; then
 		totalTests=$((totalTests+1))
 	else
 		numTestsFailed=$((numTestsFailed+1))
