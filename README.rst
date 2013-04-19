@@ -28,6 +28,7 @@ WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE.  See the GNU General Public License for more details in the
 file gpl.txt.
 
+
 Build Instructions
 ==================
 
@@ -39,6 +40,7 @@ Build Instructions
 #. Type ``make .``
 #. To specify the install directory,
    use ``make install DESTDIR="/home/me/mydist"``
+
 
 Usage
 =====
@@ -68,6 +70,7 @@ Check that perceptualdiff is built with OpenMP support::
    $ ./perceptualdiff | grep -i openmp
    OpenMP status: enabled
 
+
 Credits
 =======
 
@@ -76,6 +79,7 @@ Credits
 - Tobias Sauerwein, for make install, package_source Cmake configuration
 - Cairo Team for bugfixes
 - Jim Tilander, Rewrote the IO to use FreeImage.
+
 
 Version History
 ===============
