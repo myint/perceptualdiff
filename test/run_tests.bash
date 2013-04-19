@@ -52,6 +52,7 @@ else
 fi
 
 # Run additional tests.
+$pdiffBinary | grep -i openmp
 rm -f diff.png
 $pdiffBinary -output diff.png -verbose fish[12].png || true
 ls diff.png
