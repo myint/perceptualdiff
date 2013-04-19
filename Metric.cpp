@@ -86,7 +86,8 @@ float mask(float contrast)
 }
 
 // convert Adobe RGB (1998) with reference white D65 to XYZ
-void AdobeRGBToXYZ(float r, float g, float b, float &x, float &y, float &z)
+static void AdobeRGBToXYZ(float r, float g, float b,
+                          float &x, float &y, float &z)
 {
 	// matrix is from http://www.brucelindbloom.com/
 	x = r * 0.576700f + g * 0.185556f + b * 0.188212f;
@@ -94,7 +95,7 @@ void AdobeRGBToXYZ(float r, float g, float b, float &x, float &y, float &z)
 	z = r * 0.0270328f + g * 0.0706879f + b * 0.991248f;
 }
 
-void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
+static void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
 {
 	static float xw = -1;
 	static float yw;
