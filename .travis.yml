@@ -20,5 +20,5 @@ script:
 after_success:
     - ./coveralls.bash
 
-    - sudo pip install --quiet --use-mirrors git+git://github.com/eddyxu/cpp-coveralls.git
+    - sudo pip install --quiet --use-mirrors git+git://github.com/myint/cpp-coveralls.git
     - coveralls --exclude='CMakeFiles'
