@@ -16,3 +16,9 @@ script:
   - make check
   - ./memcheck.bash
   - bash -c './perceptualdiff | grep -i openmp'
+
+after_success:
+    - ./coverage.bash
+
+    - sudo pip install cpp-coveralls --use-mirrors
+    - coveralls
