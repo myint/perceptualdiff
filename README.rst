@@ -32,7 +32,9 @@ Build Instructions
 ==================
 
 #. Download cross platform make from http://www.cmake.org
-#. Download freeimage from https://sourceforge.net/projects/freeimage (mac: ``brew install freeimage``, ubuntu: ``apt-get install libfreeimage-dev``)
+#. Download freeimage from https://sourceforge.net/projects/freeimage
+   (mac: ``brew install freeimage``,
+   ubuntu: ``apt-get install libfreeimage-dev``)
 #. Type ``cmake .``
 #. Type ``make .``
 #. To specify the install directory, use ``make install DESTDIR="/home/me/mydist"``
