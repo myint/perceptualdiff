@@ -21,4 +21,4 @@ after_success:
     - ./coverage.bash
 
     - sudo pip install git+git://github.com/eddyxu/cpp-coveralls.git --use-mirrors
-    - coveralls
+    - coveralls --exclude='CMakeFiles'
