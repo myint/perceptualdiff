@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash -ex
 
 # Script to run pdiff against a set of image file pairs, and check that the
 # PASS or FAIL status is as expected.
@@ -48,6 +48,14 @@ if [[ $numTestsFailed == 0 ]] ; then
 	echo "*** all $totalTests tests passed"
 else
 	echo "*** $numTestsFailed failed tests of $totalTests"
+	exit $numTestsFailed
 fi
 
-exit $numTestsFailed
+# Run additional tests.
+rm -f diff.png
+$pdiffBinary -output diff.png -verbose fish[12].png || true
+ls diff.png
+rm -f diff.png
+$pdiffBinary -verbose -scale fish1.png Aqsis_vase.png || true
+$pdiffBinary -verbose -downsample fish1.png Aqsis_vase.png || true
+$pdiffBinary -verbose -sum-errors cam_mb_ref.tif cam_mb.tif

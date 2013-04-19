@@ -12,12 +12,6 @@ cmake -D CMAKE_BUILD_TYPE=Debug .
 
 make check
 
-# Test output.
-./perceptualdiff -output diff.png -verbose test/fish[12].png || echo 'expect to fail'
-./perceptualdiff -verbose -scale test/fish1.png test/Aqsis_vase.png || echo 'expect to fail'
-./perceptualdiff -verbose -downsample test/fish1.png test/Aqsis_vase.png || echo 'expect to fail'
-./perceptualdiff -verbose -sum-errors test/cam_mb_ref.tif test/cam_mb.tif
-
 # For Coveralls.
 path=$PWD
 for f in *.cpp *.h
