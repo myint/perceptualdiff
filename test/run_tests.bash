@@ -57,8 +57,12 @@ rm -f diff.png
 $pdiffBinary -output diff.png -verbose fish[12].png | grep -q 'FAIL'
 ls diff.png
 rm -f diff.png
+
+$pdiffBinary fish[12].png -output foo | grep -q 'unknown filetype'
+
 $pdiffBinary -verbose -scale fish1.png Aqsis_vase.png | grep -q 'FAIL'
-$pdiffBinary -verbose -downsample 2 fish1.png Aqsis_vase.png | grep -q 'FAIL'
+$pdiffBinary -downsample 2 fish1.png Aqsis_vase.png | grep -q 'FAIL'
+$pdiffBinary  /dev/null /dev/null | grep -q 'FAIL'
 $pdiffBinary -verbose -sum-errors cam_mb_ref.tif cam_mb.tif
-$pdiffBinary -verbose -colorfactor .5 -threshold 1000 -gamma 3 -luminance 90 cam_mb_ref.tif cam_mb.tif
-$pdiffBinary -verbose -downsample 3 -scale -luminanceonly -fov 80 cam_mb_ref.tif cam_mb.tif
+$pdiffBinary -colorfactor .5 -threshold 1000 -gamma 3 -luminance 90 cam_mb_ref.tif cam_mb.tif
+$pdiffBinary -downsample 3 -scale -luminanceonly -fov 80 cam_mb_ref.tif cam_mb.tif
