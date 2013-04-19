@@ -18,8 +18,8 @@ PASS square.png square_scaled.png
 EOF
 }
 
-# Modify pdiffBinary to point to your compiled pdiff executable if desired.
-pdiffBinary=../perceptualdiff
+# Modify pdiff to point to your compiled pdiff executable if desired.
+pdiff=../perceptualdiff
 
 #------------------------------------------------------------------------------
 
@@ -31,11 +31,11 @@ cd "$(dirname $0)"
 
 # Run all tests.
 while read expectedResult image1 image2 ; do
-	if $pdiffBinary -verbose -scale "$image1" "$image2" | grep -q "^$expectedResult" ; then
+	if $pdiff -verbose -scale "$image1" "$image2" | grep -q "^$expectedResult" ; then
 		totalTests=$((totalTests+1))
 	else
 		numTestsFailed=$((numTestsFailed+1))
-		echo "Regression failure: expected $expectedResult for \"$pdiffBinary $image1 $image2\"" >&2
+		echo "Regression failure: expected $expectedResult for \"$pdiff $image1 $image2\"" >&2
 	fi
 done <<EOF
 $(all_tests)
@@ -52,22 +52,22 @@ else
 fi
 
 # Run additional tests.
-$pdiffBinary | grep -i openmp
+$pdiff | grep -i openmp
 rm -f diff.png
-$pdiffBinary -output diff.png -verbose fish[12].png | grep -q 'FAIL'
+$pdiff -output diff.png -verbose fish[12].png | grep -q 'FAIL'
 ls diff.png
 rm -f diff.png
 
 head fish1.png > fake.png
-$pdiffBinary -verbose fish1.png fake.png | grep -q 'Failed to load'
+$pdiff -verbose fish1.png fake.png | grep -q 'Failed to load'
 rm -f fake.png
 
-$pdiffBinary fish[12].png -output foo | grep -q 'unknown filetype'
-$pdiffBinary -verbose fish1.png | grep -q 'Not enough'
-$pdiffBinary cam_mb_ref.tif cam_mb.tif -fake-option
-$pdiffBinary -verbose -scale fish1.png Aqsis_vase.png | grep -q 'FAIL'
-$pdiffBinary -downsample 2 fish1.png Aqsis_vase.png | grep -q 'FAIL'
-$pdiffBinary  /dev/null /dev/null | grep -q 'FAIL'
-$pdiffBinary -verbose -sum-errors fish[12].png | grep -q 'sum'
-$pdiffBinary -colorfactor .5 -threshold 1000 -gamma 3 -luminance 90 cam_mb_ref.tif cam_mb.tif
-$pdiffBinary -downsample 3 -scale -luminanceonly -fov 80 cam_mb_ref.tif cam_mb.tif
+$pdiff fish[12].png -output foo | grep -q 'unknown filetype'
+$pdiff -verbose fish1.png | grep -q 'Not enough'
+$pdiff cam_mb_ref.tif cam_mb.tif -fake-option
+$pdiff -verbose -scale fish1.png Aqsis_vase.png | grep -q 'FAIL'
+$pdiff -downsample 2 fish1.png Aqsis_vase.png | grep -q 'FAIL'
+$pdiff  /dev/null /dev/null | grep -q 'FAIL'
+$pdiff -verbose -sum-errors fish[12].png | grep -q 'sum'
+$pdiff -colorfactor .5 -threshold 1000 -gamma 3 -luminance 90 cam_mb_ref.tif cam_mb.tif
+$pdiff -downsample 3 -scale -luminanceonly -fov 80 cam_mb_ref.tif cam_mb.tif
