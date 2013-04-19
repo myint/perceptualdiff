@@ -1,18 +1,9 @@
 #!/bin/bash -ex
 #
-# Run tests with coverage reporting enabled.
+# Run tests for Coveralls.
 
-export CXXFLAGS='-coverage'
-export LDFLAGS='-coverage'
+./coverage.bash
 
-rm -f CMakeCache.txt
-rm -rf CMakeFiles
-
-cmake -D CMAKE_BUILD_TYPE=Debug .
-
-make check
-
-# For Coveralls.
 path=$PWD
 for f in *.cpp *.h
 do
