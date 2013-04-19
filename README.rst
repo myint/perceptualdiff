@@ -83,6 +83,7 @@ Version History
 - 1.0.1 - Fixed off by one convolution error and libpng interface to 1.2.8
 - 1.0.2 - [jt] Converted the loading and saving routines to use FreeImage
 - 1.1 - Added colorfactor and downsample options. Also always output
-  difference file if requested. Always print out differing pixels even if the test passes.
+  difference file if requested. Always print out differing pixels even if the
+  test passes.
 - 1.1.1 - Turn off color test in low lighting conditions.
 - 1.1.2 - Add OpenMP parallel processing support and fix bugs.
