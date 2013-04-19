@@ -17,7 +17,8 @@ done
 
 # Do this in a separate pass to make sure everything is accumulated.
 cd "$path"
-for f in *.cpp *.h
+# Ignore the header files, which don't seem to have correct coverage results.
+for f in *.cpp
 do
     cp "$result_path/$f.gcov" "$path" || true
 done
