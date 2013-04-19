@@ -31,8 +31,7 @@ if not, write to the Free Software Foundation, Inc., 59 Temple Place, Suite 330,
 * TVI means Threshold vs Intensity function
 * This version comes from Ward Larson Siggraph 1997
 */
-
-float tvi(float adaptation_luminance)
+static float tvi(float adaptation_luminance)
 {
 	// returns the threshold luminance given the adaptation luminance
 	// units are candelas per meter squared
@@ -59,7 +58,7 @@ float tvi(float adaptation_luminance)
 
 // computes the contrast sensitivity function (Barten SPIE 1989)
 // given the cycles per degree (cpd) and luminance (lum)
-float csf(float cpd, float lum)
+static float csf(float cpd, float lum)
 {
 	float a, b, result;
 
@@ -75,7 +74,7 @@ float csf(float cpd, float lum)
 * Visual Masking Function
 * from Daly 1993
 */
-float mask(float contrast)
+static float mask(float contrast)
 {
 	float a, b, result;
 	a = powf(392.498f * contrast, 0.7f);
