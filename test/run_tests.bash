@@ -63,7 +63,7 @@ $pdiffBinary -verbose fish1.png fake.png | grep -q 'Failed to load'
 rm -f fake.png
 
 $pdiffBinary fish[12].png -output foo | grep -q 'unknown filetype'
-
+$pdiffBinary cam_mb_ref.tif cam_mb.tif -fake-option
 $pdiffBinary -verbose -scale fish1.png Aqsis_vase.png | grep -q 'FAIL'
 $pdiffBinary -downsample 2 fish1.png Aqsis_vase.png | grep -q 'FAIL'
 $pdiffBinary  /dev/null /dev/null | grep -q 'FAIL'
