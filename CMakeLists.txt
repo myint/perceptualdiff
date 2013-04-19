@@ -24,14 +24,12 @@ if(OPENMP_FOUND)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
 endif()
 
-# Compiler options
+# Compiler options.
 if(CMAKE_COMPILER_IS_GNUCC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3 -Wall -Wextra -ansi -pedantic -Wcast-qual -Wpointer-arith -Winit-self -Wswitch-default -Wmissing-include-dirs -Wold-style-cast -Wnon-virtual-dtor -Wno-unknown-pragmas")
 endif()
 
-#
-# Packing stuff
-#
+# Packing stuff.
 set(CPACK_PACKAGE_VERSION_MAJOR "1")
 set(CPACK_PACKAGE_VERSION_MINOR "1")
 set(CPACK_PACKAGE_VERSION_PATCH "2")
@@ -72,7 +70,7 @@ set(CPACK_SOURCE_IGNORE_FILES
 )
 include(CPack)
 
-# Tests
+# Tests.
 enable_testing()
 add_test(run_tests.bash, "${PROJECT_SOURCE_DIR}/test/run_tests.bash")
 add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
