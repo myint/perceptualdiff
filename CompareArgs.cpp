@@ -33,8 +33,10 @@ to redistribute it under certain conditions;\n\
 See the GPL page for details: http://www.gnu.org/copyleft/gpl.html\n\n";
 
 static const char *usage =
-"PeceptualDiff image1.tif image2.tif\n\n\
-Compares image1.tif and image2.tif using a perceptually based image metric\n\
+"Usage: peceptualDiff image1 image2\n\
+\n\
+Compares image1 and image2 using a perceptually based image metric.\n\
+\n\
 Options:\n\
     -verbose       : Turns on verbose mode\n\
     -fov deg       : Field of view in degrees (0.1 to 89.9)\n\
