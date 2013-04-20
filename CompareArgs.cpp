@@ -34,23 +34,22 @@ See the GPL page for details: http://www.gnu.org/copyleft/gpl.html\n\n";
 
 static const char *usage =
 "PeceptualDiff image1.tif image2.tif\n\n\
-   Compares image1.tif and image2.tif using a perceptually based image metric\n\
-   Options:\n\
-\t-verbose       : Turns on verbose mode\n\
-\t-fov deg       : Field of view in degrees (0.1 to 89.9)\n\
-\t-threshold p   : #pixels p below which differences are ignored\n\
-\t-gamma g       : Value to convert rgb into linear space (default 2.2)\n\
-\t-luminance l   : White luminance (default 100.0 cdm^-2)\n\
-\t-luminanceonly : Only consider luminance; ignore chroma (color) in the comparison\n\
-\t-colorfactor   : How much of color to use, 0.0 to 1.0, 0.0 = ignore color.\n\
-\t-downsample    : How many powers of two to down sample the image.\n\
-\t-scale         : Scale images to match each other's dimensions.\n\
-\t-sum-errors    : Print a sum of the luminance and color differences.\n\
-\t-output o.ppm  : Write difference to the file o.ppm\n\
+Compares image1.tif and image2.tif using a perceptually based image metric\n\
+Options:\n\
+    -verbose       : Turns on verbose mode\n\
+    -fov deg       : Field of view in degrees (0.1 to 89.9)\n\
+    -threshold p   : #pixels p below which differences are ignored\n\
+    -gamma g       : Value to convert rgb into linear space (default 2.2)\n\
+    -luminance l   : White luminance (default 100.0 cdm^-2)\n\
+    -luminanceonly : Only consider luminance; ignore chroma (color) in the comparison\n\
+    -colorfactor   : How much of color to use, 0.0 to 1.0, 0.0 = ignore color.\n\
+    -downsample    : How many powers of two to down sample the image.\n\
+    -scale         : Scale images to match each other's dimensions.\n\
+    -sum-errors    : Print a sum of the luminance and color differences.\n\
+    -output o.ppm  : Write difference to the file o.ppm\n\
 \n\
-\n Note: Input or Output files can also be in the PNG or JPG format or any format\
-\n that FreeImage supports.\
-\n";
+Note: Input or Output files can also be in the PNG or JPG format or any format\n\
+that FreeImage supports.\n";
 
 CompareArgs::CompareArgs()
 {
