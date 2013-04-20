@@ -33,7 +33,7 @@ to redistribute it under certain conditions;\n\
 See the GPL page for details: http://www.gnu.org/copyleft/gpl.html\n\n";
 
 static const char *usage =
-"Usage: peceptualDiff image1 image2\n\
+"Usage: peceptualdiff image1 image2\n\
 \n\
 Compares image1 and image2 using a perceptually based image metric.\n\
 \n\
