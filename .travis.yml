@@ -20,7 +20,7 @@ script:
 after_success:
     - ./coveralls.bash
 
-    - sudo pip install --quiet git+git://github.com/myint/cpp-coveralls.git
+    - sudo pip install cpp-coveralls
 
     # Ignore header files in a stupid way.
     - rm -f *.h
