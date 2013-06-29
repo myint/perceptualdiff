@@ -5,12 +5,12 @@ perceptualdiff
 A program that compares two images using a perceptually based image metric
 
 .. image:: https://travis-ci.org/myint/perceptualdiff.png?branch=master
-   :target: https://travis-ci.org/myint/perceptualdiff
-   :alt: Build status
+    :target: https://travis-ci.org/myint/perceptualdiff
+    :alt: Build status
 
 .. image:: https://coveralls.io/repos/myint/perceptualdiff/badge.png?branch=master
-   :target: https://coveralls.io/r/myint/perceptualdiff
-   :alt: Test coverage status
+    :target: https://coveralls.io/r/myint/perceptualdiff
+    :alt: Test coverage status
 
 Copyright (C) 2006 Yangli Hector Yee
 
@@ -67,8 +67,8 @@ Command line::
 
 Check that perceptualdiff is built with OpenMP support::
 
-   $ ./perceptualdiff | grep -i openmp
-   OpenMP status: enabled
+    $ ./perceptualdiff | grep -i openmp
+    OpenMP status: enabled
 
 
 Credits
