@@ -127,7 +127,7 @@ static void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
 bool Yee_Compare(CompareArgs &args)
 {
 	if ((args.ImgA->Get_Width() != args.ImgB->Get_Width()) ||
-		(args.ImgA->Get_Height() != args.ImgB->Get_Height())) {
+	        (args.ImgA->Get_Height() != args.ImgB->Get_Height())) {
 		args.ErrorStr = "Image dimensions do not match\n";
 		return false;
 	}

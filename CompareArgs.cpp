@@ -25,15 +25,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <sstream>
 
 
-static const char* copyright =
-"PerceptualDiff version 1.1.2, Copyright (C) 2006 Yangli Hector Yee\n\
+static const char* copyright = "PerceptualDiff version 1.1.2, Copyright (C) 2006 Yangli Hector Yee\n\
 PerceptualDiff comes with ABSOLUTELY NO WARRANTY;\n\
 This is free software, and you are welcome\n\
 to redistribute it under certain conditions;\n\
 See the GPL page for details: http://www.gnu.org/copyleft/gpl.html\n\n";
 
-static const char *usage =
-"Usage: peceptualdiff image1 image2\n\
+static const char *usage = "Usage: peceptualdiff image1 image2\n\
 \n\
 Compares image1 and image2 using a perceptually based image metric.\n\
 \n\
@@ -167,8 +165,8 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		}
 	}
 	if (scale &&
-	    (ImgA->Get_Width() != ImgB->Get_Width() ||
-	     ImgA->Get_Height() != ImgB->Get_Height())) {
+	        (ImgA->Get_Width() != ImgB->Get_Width() ||
+	         ImgA->Get_Height() != ImgB->Get_Height())) {
 		int min_width = ImgA->Get_Width();
 		if (ImgB->Get_Width() < min_width) {
 			min_width = ImgB->Get_Width();
