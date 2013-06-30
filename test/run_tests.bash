@@ -18,8 +18,12 @@ PASS square.png square_scaled.png
 EOF
 }
 
-# Modify pdiff to point to your compiled pdiff executable if desired.
-pdiff=../perceptualdiff
+if [ -f '../build/perceptualdiff' ]
+then
+	pdiff=../build/perceptualdiff
+else
+	pdiff=../perceptualdiff
+fi
 
 #------------------------------------------------------------------------------
 
