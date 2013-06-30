@@ -18,6 +18,9 @@ PASS square.png square_scaled.png
 EOF
 }
 
+# Change to test directory
+cd "$(dirname $0)"
+
 if [ -f '../build/perceptualdiff' ]
 then
 	pdiff=../build/perceptualdiff
@@ -33,9 +36,6 @@ fi
 
 totalTests=0
 numTestsFailed=0
-
-# Change to test directory
-cd "$(dirname $0)"
 
 # Run all tests.
 while read expectedResult image1 image2 ; do
