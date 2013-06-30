@@ -29,7 +29,7 @@ static FIBITMAP *ToFreeImage(const RGBAImage &image)
 {
 	const unsigned int *data = image.Get_Data();
 
-	FIBITMAP* bitmap = FreeImage_Allocate(image.Get_Width(),
+	FIBITMAP *bitmap = FreeImage_Allocate(image.Get_Width(),
 	                                      image.Get_Height(),
 	                                      32,
 	                                      0x000000ff,
@@ -39,7 +39,7 @@ static FIBITMAP *ToFreeImage(const RGBAImage &image)
 
 	for (int y=0; y < image.Get_Height(); y++, data += image.Get_Width())
 	{
-		unsigned int* scanline = reinterpret_cast<unsigned int*>(FreeImage_GetScanLine(bitmap, image.Get_Height() - y - 1));
+		unsigned int *scanline = reinterpret_cast<unsigned int*>(FreeImage_GetScanLine(bitmap, image.Get_Height() - y - 1));
 		memcpy(scanline, data, sizeof(data[0]) * image.Get_Width());
 	}
 
@@ -52,12 +52,12 @@ static RGBAImage *ToRGBAImage(FIBITMAP *image, const char *filename=NULL)
 	const int w = FreeImage_GetWidth(image);
 	const int h = FreeImage_GetHeight(image);
 
-	RGBAImage* result = new RGBAImage(w, h, filename);
+	RGBAImage *result = new RGBAImage(w, h, filename);
 	// Copy the image over to our internal format, FreeImage has the scanlines bottom to top though.
-	unsigned int* dest = result->Get_Data();
-	for( int y=0; y < h; y++, dest += w )
+	unsigned int *dest = result->Get_Data();
+	for ( int y=0; y < h; y++, dest += w )
 	{
-		const unsigned int* scanline = reinterpret_cast<const unsigned int*>(FreeImage_GetScanLine(image, h - y - 1));
+		const unsigned int *scanline = reinterpret_cast<const unsigned int*>(FreeImage_GetScanLine(image, h - y - 1));
 		memcpy(dest, scanline, sizeof(dest[0]) * w);
 	}
 
@@ -65,7 +65,7 @@ static RGBAImage *ToRGBAImage(FIBITMAP *image, const char *filename=NULL)
 }
 
 
-RGBAImage* RGBAImage::DownSample(int w, int h) const {
+RGBAImage *RGBAImage::DownSample(int w, int h) const {
 	if (w == 0)
 	{
 		w = Width / 2;
@@ -87,29 +87,29 @@ RGBAImage* RGBAImage::DownSample(int w, int h) const {
 	FreeImage_Unload(bitmap);
 	bitmap = NULL;
 
-	RGBAImage* img = ToRGBAImage(converted, Name.c_str());
+	RGBAImage *img = ToRGBAImage(converted, Name.c_str());
 
 	FreeImage_Unload(converted);
 
 	return img;
 }
 
-bool RGBAImage::WriteToFile(const char* filename) const
+bool RGBAImage::WriteToFile(const char *filename) const
 {
 	const FREE_IMAGE_FORMAT fileType = FreeImage_GetFIFFromFilename(filename);
-	if(FIF_UNKNOWN == fileType)
+	if (FIF_UNKNOWN == fileType)
 	{
 		printf("Can't save to unknown filetype %s\n", filename);
 		return false;
 	}
 
-	FIBITMAP* bitmap = ToFreeImage(*this);
+	FIBITMAP *bitmap = ToFreeImage(*this);
 
 	FreeImage_SetTransparent(bitmap, false);
-	FIBITMAP* converted = FreeImage_ConvertTo24Bits(bitmap);
+	FIBITMAP *converted = FreeImage_ConvertTo24Bits(bitmap);
 
 	const bool result = !!FreeImage_Save(fileType, converted, filename);
-	if(!result)
+	if (!result)
 		printf("Failed to save to %s\n", filename);
 
 	FreeImage_Unload(converted);
@@ -117,22 +117,22 @@ bool RGBAImage::WriteToFile(const char* filename) const
 	return result;
 }
 
-RGBAImage* RGBAImage::ReadFromFile(const char* filename)
+RGBAImage *RGBAImage::ReadFromFile(const char *filename)
 {
 	const FREE_IMAGE_FORMAT fileType = FreeImage_GetFileType(filename);
-	if(FIF_UNKNOWN == fileType)
+	if (FIF_UNKNOWN == fileType)
 	{
 		printf("Unknown filetype %s\n", filename);
 		return 0;
 	}
 
-	FIBITMAP* freeImage = 0;
-	if(FIBITMAP* temporary = FreeImage_Load(fileType, filename, 0))
+	FIBITMAP *freeImage = 0;
+	if (FIBITMAP *temporary = FreeImage_Load(fileType, filename, 0))
 	{
 		freeImage = FreeImage_ConvertTo32Bits(temporary);
 		FreeImage_Unload(temporary);
 	}
-	if(!freeImage)
+	if (!freeImage)
 	{
 		printf( "Failed to load the image %s\n", filename);
 		return 0;

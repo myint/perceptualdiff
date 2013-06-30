@@ -19,10 +19,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "LPyramid.h"
 
 
-//////////////////////////////////////////////////////////////////////
-// Construction/Destruction
-//////////////////////////////////////////////////////////////////////
-
 LPyramid::LPyramid(const float *image, int width, int height) :
 	Width(width),
 	Height(height)
@@ -66,12 +62,12 @@ void LPyramid::Convolve(float *a, const float *b) const
 			a[index] = 0.0f;
 			for (int i=-2; i<=2; i++) {
 				for (int j=-2; j<=2; j++) {
-					int nx=x+i;
-					int ny=y+j;
-					if (nx<0) nx=-nx;
-					if (ny<0) ny=-ny;
-					if (nx>=Width) nx=2*Width-nx-1;
-					if (ny>=Height) ny=2*Height-ny-1;
+					int nx = x + i;
+					int ny = y + j;
+					if (nx<0) nx = -nx;
+					if (ny<0) ny = -ny;
+					if (nx>=Width) nx  =2*Width-nx-1;
+					if (ny>=Height) ny  =2*Height-ny-1;
 					a[index] += Kernel[i+2] * Kernel[j+2] * b[ny * Width + nx];
 				}
 			}

@@ -25,7 +25,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <sstream>
 
 
-static const char* copyright = "PerceptualDiff version 1.1.2, Copyright (C) 2006 Yangli Hector Yee\n\
+static const char *copyright = "PerceptualDiff version 1.1.2, Copyright (C) 2006 Yangli Hector Yee\n\
 PerceptualDiff comes with ABSOLUTELY NO WARRANTY;\n\
 This is free software, and you are welcome\n\
 to redistribute it under certain conditions;\n\
@@ -90,7 +90,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		return false;
 	}
 	int image_count = 0;
-	const char* output_file_name = NULL;
+	const char *output_file_name = NULL;
 	bool scale = false;
 	for (int i = 1; i < argc; i++) {
 		if (strcmp(argv[i], "-fov") == 0) {
@@ -130,7 +130,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 				output_file_name = argv[i];
 			}
 		} else if (image_count < 2) {
-			RGBAImage* img = RGBAImage::ReadFromFile(argv[i]);
+			RGBAImage *img = RGBAImage::ReadFromFile(argv[i]);
 			if (!img) {
 				ErrorStr = "FAIL: Cannot open ";
 				ErrorStr += argv[i];
@@ -138,7 +138,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 				return false;
 			} else {
 				++image_count;
-				if(image_count == 1)
+				if (image_count == 1)
 					ImgA = img;
 				else
 					ImgB = img;
@@ -147,7 +147,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			fprintf(stderr, "Warning: option/file \"%s\" ignored\n", argv[i]);
 		}
 	} // i
-	if(!ImgA || !ImgB) {
+	if (!ImgA || !ImgB) {
 		ErrorStr = "FAIL: Not enough image files specified\n";
 		return false;
 	}
@@ -189,7 +189,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			ImgB = tmp;
 		}
 	}
-	if(output_file_name) {
+	if (output_file_name) {
 		ImgDiff = new RGBAImage(ImgA->Get_Width(), ImgA->Get_Height(), output_file_name);
 	}
 	return true;

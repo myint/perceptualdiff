@@ -40,7 +40,7 @@ int main(int argc, char **argv)
 
 	const bool passed = Yee_Compare(args);
 	if (passed) {
-		if(args.Verbose)
+		if (args.Verbose)
 			printf("PASS: %s", args.ErrorStr.c_str());
 	} else {
 		printf("FAIL: %s", args.ErrorStr.c_str());
