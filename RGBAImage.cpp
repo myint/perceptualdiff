@@ -76,8 +76,12 @@ RGBAImage *RGBAImage::DownSample(int w, int h) const {
 		h = Height / 2;
 	}
 
-	if (Width <= 1 || Height <= 1) return NULL;
-	if (Width == w && Height == h) return NULL;
+	if (Width <= 1 || Height <= 1) {
+		return NULL;
+	}
+	if (Width == w && Height == h) {
+		return NULL;
+	}
 	assert(w <= Width);
 	assert(h <= Height);
 
@@ -109,8 +113,9 @@ bool RGBAImage::WriteToFile(const char *filename) const
 	FIBITMAP *converted = FreeImage_ConvertTo24Bits(bitmap);
 
 	const bool result = !!FreeImage_Save(fileType, converted, filename);
-	if (!result)
+	if (!result) {
 		printf("Failed to save to %s\n", filename);
+	}
 
 	FreeImage_Unload(converted);
 	FreeImage_Unload(bitmap);

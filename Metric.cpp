@@ -160,7 +160,9 @@ bool Yee_Compare(CompareArgs &args)
 	float *aB = new float[dim];
 	float *bB = new float[dim];
 
-	if (args.Verbose) printf("Converting RGB to XYZ\n");
+	if (args.Verbose) {
+		printf("Converting RGB to XYZ\n");
+	}
 
 	const unsigned int w = args.ImgA->Get_Width();
 	const unsigned int h = args.ImgA->Get_Height();
@@ -184,7 +186,9 @@ bool Yee_Compare(CompareArgs &args)
 		}
 	}
 
-	if (args.Verbose) printf("Constructing Laplacian Pyramids\n");
+	if (args.Verbose) {
+		printf("Constructing Laplacian Pyramids\n");
+	}
 
 	LPyramid *la = new LPyramid(aLum, w, h);
 	LPyramid *lb = new LPyramid(bLum, w, h);
@@ -192,23 +196,31 @@ bool Yee_Compare(CompareArgs &args)
 	float num_one_degree_pixels = 2 * tan(args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI;
 	float pixels_per_degree = w / num_one_degree_pixels;
 
-	if (args.Verbose) printf("Performing test\n");
+	if (args.Verbose) {
+		printf("Performing test\n");
+	}
 
 	float num_pixels = 1;
 	unsigned int adaptation_level = 0;
 	for (unsigned int i = 0; i < MAX_PYR_LEVELS; i++) {
 		adaptation_level = i;
-		if (num_pixels > num_one_degree_pixels) break;
+		if (num_pixels > num_one_degree_pixels) {
+			break;
+		}
 		num_pixels *= 2;
 	}
 
 	float cpd[MAX_PYR_LEVELS];
 	cpd[0] = 0.5f * pixels_per_degree;
-	for (unsigned int i = 1; i < MAX_PYR_LEVELS; i++) cpd[i] = 0.5f * cpd[i - 1];
+	for (unsigned int i = 1; i < MAX_PYR_LEVELS; i++) {
+		cpd[i] = 0.5f * cpd[i - 1];
+	}
 	float csf_max = csf(3.248f, 100.0f);
 
 	float F_freq[MAX_PYR_LEVELS - 2];
-	for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) F_freq[i] = csf_max / csf( cpd[i], 100.0f);
+	for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
+		F_freq[i] = csf_max / csf( cpd[i], 100.0f);
+	}
 
 	unsigned int pixels_failed = 0;
 	double error_sum = 0.0;
@@ -225,15 +237,21 @@ bool Yee_Compare(CompareArgs &args)
 				float d1 = fabsf(la->Get_Value(x,y,i+2));
 				float d2 = fabsf(lb->Get_Value(x,y,i+2));
 				float denominator = (d1 > d2) ? d1 : d2;
-				if (denominator < 1e-5f) denominator = 1e-5f;
+				if (denominator < 1e-5f) {
+					denominator = 1e-5f;
+				}
 				contrast[i] = numerator / denominator;
 				sum_contrast += contrast[i];
 			}
-			if (sum_contrast < 1e-5) sum_contrast = 1e-5f;
+			if (sum_contrast < 1e-5) {
+				sum_contrast = 1e-5f;
+			}
 			float F_mask[MAX_PYR_LEVELS - 2];
 			float adapt = la->Get_Value(x,y,adaptation_level) + lb->Get_Value(x,y,adaptation_level);
 			adapt *= 0.5f;
-			if (adapt < 1e-5) adapt = 1e-5f;
+			if (adapt < 1e-5) {
+				adapt = 1e-5f;
+			}
 			for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
 				F_mask[i] = mask(contrast[i] * csf(cpd[i], adapt));
 			}
@@ -241,8 +259,12 @@ bool Yee_Compare(CompareArgs &args)
 			for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
 				factor += contrast[i] * F_freq[i] * F_mask[i] / sum_contrast;
 			}
-			if (factor < 1) factor = 1;
-			if (factor > 10) factor = 10;
+			if (factor < 1) {
+				factor = 1;
+			}
+			if (factor > 10) {
+				factor = 10;
+			}
 			float delta = fabsf(la->Get_Value(x,y,0) - lb->Get_Value(x,y,0));
 			error_sum += delta;
 			bool pass = true;

@@ -35,13 +35,16 @@ int main(int argc, char **argv)
 		printf("%s", args.ErrorStr.c_str());
 		return -1;
 	} else {
-		if (args.Verbose) args.Print_Args();
+		if (args.Verbose) {
+			args.Print_Args();
+		}
 	}
 
 	const bool passed = Yee_Compare(args);
 	if (passed) {
-		if (args.Verbose)
+		if (args.Verbose) {
 			printf("PASS: %s", args.ErrorStr.c_str());
+		}
 	} else {
 		printf("FAIL: %s", args.ErrorStr.c_str());
 	}

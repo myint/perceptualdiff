@@ -138,10 +138,12 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 				return false;
 			} else {
 				++image_count;
-				if (image_count == 1)
+				if (image_count == 1) {
 					ImgA = img;
-				else
+				}
+				else {
 					ImgB = img;
+				}
 			}
 		} else {
 			fprintf(stderr, "Warning: option/file \"%s\" ignored\n", argv[i]);
@@ -152,7 +154,9 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		return false;
 	}
 	for (int i = 0; i < DownSample; i++) {
-		if (Verbose) printf("Downsampling by %d\n", 1 << (i+1));
+		if (Verbose) {
+			printf("Downsampling by %d\n", 1 << (i+1));
+		}
 		RGBAImage *tmp = ImgA->DownSample();
 		if (tmp) {
 			delete ImgA;
@@ -177,7 +181,9 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			min_height = ImgB->Get_Height();
 		}
 
-		if (Verbose) printf("Scaling to %d x %d\n", min_width, min_height);
+		if (Verbose) {
+			printf("Scaling to %d x %d\n", min_width, min_height);
+		}
 		RGBAImage *tmp = ImgA->DownSample(min_width, min_height);
 		if (tmp) {
 			delete ImgA;

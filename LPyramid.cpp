@@ -46,7 +46,9 @@ float *LPyramid::Copy(const float *img) const
 {
 	int max = Width * Height;
 	float *out = new float[max];
-	for (int i = 0; i < max; i++) out[i] = img[i];
+	for (int i = 0; i < max; i++) {
+		out[i] = img[i];
+	}
 
 	return out;
 }
@@ -64,11 +66,19 @@ void LPyramid::Convolve(float *a, const float *b) const
 				for (int j=-2; j<=2; j++) {
 					int nx = x + i;
 					int ny = y + j;
-					if (nx<0) nx = -nx;
-					if (ny<0) ny = -ny;
-					if (nx>=Width) nx  =2*Width-nx-1;
-					if (ny>=Height) ny  =2*Height-ny-1;
-					a[index] += Kernel[i+2] * Kernel[j+2] * b[ny * Width + nx];
+					if (nx<0) {
+						nx = -nx;
+					}
+					if (ny<0) {
+						ny = -ny;
+					}
+					if (nx>=Width) {
+						nx = 2 * Width - nx - 1;
+					}
+					if (ny>=Height) {
+						ny = 2 * Height - ny - 1;
+					}
+					a[index] += Kernel[i + 2] * Kernel[j + 2] * b[ny * Width + nx];
 				}
 			}
 		}
@@ -79,6 +89,8 @@ float LPyramid::Get_Value(int x, int y, int level) const
 {
 	int index = x + y * Width;
 	int l = level;
-	if (l >= MAX_PYR_LEVELS) l = MAX_PYR_LEVELS - 1;
+	if (l >= MAX_PYR_LEVELS) {
+		l = MAX_PYR_LEVELS - 1;
+	}
 	return Levels[l][index];
 }
