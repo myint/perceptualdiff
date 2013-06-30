@@ -37,7 +37,7 @@ static FIBITMAP *ToFreeImage(const RGBAImage &image)
 	                                      0x00ff0000);
 	assert(bitmap);
 
-	for (int y=0; y < image.Get_Height(); y++, data += image.Get_Width())
+	for (int y = 0; y < image.Get_Height(); y++, data += image.Get_Width())
 	{
 		unsigned int *scanline = reinterpret_cast<unsigned int *>(FreeImage_GetScanLine(bitmap, image.Get_Height() - y - 1));
 		memcpy(scanline, data, sizeof(data[0]) * image.Get_Width());
@@ -55,7 +55,7 @@ static RGBAImage *ToRGBAImage(FIBITMAP *image, const char *filename=NULL)
 	RGBAImage *result = new RGBAImage(w, h, filename);
 	// Copy the image over to our internal format, FreeImage has the scanlines bottom to top though.
 	unsigned int *dest = result->Get_Data();
-	for ( int y=0; y < h; y++, dest += w )
+	for (int y = 0; y < h; y++, dest += w)
 	{
 		const unsigned int *scanline = reinterpret_cast<const unsigned int *>(FreeImage_GetScanLine(image, h - y - 1));
 		memcpy(dest, scanline, sizeof(dest[0]) * w);
@@ -139,7 +139,7 @@ RGBAImage *RGBAImage::ReadFromFile(const char *filename)
 	}
 	if (!freeImage)
 	{
-		printf( "Failed to load the image %s\n", filename);
+		printf("Failed to load the image %s\n", filename);
 		return 0;
 	}
 

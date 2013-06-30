@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 class RGBAImage
 {
 	RGBAImage(const RGBAImage &);
-	RGBAImage &operator=(const RGBAImage &);
+	RGBAImage &operator= (const RGBAImage &);
 public:
 	RGBAImage(int w, int h, const char *name = 0)
 	{
@@ -52,13 +52,13 @@ public:
 		return (Data[i] & 0xFF);
 	}
 	unsigned char Get_Green(unsigned int i) const {
-		return ((Data[i]>>8) & 0xFF);
+		return ((Data[i] >> 8) & 0xFF);
 	}
 	unsigned char Get_Blue(unsigned int i) const {
-		return ((Data[i]>>16) & 0xFF);
+		return ((Data[i] >> 16) & 0xFF);
 	}
 	unsigned char Get_Alpha(unsigned int i) const {
-		return ((Data[i]>>24) & 0xFF);
+		return ((Data[i] >> 24) & 0xFF);
 	}
 	void Set(unsigned char r, unsigned char g, unsigned char b, unsigned char a, unsigned int i)
 	{
@@ -91,7 +91,7 @@ public:
 
 	/** By default down sample to half of each original dimension.
 	 */
-	RGBAImage *DownSample(int w=0, int h=0) const;
+	RGBAImage *DownSample(int w = 0, int h = 0) const;
 
 	bool WriteToFile(const char *filename) const;
 	static RGBAImage *ReadFromFile(const char *filename);

@@ -174,12 +174,12 @@ bool Yee_Compare(CompareArgs &args)
 			r = powf(args.ImgA->Get_Red(i) / 255.0f, args.Gamma);
 			g = powf(args.ImgA->Get_Green(i) / 255.0f, args.Gamma);
 			b = powf(args.ImgA->Get_Blue(i) / 255.0f, args.Gamma);
-			AdobeRGBToXYZ(r,g,b,aX[i],aY[i],aZ[i]);
+			AdobeRGBToXYZ(r, g, b, aX[i], aY[i], aZ[i]);
 			XYZToLAB(aX[i], aY[i], aZ[i], l, aA[i], aB[i]);
 			r = powf(args.ImgB->Get_Red(i) / 255.0f, args.Gamma);
 			g = powf(args.ImgB->Get_Green(i) / 255.0f, args.Gamma);
 			b = powf(args.ImgB->Get_Blue(i) / 255.0f, args.Gamma);
-			AdobeRGBToXYZ(r,g,b,bX[i],bY[i],bZ[i]);
+			AdobeRGBToXYZ(r, g, b, bX[i], bY[i], bZ[i]);
 			XYZToLAB(bX[i], bY[i], bZ[i], l, bA[i], bB[i]);
 			aLum[i] = aY[i] * args.Luminance;
 			bLum[i] = bY[i] * args.Luminance;
@@ -219,7 +219,7 @@ bool Yee_Compare(CompareArgs &args)
 
 	float F_freq[MAX_PYR_LEVELS - 2];
 	for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
-		F_freq[i] = csf_max / csf( cpd[i], 100.0f);
+		F_freq[i] = csf_max / csf(cpd[i], 100.0f);
 	}
 
 	unsigned int pixels_failed = 0;
@@ -231,11 +231,11 @@ bool Yee_Compare(CompareArgs &args)
 			float contrast[MAX_PYR_LEVELS - 2];
 			float sum_contrast = 0;
 			for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
-				float n1 = fabsf(la->Get_Value(x,y,i) - la->Get_Value(x,y,i + 1));
-				float n2 = fabsf(lb->Get_Value(x,y,i) - lb->Get_Value(x,y,i + 1));
+				float n1 = fabsf(la->Get_Value(x, y, i) - la->Get_Value(x, y, i + 1));
+				float n2 = fabsf(lb->Get_Value(x, y, i) - lb->Get_Value(x, y, i + 1));
 				float numerator = (n1 > n2) ? n1 : n2;
-				float d1 = fabsf(la->Get_Value(x,y,i+2));
-				float d2 = fabsf(lb->Get_Value(x,y,i+2));
+				float d1 = fabsf(la->Get_Value(x, y, i + 2));
+				float d2 = fabsf(lb->Get_Value(x, y, i + 2));
 				float denominator = (d1 > d2) ? d1 : d2;
 				if (denominator < 1e-5f) {
 					denominator = 1e-5f;
@@ -247,7 +247,7 @@ bool Yee_Compare(CompareArgs &args)
 				sum_contrast = 1e-5f;
 			}
 			float F_mask[MAX_PYR_LEVELS - 2];
-			float adapt = la->Get_Value(x,y,adaptation_level) + lb->Get_Value(x,y,adaptation_level);
+			float adapt = la->Get_Value(x, y, adaptation_level) + lb->Get_Value(x, y, adaptation_level);
 			adapt *= 0.5f;
 			if (adapt < 1e-5) {
 				adapt = 1e-5f;
@@ -265,7 +265,7 @@ bool Yee_Compare(CompareArgs &args)
 			if (factor > 10) {
 				factor = 10;
 			}
-			float delta = fabsf(la->Get_Value(x,y,0) - lb->Get_Value(x,y,0));
+			float delta = fabsf(la->Get_Value(x, y, 0) - lb->Get_Value(x, y, 0));
 			error_sum += delta;
 			bool pass = true;
 
@@ -331,11 +331,11 @@ bool Yee_Compare(CompareArgs &args)
 	if (args.ImgDiff) {
 		if (args.ImgDiff->WriteToFile(args.ImgDiff->Get_Name().c_str())) {
 			args.ErrorStr += "Wrote difference image to ";
-			args.ErrorStr+= args.ImgDiff->Get_Name();
+			args.ErrorStr += args.ImgDiff->Get_Name();
 			args.ErrorStr += "\n";
 		} else {
 			args.ErrorStr += "Could not write difference image to ";
-			args.ErrorStr+= args.ImgDiff->Get_Name();
+			args.ErrorStr += args.ImgDiff->Get_Name();
 			args.ErrorStr += "\n";
 		}
 	}

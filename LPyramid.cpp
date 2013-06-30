@@ -25,7 +25,7 @@ LPyramid::LPyramid(const float *image, int width, int height) :
 {
 	// Make the Laplacian pyramid by successively
 	// copying the earlier levels and blurring them
-	for (int i=0; i<MAX_PYR_LEVELS; i++) {
+	for (int i = 0; i < MAX_PYR_LEVELS; i++) {
 		if (i == 0) {
 			Levels[i] = Copy(image);
 		} else {
@@ -37,7 +37,7 @@ LPyramid::LPyramid(const float *image, int width, int height) :
 
 LPyramid::~LPyramid()
 {
-	for (int i=0; i<MAX_PYR_LEVELS; i++) {
+	for (int i = 0; i < MAX_PYR_LEVELS; i++) {
 		delete [] Levels[i];
 	}
 }
@@ -58,24 +58,24 @@ void LPyramid::Convolve(float *a, const float *b) const
 {
 	const float Kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
 	#pragma omp parallel for
-	for (int y=0; y<Height; y++) {
-		for (int x=0; x<Width; x++) {
+	for (int y = 0; y < Height; y++) {
+		for (int x = 0; x < Width; x++) {
 			int index = y * Width + x;
 			a[index] = 0.0f;
-			for (int i=-2; i<=2; i++) {
-				for (int j=-2; j<=2; j++) {
+			for (int i = -2; i <= 2; i++) {
+				for (int j = -2; j <= 2; j++) {
 					int nx = x + i;
 					int ny = y + j;
-					if (nx<0) {
+					if (nx < 0) {
 						nx = -nx;
 					}
-					if (ny<0) {
+					if (ny < 0) {
 						ny = -ny;
 					}
-					if (nx>=Width) {
+					if (nx >= Width) {
 						nx = 2 * Width - nx - 1;
 					}
-					if (ny>=Height) {
+					if (ny >= Height) {
 						ny = 2 * Height - ny - 1;
 					}
 					a[index] += Kernel[i + 2] * Kernel[j + 2] * b[ny * Width + nx];

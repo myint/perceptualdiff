@@ -155,7 +155,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 	}
 	for (int i = 0; i < DownSample; i++) {
 		if (Verbose) {
-			printf("Downsampling by %d\n", 1 << (i+1));
+			printf("Downsampling by %d\n", 1 << (i + 1));
 		}
 		RGBAImage *tmp = ImgA->DownSample();
 		if (tmp) {
