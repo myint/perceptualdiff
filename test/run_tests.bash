@@ -21,8 +21,12 @@ EOF
 if [ -f '../build/perceptualdiff' ]
 then
 	pdiff=../build/perceptualdiff
-else
+elif [ -f '../perceptualdiff' ]
+then
 	pdiff=../perceptualdiff
+else
+	echo 'perceptualdiff must be built and exist in repository root or the "build" directory'
+	exit 1
 fi
 
 #------------------------------------------------------------------------------
