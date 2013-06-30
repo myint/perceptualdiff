@@ -25,7 +25,7 @@ elif [ -f '../perceptualdiff' ]
 then
 	pdiff=../perceptualdiff
 else
-	echo 'perceptualdiff must be built and exist in repository root or the "build" directory'
+	echo 'perceptualdiff must be built and exist in the repository root or the "build" directory'
 	exit 1
 fi
 
