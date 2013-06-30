@@ -31,8 +31,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
  */
 class RGBAImage
 {
-	RGBAImage(const RGBAImage&);
-	RGBAImage& operator=(const RGBAImage&);
+	RGBAImage(const RGBAImage &);
+	RGBAImage &operator=(const RGBAImage &);
 public:
 	RGBAImage(int w, int h, const char *name = 0)
 	{
@@ -91,10 +91,10 @@ public:
 
 	/** By default down sample to half of each original dimension.
 	 */
-	RGBAImage* DownSample(int w=0, int h=0) const;
+	RGBAImage *DownSample(int w=0, int h=0) const;
 
-	bool WriteToFile(const char* filename) const;
-	static RGBAImage* ReadFromFile(const char* filename);
+	bool WriteToFile(const char *filename) const;
+	static RGBAImage *ReadFromFile(const char *filename);
 
 private:
 	int Width;

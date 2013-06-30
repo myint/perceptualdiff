@@ -39,7 +39,7 @@ static FIBITMAP *ToFreeImage(const RGBAImage &image)
 
 	for (int y=0; y < image.Get_Height(); y++, data += image.Get_Width())
 	{
-		unsigned int *scanline = reinterpret_cast<unsigned int*>(FreeImage_GetScanLine(bitmap, image.Get_Height() - y - 1));
+		unsigned int *scanline = reinterpret_cast<unsigned int *>(FreeImage_GetScanLine(bitmap, image.Get_Height() - y - 1));
 		memcpy(scanline, data, sizeof(data[0]) * image.Get_Width());
 	}
 
@@ -57,7 +57,7 @@ static RGBAImage *ToRGBAImage(FIBITMAP *image, const char *filename=NULL)
 	unsigned int *dest = result->Get_Data();
 	for ( int y=0; y < h; y++, dest += w )
 	{
-		const unsigned int *scanline = reinterpret_cast<const unsigned int*>(FreeImage_GetScanLine(image, h - y - 1));
+		const unsigned int *scanline = reinterpret_cast<const unsigned int *>(FreeImage_GetScanLine(image, h - y - 1));
 		memcpy(dest, scanline, sizeof(dest[0]) * w);
 	}
 

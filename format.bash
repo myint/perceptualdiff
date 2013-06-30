@@ -1,3 +1,9 @@
 #!/bin/bash
 
-astyle --add-brackets --indent=tab *.h *.cpp
+astyle \
+    --add-brackets \
+    --align-reference=name \
+    --align-pointer=name \
+    --indent=tab \
+    *.h \
+    *.cpp
