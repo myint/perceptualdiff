@@ -34,7 +34,7 @@ class RGBAImage
 	RGBAImage(const RGBAImage &);
 	RGBAImage &operator= (const RGBAImage &);
 public:
-	RGBAImage(int w, int h, const char *name = 0)
+	RGBAImage(int w, int h, const char *name=0)
 	{
 		Width = w;
 		Height = h;
@@ -91,7 +91,7 @@ public:
 
 	/** By default down sample to half of each original dimension.
 	 */
-	RGBAImage *DownSample(int w = 0, int h = 0) const;
+	RGBAImage *DownSample(int w=0, int h=0) const;
 
 	bool WriteToFile(const char *filename) const;
 	static RGBAImage *ReadFromFile(const char *filename);
