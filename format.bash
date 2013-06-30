@@ -2,10 +2,10 @@
 
 astyle \
     --add-brackets \
-    --align-reference=name \
     --align-pointer=name \
+    --align-reference=name \
     --indent=tab \
     --pad-header \
     --unpad-paren \
-    *.h \
-    *.cpp
+    *.cpp \
+    *.h
