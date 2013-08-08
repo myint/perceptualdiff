@@ -19,7 +19,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "LPyramid.h"
 
 
-LPyramid::LPyramid(const float *image, int width, int height) :
+LPyramid::LPyramid(const float *image, unsigned int width, unsigned int height) :
 	Width(width),
 	Height(height)
 {
@@ -58,9 +58,9 @@ void LPyramid::Convolve(float *a, const float *b) const
 {
 	const float Kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
 	#pragma omp parallel for
-	for (int y = 0; y < Height; y++) {
-		for (int x = 0; x < Width; x++) {
-			int index = y * Width + x;
+	for (unsigned int y = 0; y < Height; y++) {
+		for (unsigned int x = 0; x < Width; x++) {
+			unsigned int index = y * Width + x;
 			a[index] = 0.0f;
 			for (int i = -2; i <= 2; i++) {
 				for (int j = -2; j <= 2; j++) {
@@ -72,10 +72,10 @@ void LPyramid::Convolve(float *a, const float *b) const
 					if (ny < 0) {
 						ny = -ny;
 					}
-					if (nx >= Width) {
+					if (nx >= static_cast<long>(Width)) {
 						nx = 2 * Width - nx - 1;
 					}
-					if (ny >= Height) {
+					if (ny >= static_cast<long>(Height)) {
 						ny = 2 * Height - ny - 1;
 					}
 					a[index] += Kernel[i + 2] * Kernel[j + 2] * b[ny * Width + nx];

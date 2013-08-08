@@ -89,7 +89,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		ErrorStr = ss.str();
 		return false;
 	}
-	int image_count = 0;
+	unsigned int image_count = 0;
 	const char *output_file_name = NULL;
 	bool scale = false;
 	for (int i = 1; i < argc; i++) {
@@ -153,7 +153,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		ErrorStr = "FAIL: Not enough image files specified\n";
 		return false;
 	}
-	for (int i = 0; i < DownSample; i++) {
+	for (unsigned int i = 0; i < DownSample; i++) {
 		if (Verbose) {
 			printf("Downsampling by %d\n", 1 << (i + 1));
 		}
@@ -171,18 +171,18 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 	if (scale &&
 	        (ImgA->Get_Width() != ImgB->Get_Width() ||
 	         ImgA->Get_Height() != ImgB->Get_Height())) {
-		int min_width = ImgA->Get_Width();
+		unsigned int min_width = ImgA->Get_Width();
 		if (ImgB->Get_Width() < min_width) {
 			min_width = ImgB->Get_Width();
 		}
 
-		int min_height = ImgA->Get_Height();
+		unsigned int min_height = ImgA->Get_Height();
 		if (ImgB->Get_Height() < min_height) {
 			min_height = ImgB->Get_Height();
 		}
 
 		if (Verbose) {
-			printf("Scaling to %d x %d\n", min_width, min_height);
+			printf("Scaling to %u x %u\n", min_width, min_height);
 		}
 		RGBAImage *tmp = ImgA->DownSample(min_width, min_height);
 		if (tmp) {

@@ -50,7 +50,7 @@ public:
 	float ColorFactor;
 
 	// How much to down sample image before comparing, in powers of 2.
-	int DownSample;
+	unsigned int DownSample;
 };
 
 #endif

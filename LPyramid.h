@@ -23,7 +23,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 class LPyramid
 {
 public:
-	LPyramid(const float *image, int width, int height);
+	LPyramid(const float *image, unsigned int width, unsigned int height);
 	~LPyramid();
 	float Get_Value(int x, int y, int level) const;
 private:
@@ -33,8 +33,8 @@ private:
 	// Successively blurred versions of the original image
 	float *Levels[MAX_PYR_LEVELS];
 
-	int Width;
-	int Height;
+	unsigned int Width;
+	unsigned int Height;
 };
 
 #endif // _LPYRAMID_H

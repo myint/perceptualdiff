@@ -64,19 +64,19 @@ public:
 	{
 		Data[i] = r | (g << 8) | (b << 16) | (a << 24);
 	}
-	int Get_Width(void) const {
+	unsigned int Get_Width(void) const {
 		return Width;
 	}
-	int Get_Height(void) const {
+	unsigned int Get_Height(void) const {
 		return Height;
 	}
-	void Set(int x, int y, unsigned int d) {
+	void Set(unsigned int x, unsigned int y, unsigned int d) {
 		Data[x + y * Width] = d;
 	}
-	unsigned int Get(int x, int y) const {
+	unsigned int Get(unsigned int x, unsigned int y) const {
 		return Data[x + y * Width];
 	}
-	unsigned int Get(int i) const {
+	unsigned int Get(unsigned int i) const {
 		return Data[i];
 	}
 	const std::string &Get_Name(void) const {
@@ -91,14 +91,14 @@ public:
 
 	/** By default down sample to half of each original dimension.
 	 */
-	RGBAImage *DownSample(int w=0, int h=0) const;
+	RGBAImage *DownSample(unsigned int w=0, unsigned int h=0) const;
 
 	bool WriteToFile(const char *filename) const;
 	static RGBAImage *ReadFromFile(const char *filename);
 
 private:
-	int Width;
-	int Height;
+	unsigned int Width;
+	unsigned int Height;
 	std::string Name;
 	unsigned int *Data;
 };
