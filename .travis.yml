@@ -28,4 +28,4 @@ after_success:
     # Ignore header files in a stupid way.
     - rm -f *.h
 
-    - coveralls --verbose --exclude='CMakeFiles'
+    - if [ "$CC" == "gcc" ]; then ./coveralls.bash; fi
