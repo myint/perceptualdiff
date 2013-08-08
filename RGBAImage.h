@@ -34,7 +34,7 @@ class RGBAImage
 	RGBAImage(const RGBAImage &);
 	RGBAImage &operator= (const RGBAImage &);
 public:
-	RGBAImage(int w, int h, const char *name=0)
+	RGBAImage(unsigned int w, unsigned int h, const char *name=0)
 	{
 		Width = w;
 		Height = h;

@@ -112,7 +112,7 @@ static void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
 	r[0] = x / xw;
 	r[1] = y / yw;
 	r[2] = z / zw;
-	for (int i = 0; i < 3; i++) {
+	for (unsigned int i = 0; i < 3; i++) {
 		if (r[i] > epsilon) {
 			f[i] = powf(r[i], 1.0f / 3.0f);
 		} else {
@@ -227,7 +227,7 @@ bool Yee_Compare(CompareArgs &args)
 	#pragma omp parallel for reduction(+:pixels_failed) reduction(+:error_sum)
 	for (unsigned int y = 0; y < h; y++) {
 		for (unsigned int x = 0; x < w; x++) {
-			int index = x + y * w;
+			unsigned int index = x + y * w;
 			float contrast[MAX_PYR_LEVELS - 2];
 			float sum_contrast = 0;
 			for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
