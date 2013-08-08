@@ -25,7 +25,7 @@ class LPyramid
 public:
 	LPyramid(const float *image, unsigned int width, unsigned int height);
 	~LPyramid();
-	float Get_Value(unsigned int x, unsigned int y, int level) const;
+	float Get_Value(unsigned int x, unsigned int y, unsigned int level) const;
 private:
 	float *Copy(const float *img) const;
 	void Convolve(float *a, const float *b) const;
