@@ -28,4 +28,4 @@ after_success:
     # Ignore header files in a stupid way.
     - rm -f *.h
 
-    - coveralls --exclude='CMakeFiles'
+    - coveralls --verbose --exclude='CMakeFiles'
