@@ -78,4 +78,4 @@ $pdiff -downsample 2 fish1.png Aqsis_vase.png | grep -q 'FAIL'
 $pdiff  /dev/null /dev/null | grep -q 'FAIL'
 $pdiff -verbose -sum-errors fish[12].png | grep -q 'sum'
 $pdiff -colorfactor .5 -threshold 1000 -gamma 3 -luminance 90 cam_mb_ref.tif cam_mb.tif
-$pdiff -downsample 3 -scale -luminanceonly -fov 80 cam_mb_ref.tif cam_mb.tif
+$pdiff -downsample 30 -scale -luminanceonly -fov 80 cam_mb_ref.tif cam_mb.tif
