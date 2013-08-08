@@ -89,8 +89,7 @@ void LPyramid::Convolve(float *a, const float *b) const
 
 float LPyramid::Get_Value(unsigned int x, unsigned int y, unsigned int level) const
 {
-	unsigned int index = x + y * Width;
-	unsigned int l = level;
-	assert(l < MAX_PYR_LEVELS);
+	const unsigned int index = x + y * Width;
+	assert(level < MAX_PYR_LEVELS);
 	return Levels[level][index];
 }
