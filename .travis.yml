@@ -21,11 +21,8 @@ script:
     - bash -c './perceptualdiff | grep -i openmp'
 
 after_success:
-    - ./coveralls.bash
-
     - sudo pip install cpp-coveralls
+    - if [ "$CC" == "gcc" ]; then ./coveralls.bash; fi
 
     # Ignore header files in a stupid way.
     - rm -f *.h
-
-    - if [ "$CC" == "gcc" ]; then ./coveralls.bash; fi
