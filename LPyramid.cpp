@@ -16,6 +16,8 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
+#include <cassert>
+
 #include "LPyramid.h"
 
 
@@ -89,8 +91,6 @@ float LPyramid::Get_Value(unsigned int x, unsigned int y, unsigned int level) co
 {
 	unsigned int index = x + y * Width;
 	unsigned int l = level;
-	if (l >= MAX_PYR_LEVELS) {
-		l = MAX_PYR_LEVELS - 1;
-	}
-	return Levels[l][index];
+	assert(l < MAX_PYR_LEVELS);
+	return Levels[level][index];
 }
