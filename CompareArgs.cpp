@@ -61,7 +61,7 @@ Output lexical_cast(const Input &input)
 	ss << input;
 	Output output;
 	if (not (ss >> output)) {
-		throw std::invalid_argument("Bad cast");
+		throw std::bad_cast();
 	}
 	return output;
 }
@@ -165,7 +165,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			} else {
 				fprintf(stderr, "Warning: option/file \"%s\" ignored\n", argv[i]);
 			}
-		} catch (const std::invalid_argument &)
+		} catch (const std::bad_cast &)
 		{
 			std::cerr << "Invalid argument (" << argv[i] << ") for " << argv[i - 1] << std::endl;
 			return false;
