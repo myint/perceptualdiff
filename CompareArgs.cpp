@@ -20,7 +20,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "RGBAImage.h"
 #include <cstdio>
 #include <cstdlib>
-#include <cstring>
 #include <cassert>
 #include <iostream>
 #include <sstream>
@@ -110,39 +109,39 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 	bool scale = false;
 	for (int i = 1; i < argc; i++) {
 		try {
-			if (strcmp(argv[i], "-fov") == 0) {
+			if (std::string(argv[i]) == "-fov") {
 				if (++i < argc) {
 					FieldOfView = lexical_cast<double>(argv[i]);
 				}
-			} else if (strcmp(argv[i], "-verbose") == 0) {
+			} else if (std::string(argv[i]) == "-verbose") {
 				Verbose = true;
-			} else if (strcmp(argv[i], "-threshold") == 0) {
+			} else if (std::string(argv[i]) == "-threshold") {
 				if (++i < argc) {
 					ThresholdPixels = lexical_cast<int>(argv[i]);
 				}
-			} else if (strcmp(argv[i], "-gamma") == 0) {
+			} else if (std::string(argv[i]) == "-gamma") {
 				if (++i < argc) {
 					Gamma = lexical_cast<double>(argv[i]);
 				}
-			} else if (strcmp(argv[i], "-luminance") == 0) {
+			} else if (std::string(argv[i]) == "-luminance") {
 				if (++i < argc) {
 					Luminance = lexical_cast<double>(argv[i]);
 				}
-			} else if (strcmp(argv[i], "-luminanceonly") == 0) {
+			} else if (std::string(argv[i]) == "-luminanceonly") {
 				LuminanceOnly = true;
-			} else if (strcmp(argv[i], "-sum-errors") == 0) {
+			} else if (std::string(argv[i]) == "-sum-errors") {
 				SumErrors = true;
-			} else if (strcmp(argv[i], "-colorfactor") == 0) {
+			} else if (std::string(argv[i]) == "-colorfactor") {
 				if (++i < argc) {
 					ColorFactor = lexical_cast<double>(argv[i]);
 				}
-			} else if (strcmp(argv[i], "-downsample") == 0) {
+			} else if (std::string(argv[i]) == "-downsample") {
 				if (++i < argc) {
 					DownSample = lexical_cast<int>(argv[i]);
 				}
-			} else if (strcmp(argv[i], "-scale") == 0) {
+			} else if (std::string(argv[i]) == "-scale") {
 				scale = true;
-			} else if (strcmp(argv[i], "-output") == 0) {
+			} else if (std::string(argv[i]) == "-output") {
 				if (++i < argc) {
 					output_file_name = argv[i];
 				}
