@@ -22,7 +22,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <cstdlib>
 #include <cstring>
 #include <cassert>
+#include <iostream>
 #include <sstream>
+#include <stdexcept>
 
 
 static const char *copyright = "PerceptualDiff version 1.1.2, Copyright (C) 2006 Yangli Hector Yee\n\
@@ -50,6 +52,20 @@ Options:\n\
 \n\
 Note: Input or Output files can also be in the PNG or JPG format or any format\n\
 that FreeImage supports.\n";
+
+
+template <typename Output, typename Input>
+Output lexical_cast(const Input &input)
+{
+	std::stringstream ss;
+	ss << input;
+	Output output;
+	if (not (ss >> output)) {
+		throw std::invalid_argument("Bad cast");
+	}
+	return output;
+}
+
 
 CompareArgs::CompareArgs()
 {
@@ -93,60 +109,66 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 	const char *output_file_name = NULL;
 	bool scale = false;
 	for (int i = 1; i < argc; i++) {
-		if (strcmp(argv[i], "-fov") == 0) {
-			if (++i < argc) {
-				FieldOfView = atof(argv[i]);
-			}
-		} else if (strcmp(argv[i], "-verbose") == 0) {
-			Verbose = true;
-		} else if (strcmp(argv[i], "-threshold") == 0) {
-			if (++i < argc) {
-				ThresholdPixels = atoi(argv[i]);
-			}
-		} else if (strcmp(argv[i], "-gamma") == 0) {
-			if (++i < argc) {
-				Gamma = atof(argv[i]);
-			}
-		} else if (strcmp(argv[i], "-luminance") == 0) {
-			if (++i < argc) {
-				Luminance = atof(argv[i]);
-			}
-		} else if (strcmp(argv[i], "-luminanceonly") == 0) {
-			LuminanceOnly = true;
-		} else if (strcmp(argv[i], "-sum-errors") == 0) {
-			SumErrors = true;
-		} else if (strcmp(argv[i], "-colorfactor") == 0) {
-			if (++i < argc) {
-				ColorFactor = atof(argv[i]);
-			}
-		} else if (strcmp(argv[i], "-downsample") == 0) {
-			if (++i < argc) {
-				DownSample = atoi(argv[i]);
-			}
-		} else if (strcmp(argv[i], "-scale") == 0) {
-			scale = true;
-		} else if (strcmp(argv[i], "-output") == 0) {
-			if (++i < argc) {
-				output_file_name = argv[i];
-			}
-		} else if (image_count < 2) {
-			RGBAImage *img = RGBAImage::ReadFromFile(argv[i]);
-			if (!img) {
-				ErrorStr = "FAIL: Cannot open ";
-				ErrorStr += argv[i];
-				ErrorStr += "\n";
-				return false;
+		try {
+			if (strcmp(argv[i], "-fov") == 0) {
+				if (++i < argc) {
+					FieldOfView = lexical_cast<double>(argv[i]);
+				}
+			} else if (strcmp(argv[i], "-verbose") == 0) {
+				Verbose = true;
+			} else if (strcmp(argv[i], "-threshold") == 0) {
+				if (++i < argc) {
+					ThresholdPixels = lexical_cast<int>(argv[i]);
+				}
+			} else if (strcmp(argv[i], "-gamma") == 0) {
+				if (++i < argc) {
+					Gamma = lexical_cast<double>(argv[i]);
+				}
+			} else if (strcmp(argv[i], "-luminance") == 0) {
+				if (++i < argc) {
+					Luminance = lexical_cast<double>(argv[i]);
+				}
+			} else if (strcmp(argv[i], "-luminanceonly") == 0) {
+				LuminanceOnly = true;
+			} else if (strcmp(argv[i], "-sum-errors") == 0) {
+				SumErrors = true;
+			} else if (strcmp(argv[i], "-colorfactor") == 0) {
+				if (++i < argc) {
+					ColorFactor = lexical_cast<double>(argv[i]);
+				}
+			} else if (strcmp(argv[i], "-downsample") == 0) {
+				if (++i < argc) {
+					DownSample = lexical_cast<int>(argv[i]);
+				}
+			} else if (strcmp(argv[i], "-scale") == 0) {
+				scale = true;
+			} else if (strcmp(argv[i], "-output") == 0) {
+				if (++i < argc) {
+					output_file_name = argv[i];
+				}
+			} else if (image_count < 2) {
+				RGBAImage *img = RGBAImage::ReadFromFile(argv[i]);
+				if (!img) {
+					ErrorStr = "FAIL: Cannot open ";
+					ErrorStr += argv[i];
+					ErrorStr += "\n";
+					return false;
+				} else {
+					++image_count;
+					if (image_count == 1) {
+						ImgA = img;
+					}
+					else {
+						ImgB = img;
+					}
+				}
 			} else {
-				++image_count;
-				if (image_count == 1) {
-					ImgA = img;
-				}
-				else {
-					ImgB = img;
-				}
+				fprintf(stderr, "Warning: option/file \"%s\" ignored\n", argv[i]);
 			}
-		} else {
-			fprintf(stderr, "Warning: option/file \"%s\" ignored\n", argv[i]);
+		} catch (const std::invalid_argument &)
+		{
+			std::cerr << "Invalid argument (" << argv[i] << ") for " << argv[i - 1] << std::endl;
+			return false;
 		}
 	} // i
 	if (!ImgA || !ImgB) {
