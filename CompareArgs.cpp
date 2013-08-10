@@ -111,7 +111,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		try {
 			if (std::string(argv[i]) == "-fov") {
 				if (++i < argc) {
-					FieldOfView = lexical_cast<double>(argv[i]);
+					FieldOfView = lexical_cast<float>(argv[i]);
 				}
 			} else if (std::string(argv[i]) == "-verbose") {
 				Verbose = true;
@@ -121,11 +121,11 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 				}
 			} else if (std::string(argv[i]) == "-gamma") {
 				if (++i < argc) {
-					Gamma = lexical_cast<double>(argv[i]);
+					Gamma = lexical_cast<float>(argv[i]);
 				}
 			} else if (std::string(argv[i]) == "-luminance") {
 				if (++i < argc) {
-					Luminance = lexical_cast<double>(argv[i]);
+					Luminance = lexical_cast<float>(argv[i]);
 				}
 			} else if (std::string(argv[i]) == "-luminanceonly") {
 				LuminanceOnly = true;
@@ -133,7 +133,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 				SumErrors = true;
 			} else if (std::string(argv[i]) == "-colorfactor") {
 				if (++i < argc) {
-					ColorFactor = lexical_cast<double>(argv[i]);
+					ColorFactor = lexical_cast<float>(argv[i]);
 				}
 			} else if (std::string(argv[i]) == "-downsample") {
 				if (++i < argc) {
