@@ -225,7 +225,7 @@ bool Yee_Compare(CompareArgs &args)
 	#pragma omp parallel for reduction(+:pixels_failed) reduction(+:error_sum)
 	for (unsigned int y = 0; y < h; y++) {
 		for (unsigned int x = 0; x < w; x++) {
-			unsigned int index = x + y * w;
+			const unsigned int index = x + y * w;
 			float contrast[MAX_PYR_LEVELS - 2];
 			float sum_contrast = 0;
 			for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
@@ -284,7 +284,7 @@ bool Yee_Compare(CompareArgs &args)
 				float db = aB[index] - bB[index];
 				da = da * da;
 				db = db * db;
-				float delta_e = (da + db) * color_scale;
+				const float delta_e = (da + db) * color_scale;
 				error_sum += delta_e;
 				if (delta_e > factor) {
 					pass = false;
