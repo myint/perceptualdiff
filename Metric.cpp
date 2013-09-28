@@ -62,14 +62,10 @@ static float tvi(float adaptation_luminance)
 // given the cycles per degree (cpd) and luminance (lum)
 static float csf(float cpd, float lum)
 {
-	float a, b, result;
+	const float a = 440.0f * powf((1.0f + 0.7f / lum), -0.2f);
+	const float b = 0.3f * powf((1.0f + 100.0f / lum), 0.15f);
 
-	a = 440.0f * powf((1.0f + 0.7f / lum), -0.2f);
-	b = 0.3f * powf((1.0f + 100.0f / lum), 0.15f);
-
-	result = a * cpd * expf(-b * cpd) * sqrtf(1.0f + 0.06f * expf(b * cpd));
-
-	return result;
+	return a * cpd * expf(-b * cpd) * sqrtf(1.0f + 0.06f * expf(b * cpd));
 }
 
 /*
@@ -78,12 +74,9 @@ static float csf(float cpd, float lum)
 */
 static float mask(float contrast)
 {
-	float a, b, result;
-	a = powf(392.498f * contrast, 0.7f);
-	b = powf(0.0153f * a, 4.0f);
-	result = powf(1.0f + b, 0.25f);
-
-	return result;
+	const float a = powf(392.498f * contrast, 0.7f);
+	const float b = powf(0.0153f * a, 4.0f);
+	return powf(1.0f + b, 0.25f);
 }
 
 // convert Adobe RGB (1998) with reference white D65 to XYZ
