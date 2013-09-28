@@ -108,7 +108,7 @@ struct White
 	float z;
 };
 
-static const White reference_white;
+static const White global_white;
 
 static void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
 {
@@ -116,9 +116,9 @@ static void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
 	const float kappa = 24389.0f / 27.0f;
 	float f[3];
 	float r[3];
-	r[0] = x / reference_white.x;
-	r[1] = y / reference_white.y;
-	r[2] = z / reference_white.z;
+	r[0] = x / global_white.x;
+	r[1] = y / global_white.y;
+	r[2] = z / global_white.z;
 	for (unsigned int i = 0; i < 3; i++) {
 		if (r[i] > epsilon) {
 			f[i] = powf(r[i], 1.0f / 3.0f);
