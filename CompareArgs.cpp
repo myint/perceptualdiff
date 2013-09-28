@@ -147,7 +147,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 				}
 			} else if (image_count < 2) {
 				RGBAImage *img = RGBAImage::ReadFromFile(argv[i]);
-				if (!img) {
+				if (not img) {
 					ErrorStr = "FAIL: Cannot open ";
 					ErrorStr += argv[i];
 					ErrorStr += "\n";
@@ -170,7 +170,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			return false;
 		}
 	} // i
-	if (!ImgA || !ImgB) {
+	if (not ImgA or not ImgB) {
 		ErrorStr = "FAIL: Not enough image files specified\n";
 		return false;
 	}
@@ -189,8 +189,8 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 			ImgB = tmp;
 		}
 	}
-	if (scale &&
-	        (ImgA->Get_Width() != ImgB->Get_Width() ||
+	if (scale and
+	        (ImgA->Get_Width() != ImgB->Get_Width() or
 	         ImgA->Get_Height() != ImgB->Get_Height())) {
 		unsigned int min_width = ImgA->Get_Width();
 		if (ImgB->Get_Width() < min_width) {

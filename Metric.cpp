@@ -124,7 +124,7 @@ static void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
 
 bool Yee_Compare(CompareArgs &args)
 {
-	if ((args.ImgA->Get_Width() != args.ImgB->Get_Width()) ||
+	if ((args.ImgA->Get_Width() != args.ImgB->Get_Width()) or
 	        (args.ImgA->Get_Height() != args.ImgB->Get_Height())) {
 		args.ErrorStr = "Image dimensions do not match\n";
 		return false;
@@ -272,7 +272,7 @@ bool Yee_Compare(CompareArgs &args)
 				pass = false;
 			}
 
-			if (!args.LuminanceOnly) {
+			if (not args.LuminanceOnly) {
 				// CIE delta E test with modifications
 				float color_scale = args.ColorFactor;
 				// ramp down the color test in scotopic regions
@@ -291,7 +291,7 @@ bool Yee_Compare(CompareArgs &args)
 				}
 			}
 
-			if (!pass) {
+			if (not pass) {
 				pixels_failed++;
 				if (args.ImgDiff) {
 					args.ImgDiff->Set(255, 0, 0, 255, index);

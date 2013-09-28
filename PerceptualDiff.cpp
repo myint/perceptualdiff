@@ -29,7 +29,7 @@ int main(int argc, char **argv)
 {
 	CompareArgs args;
 
-	if (!args.Parse_Args(argc, argv)) {
+	if (not args.Parse_Args(argc, argv)) {
 		printf("%s", args.ErrorStr.c_str());
 		return -1;
 	} else {
