@@ -96,22 +96,29 @@ static void AdobeRGBToXYZ(float r, float g, float b,
 	z = r * 0.0270328f + g * 0.0706879f + b * 0.991248f;
 }
 
+struct White
+{
+	White()
+	{
+		AdobeRGBToXYZ(1.f, 1.f, 1.f, x, y, z);
+	}
+
+	float x;
+	float y;
+	float z;
+};
+
+static const White reference_white;
+
 static void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
 {
-	static float xw = -1;
-	static float yw;
-	static float zw;
-	// reference white
-	if (xw < 0) {
-		AdobeRGBToXYZ(1.f, 1.f, 1.f, xw, yw, zw);
-	}
 	const float epsilon = 216.0f / 24389.0f;
 	const float kappa = 24389.0f / 27.0f;
 	float f[3];
 	float r[3];
-	r[0] = x / xw;
-	r[1] = y / yw;
-	r[2] = z / zw;
+	r[0] = x / reference_white.x;
+	r[1] = y / reference_white.y;
+	r[2] = z / reference_white.z;
 	for (unsigned int i = 0; i < 3; i++) {
 		if (r[i] > epsilon) {
 			f[i] = powf(r[i], 1.0f / 3.0f);
