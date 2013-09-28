@@ -34,7 +34,7 @@ class RGBAImage
 	RGBAImage(const RGBAImage &);
 	RGBAImage &operator= (const RGBAImage &);
 public:
-	RGBAImage(unsigned int w, unsigned int h, const std::string name="") :
+	RGBAImage(unsigned int w, unsigned int h, const std::string &name="") :
 		Width(w),
 		Height(h),
 		Name(name),

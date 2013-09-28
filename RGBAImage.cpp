@@ -49,7 +49,7 @@ static FIBITMAP *ToFreeImage(const RGBAImage &image)
 }
 
 
-static RGBAImage *ToRGBAImage(FIBITMAP *image, const std::string filename="")
+static RGBAImage *ToRGBAImage(FIBITMAP *image, const std::string &filename="")
 {
 	const unsigned int w = FreeImage_GetWidth(image);
 	const unsigned int h = FreeImage_GetHeight(image);
