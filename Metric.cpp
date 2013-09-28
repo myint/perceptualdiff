@@ -38,9 +38,9 @@ static float tvi(float adaptation_luminance)
 	// returns the threshold luminance given the adaptation luminance
 	// units are candelas per meter squared
 
-	float log_a, r, result;
-	log_a = log10f(adaptation_luminance);
+	const float log_a = log10f(adaptation_luminance);
 
+	float r;
 	if (log_a < -3.94f) {
 		r = -2.86f;
 	} else if (log_a < -1.44f) {
@@ -53,9 +53,7 @@ static float tvi(float adaptation_luminance)
 		r = log_a - 1.255f;
 	}
 
-	result = powf(10.0f , r);
-
-	return result;
+	return powf(10.0f , r);
 }
 
 // computes the contrast sensitivity function (Barten SPIE 1989)
