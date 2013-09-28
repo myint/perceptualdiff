@@ -39,7 +39,7 @@ numTestsFailed=0
 
 # Run all tests.
 while read expectedResult image1 image2 ; do
-	if $pdiff -verbose -scale "$image1" "$image2" | grep -q "^$expectedResult" ; then
+	if $pdiff -verbose -scale "$image1" "$image2" 2>&1 | grep -q "^$expectedResult" ; then
 		totalTests=$((totalTests+1))
 	else
 		numTestsFailed=$((numTestsFailed+1))
@@ -60,25 +60,25 @@ else
 fi
 
 # Run additional tests.
-$pdiff | grep -i openmp
+$pdiff 2>&1 | grep -i openmp
 rm -f diff.png
-$pdiff -output diff.png -verbose fish[12].png | grep -q 'FAIL'
+$pdiff -output diff.png -verbose fish[12].png 2>&1 | grep -q 'FAIL'
 ls diff.png
 rm -f diff.png
 
 head fish1.png > fake.png
-$pdiff -verbose fish1.png fake.png | grep -q 'Failed to load'
+$pdiff -verbose fish1.png fake.png 2>&1 | grep -q 'Failed to load'
 rm -f fake.png
 
-$pdiff fish[12].png -output foo | grep -q 'unknown filetype'
-$pdiff -verbose fish1.png | grep -q 'Not enough'
+$pdiff fish[12].png -output foo 2>&1 | grep -q 'unknown filetype'
+$pdiff -verbose fish1.png 2>&1 | grep -q 'Not enough'
 $pdiff cam_mb_ref.tif cam_mb.tif -fake-option
-$pdiff -verbose -scale fish1.png Aqsis_vase.png | grep -q 'FAIL'
-$pdiff -downsample 2 fish1.png Aqsis_vase.png | grep -q 'FAIL'
-$pdiff  /dev/null /dev/null | grep -q 'FAIL'
-$pdiff -verbose -sum-errors fish[12].png | grep -q 'sum'
+$pdiff -verbose -scale fish1.png Aqsis_vase.png 2>&1 | grep -q 'FAIL'
+$pdiff -downsample 2 fish1.png Aqsis_vase.png 2>&1 | grep -q 'FAIL'
+$pdiff  /dev/null /dev/null 2>&1 | grep -q 'FAIL'
+$pdiff -verbose -sum-errors fish[12].png 2>&1 | grep -q 'sum'
 $pdiff -colorfactor .5 -threshold 1000 -gamma 3 -luminance 90 cam_mb_ref.tif cam_mb.tif
 $pdiff -verbose -downsample 30 -scale -luminanceonly -fov 80 cam_mb_ref.tif cam_mb.tif
-echo "$($pdiff -fov wrong fish1.png fish1.png 2>&1)" | grep -q 'Invalid argument'
+echo "$($pdiff -fov wrong fish1.png fish1.png 2>&1)" 2>&1 | grep -q 'Invalid argument'
 
 echo -e '\x1b[01;32mOK\x1b[0m'

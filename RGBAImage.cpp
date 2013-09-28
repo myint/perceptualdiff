@@ -20,7 +20,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "RGBAImage.h"
 #include "FreeImage.h"
-#include <cstdio>
+
+#include <iostream>
+#include <string>
 #include <cstring>
 #include <cassert>
 
@@ -47,7 +49,7 @@ static FIBITMAP *ToFreeImage(const RGBAImage &image)
 }
 
 
-static RGBAImage *ToRGBAImage(FIBITMAP *image, const char *filename=NULL)
+static RGBAImage *ToRGBAImage(FIBITMAP *image, const std::string filename="")
 {
 	const unsigned int w = FreeImage_GetWidth(image);
 	const unsigned int h = FreeImage_GetHeight(image);
@@ -91,19 +93,19 @@ RGBAImage *RGBAImage::DownSample(unsigned int w, unsigned int h) const {
 	FreeImage_Unload(bitmap);
 	bitmap = NULL;
 
-	RGBAImage *img = ToRGBAImage(converted, Name.c_str());
+	RGBAImage *img = ToRGBAImage(converted, Name);
 
 	FreeImage_Unload(converted);
 
 	return img;
 }
 
-bool RGBAImage::WriteToFile(const char *filename) const
+bool RGBAImage::WriteToFile(const std::string &filename) const
 {
-	const FREE_IMAGE_FORMAT fileType = FreeImage_GetFIFFromFilename(filename);
+	const FREE_IMAGE_FORMAT fileType = FreeImage_GetFIFFromFilename(filename.c_str());
 	if (FIF_UNKNOWN == fileType)
 	{
-		printf("Can't save to unknown filetype %s\n", filename);
+		std::cerr << "Can't save to unknown filetype " << filename << std::endl;
 		return false;
 	}
 
@@ -112,9 +114,9 @@ bool RGBAImage::WriteToFile(const char *filename) const
 	FreeImage_SetTransparent(bitmap, false);
 	FIBITMAP *converted = FreeImage_ConvertTo24Bits(bitmap);
 
-	const bool result = !!FreeImage_Save(fileType, converted, filename);
+	const bool result = !!FreeImage_Save(fileType, converted, filename.c_str());
 	if (!result) {
-		printf("Failed to save to %s\n", filename);
+		std::cerr << "Failed to save to " << filename << std::endl;
 	}
 
 	FreeImage_Unload(converted);
@@ -122,24 +124,24 @@ bool RGBAImage::WriteToFile(const char *filename) const
 	return result;
 }
 
-RGBAImage *RGBAImage::ReadFromFile(const char *filename)
+RGBAImage *RGBAImage::ReadFromFile(const std::string &filename)
 {
-	const FREE_IMAGE_FORMAT fileType = FreeImage_GetFileType(filename);
+	const FREE_IMAGE_FORMAT fileType = FreeImage_GetFileType(filename.c_str());
 	if (FIF_UNKNOWN == fileType)
 	{
-		printf("Unknown filetype %s\n", filename);
+		std::cerr << "Unknown filetype " << filename << std::endl;
 		return 0;
 	}
 
 	FIBITMAP *freeImage = 0;
-	if (FIBITMAP *temporary = FreeImage_Load(fileType, filename, 0))
+	if (FIBITMAP *temporary = FreeImage_Load(fileType, filename.c_str(), 0))
 	{
 		freeImage = FreeImage_ConvertTo32Bits(temporary);
 		FreeImage_Unload(temporary);
 	}
 	if (!freeImage)
 	{
-		printf("Failed to load the image %s\n", filename);
+		std::cerr << "Failed to load the image " << filename << std::endl;
 		return 0;
 	}
 

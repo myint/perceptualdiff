@@ -327,7 +327,7 @@ bool Yee_Compare(CompareArgs &args)
 
 	// Always output image difference if requested.
 	if (args.ImgDiff) {
-		if (args.ImgDiff->WriteToFile(args.ImgDiff->Get_Name().c_str())) {
+		if (args.ImgDiff->WriteToFile(args.ImgDiff->Get_Name())) {
 			args.ErrorStr += "Wrote difference image to ";
 			args.ErrorStr += args.ImgDiff->Get_Name();
 			args.ErrorStr += "\n";

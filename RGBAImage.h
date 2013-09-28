@@ -34,19 +34,15 @@ class RGBAImage
 	RGBAImage(const RGBAImage &);
 	RGBAImage &operator= (const RGBAImage &);
 public:
-	RGBAImage(unsigned int w, unsigned int h, const char *name=0)
+	RGBAImage(unsigned int w, unsigned int h, const std::string name="") :
+		Width(w),
+		Height(h),
+		Name(name),
+		Data(new unsigned int[w * h])
 	{
-		Width = w;
-		Height = h;
-		if (name) {
-			Name = name;
-		}
-		Data = new unsigned int[w * h];
 	}
 	~RGBAImage() {
-		if (Data) {
-			delete[] Data;
-		}
+		delete [] Data;
 	}
 	unsigned char Get_Red(unsigned int i) const {
 		return (Data[i] & 0xFF);
@@ -93,13 +89,13 @@ public:
 	 */
 	RGBAImage *DownSample(unsigned int w=0, unsigned int h=0) const;
 
-	bool WriteToFile(const char *filename) const;
-	static RGBAImage *ReadFromFile(const char *filename);
+	bool WriteToFile(const std::string &filename) const;
+	static RGBAImage *ReadFromFile(const std::string &filename);
 
 private:
-	unsigned int Width;
-	unsigned int Height;
-	std::string Name;
+	const unsigned int Width;
+	const unsigned int Height;
+	const std::string Name;
 	unsigned int *Data;
 };
 
