@@ -200,8 +200,8 @@ bool Yee_Compare(CompareArgs &args)
 	LPyramid *la = new LPyramid(aLum, w, h);
 	LPyramid *lb = new LPyramid(bLum, w, h);
 
-	float num_one_degree_pixels = 2 * tan(args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI;
-	float pixels_per_degree = w / num_one_degree_pixels;
+	const float num_one_degree_pixels = 2 * tan(args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI;
+	const float pixels_per_degree = w / num_one_degree_pixels;
 
 	if (args.Verbose) {
 		printf("Performing test\n");
@@ -222,7 +222,7 @@ bool Yee_Compare(CompareArgs &args)
 	for (unsigned int i = 1; i < MAX_PYR_LEVELS; i++) {
 		cpd[i] = 0.5f * cpd[i - 1];
 	}
-	float csf_max = csf(3.248f, 100.0f);
+	const float csf_max = csf(3.248f, 100.0f);
 
 	float F_freq[MAX_PYR_LEVELS - 2];
 	for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
@@ -272,7 +272,7 @@ bool Yee_Compare(CompareArgs &args)
 			if (factor > 10) {
 				factor = 10;
 			}
-			float delta = fabsf(la->Get_Value(x, y, 0) - lb->Get_Value(x, y, 0));
+			const float delta = fabsf(la->Get_Value(x, y, 0) - lb->Get_Value(x, y, 0));
 			error_sum += delta;
 			bool pass = true;
 
