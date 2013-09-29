@@ -96,7 +96,7 @@ private:
 	const unsigned int Width;
 	const unsigned int Height;
 	const std::string Name;
-	unsigned int *Data;
+	unsigned int *const Data;
 };
 
 #endif
