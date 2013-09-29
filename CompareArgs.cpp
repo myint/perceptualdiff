@@ -54,7 +54,7 @@ that FreeImage supports.\n";
 
 
 template <typename Output, typename Input>
-Output lexical_cast(const Input &input)
+static Output lexical_cast(const Input &input)
 {
 	std::stringstream ss;
 	ss << input;
