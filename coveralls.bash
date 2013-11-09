@@ -23,4 +23,4 @@ do
     cp "$result_path/$f.gcov" "$path" || true
 done
 
-coveralls --verbose --exclude='CMakeFiles'
+coveralls --verbose --no-gcov --exclude='CMakeFiles'
