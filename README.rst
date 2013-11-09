@@ -2,7 +2,7 @@
 perceptualdiff
 ==============
 
-A program that compares two images using a perceptually based image metric
+A program that compares two images using a perceptually based image metric.
 
 .. image:: https://travis-ci.org/myint/perceptualdiff.png?branch=master
     :target: https://travis-ci.org/myint/perceptualdiff
