@@ -54,7 +54,7 @@ static RGBAImage *ToRGBAImage(FIBITMAP *image, const std::string &filename="")
 	const unsigned int w = FreeImage_GetWidth(image);
 	const unsigned int h = FreeImage_GetHeight(image);
 
-	RGBAImage *result = new RGBAImage(w, h, filename);
+	auto result = new RGBAImage(w, h, filename);
 	// Copy the image over to our internal format, FreeImage has the scanlines bottom to top though.
 	unsigned int *dest = result->Get_Data();
 	for (unsigned int y = 0; y < h; y++, dest += w)
@@ -79,10 +79,10 @@ RGBAImage *RGBAImage::DownSample(unsigned int w, unsigned int h) const {
 	}
 
 	if (Width <= 1 or Height <= 1) {
-		return NULL;
+		return nullptr;
 	}
 	if (Width == w and Height == h) {
-		return NULL;
+		return nullptr;
 	}
 	assert(w <= Width);
 	assert(h <= Height);
@@ -91,7 +91,7 @@ RGBAImage *RGBAImage::DownSample(unsigned int w, unsigned int h) const {
 	FIBITMAP *converted = FreeImage_Rescale(bitmap, w, h, FILTER_BICUBIC);
 
 	FreeImage_Unload(bitmap);
-	bitmap = NULL;
+	bitmap = nullptr;
 
 	RGBAImage *img = ToRGBAImage(converted, Name);
 
@@ -130,10 +130,10 @@ RGBAImage *RGBAImage::ReadFromFile(const std::string &filename)
 	if (FIF_UNKNOWN == fileType)
 	{
 		std::cerr << "Unknown filetype " << filename << std::endl;
-		return 0;
+		return nullptr;
 	}
 
-	FIBITMAP *freeImage = 0;
+	FIBITMAP *freeImage = nullptr;
 	if (FIBITMAP *temporary = FreeImage_Load(fileType, filename.c_str(), 0))
 	{
 		freeImage = FreeImage_ConvertTo32Bits(temporary);
@@ -142,7 +142,7 @@ RGBAImage *RGBAImage::ReadFromFile(const std::string &filename)
 	if (not freeImage)
 	{
 		std::cerr << "Failed to load the image " << filename << std::endl;
-		return 0;
+		return nullptr;
 	}
 
 	RGBAImage *result = ToRGBAImage(freeImage);

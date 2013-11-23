@@ -16,7 +16,7 @@ env:
 script:
     - cppcheck --error-exitcode=2 .
     - cmake .
-    - make check
+    - make VERBOSE=1 check
     - ./memcheck.bash
     - bash -c './perceptualdiff | grep -i openmp'
 

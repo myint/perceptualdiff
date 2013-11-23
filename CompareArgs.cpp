@@ -68,9 +68,9 @@ static Output lexical_cast(const Input &input)
 
 CompareArgs::CompareArgs()
 {
-	ImgA = NULL;
-	ImgB = NULL;
-	ImgDiff = NULL;
+	ImgA = nullptr;
+	ImgB = nullptr;
+	ImgDiff = nullptr;
 	Verbose = false;
 	LuminanceOnly = false;
 	SumErrors = false;
@@ -105,7 +105,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		return false;
 	}
 	unsigned int image_count = 0;
-	const char *output_file_name = NULL;
+	const char *output_file_name = nullptr;
 	bool scale = false;
 	for (int i = 1; i < argc; i++) {
 		try {

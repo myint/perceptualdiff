@@ -39,15 +39,15 @@ LPyramid::LPyramid(const float *image, unsigned int width, unsigned int height) 
 
 LPyramid::~LPyramid()
 {
-	for (unsigned int i = 0; i < MAX_PYR_LEVELS; i++) {
-		delete [] Levels[i];
+	for (auto &elem : Levels) {
+		delete [] elem;
 	}
 }
 
 float *LPyramid::Copy(const float *img) const
 {
 	unsigned int max = Width * Height;
-	float *out = new float[max];
+	auto out = new float[max];
 	for (unsigned int i = 0; i < max; i++) {
 		out[i] = img[i];
 	}

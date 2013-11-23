@@ -144,19 +144,19 @@ bool Yee_Compare(CompareArgs &args)
 	}
 
 	// assuming colorspaces are in Adobe RGB (1998) convert to XYZ
-	float *aX = new float[dim];
-	float *aY = new float[dim];
-	float *aZ = new float[dim];
-	float *bX = new float[dim];
-	float *bY = new float[dim];
-	float *bZ = new float[dim];
-	float *aLum = new float[dim];
-	float *bLum = new float[dim];
+	auto aX = new float[dim];
+	auto aY = new float[dim];
+	auto aZ = new float[dim];
+	auto bX = new float[dim];
+	auto bY = new float[dim];
+	auto bZ = new float[dim];
+	auto aLum = new float[dim];
+	auto bLum = new float[dim];
 
-	float *aA = new float[dim];
-	float *bA = new float[dim];
-	float *aB = new float[dim];
-	float *bB = new float[dim];
+	auto aA = new float[dim];
+	auto bA = new float[dim];
+	auto aB = new float[dim];
+	auto bB = new float[dim];
 
 	if (args.Verbose) {
 		printf("Converting RGB to XYZ\n");
@@ -188,8 +188,8 @@ bool Yee_Compare(CompareArgs &args)
 		printf("Constructing Laplacian Pyramids\n");
 	}
 
-	LPyramid *la = new LPyramid(aLum, w, h);
-	LPyramid *lb = new LPyramid(bLum, w, h);
+	auto la = new LPyramid(aLum, w, h);
+	auto lb = new LPyramid(bLum, w, h);
 
 	const float num_one_degree_pixels = 2 * tan(args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI;
 	const float pixels_per_degree = w / num_one_degree_pixels;
