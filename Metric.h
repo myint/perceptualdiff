@@ -22,7 +22,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 class CompareArgs;
 
 // Image comparison metric using Yee's method
-// References: A Perceptual Metric for Production Testing, Hector Yee, Journal of Graphics Tools 2004
+// References: A Perceptual Metric for Production Testing, Hector Yee, Journal
+// of Graphics Tools 2004
 bool Yee_Compare(CompareArgs &args);
 
 #endif

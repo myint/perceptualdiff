@@ -20,76 +20,90 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "LPyramid.h"
 
-
-LPyramid::LPyramid(const float *image, unsigned int width, unsigned int height) :
-	Width(width),
-	Height(height)
+LPyramid::LPyramid(const float *image, unsigned int width, unsigned int height)
+    : Width(width), Height(height)
 {
-	// Make the Laplacian pyramid by successively
-	// copying the earlier levels and blurring them
-	for (unsigned int i = 0; i < MAX_PYR_LEVELS; i++) {
-		if (i == 0) {
-			Levels[i] = Copy(image);
-		} else {
-			Levels[i] = new float[Width * Height];
-			Convolve(Levels[i], Levels[i - 1]);
-		}
-	}
+    // Make the Laplacian pyramid by successively
+    // copying the earlier levels and blurring them
+    for (unsigned int i = 0; i < MAX_PYR_LEVELS; i++)
+    {
+        if (i == 0)
+        {
+            Levels[i] = Copy(image);
+        }
+        else
+        {
+            Levels[i] = new float[Width * Height];
+            Convolve(Levels[i], Levels[i - 1]);
+        }
+    }
 }
 
 LPyramid::~LPyramid()
 {
-	for (auto &elem : Levels) {
-		delete [] elem;
-	}
+    for (auto &elem : Levels)
+    {
+        delete[] elem;
+    }
 }
 
 float *LPyramid::Copy(const float *img) const
 {
-	unsigned int max = Width * Height;
-	auto out = new float[max];
-	for (unsigned int i = 0; i < max; i++) {
-		out[i] = img[i];
-	}
+    unsigned int max = Width * Height;
+    auto out = new float[max];
+    for (unsigned int i = 0; i < max; i++)
+    {
+        out[i] = img[i];
+    }
 
-	return out;
+    return out;
 }
 
 void LPyramid::Convolve(float *a, const float *b) const
 // convolves image b with the filter kernel and stores it in a
 {
-	const float Kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
-	#pragma omp parallel for
-	for (unsigned int y = 0; y < Height; y++) {
-		for (unsigned int x = 0; x < Width; x++) {
-			unsigned int index = y * Width + x;
-			a[index] = 0.0f;
-			for (int i = -2; i <= 2; i++) {
-				for (int j = -2; j <= 2; j++) {
-					int nx = x + i;
-					int ny = y + j;
-					if (nx < 0) {
-						nx = -nx;
-					}
-					if (ny < 0) {
-						ny = -ny;
-					}
-					if (nx >= static_cast<long>(Width)) {
-						nx = 2 * Width - nx - 1;
-					}
-					if (ny >= static_cast<long>(Height)) {
-						ny = 2 * Height - ny - 1;
-					}
-					a[index] += Kernel[i + 2] * Kernel[j + 2] * b[ny * Width + nx];
-				}
-			}
-		}
-	}
+    const float Kernel[] = { 0.05f, 0.25f, 0.4f, 0.25f, 0.05f };
+#pragma omp parallel for
+    for (unsigned int y = 0; y < Height; y++)
+    {
+        for (unsigned int x = 0; x < Width; x++)
+        {
+            unsigned int index = y * Width + x;
+            a[index] = 0.0f;
+            for (int i = -2; i <= 2; i++)
+            {
+                for (int j = -2; j <= 2; j++)
+                {
+                    int nx = x + i;
+                    int ny = y + j;
+                    if (nx < 0)
+                    {
+                        nx = -nx;
+                    }
+                    if (ny < 0)
+                    {
+                        ny = -ny;
+                    }
+                    if (nx >= static_cast<long>(Width))
+                    {
+                        nx = 2 * Width - nx - 1;
+                    }
+                    if (ny >= static_cast<long>(Height))
+                    {
+                        ny = 2 * Height - ny - 1;
+                    }
+                    a[index] +=
+                        Kernel[i + 2] * Kernel[j + 2] * b[ny * Width + nx];
+                }
+            }
+        }
+    }
 }
 
-float LPyramid::Get_Value(unsigned int x, unsigned int y, unsigned int level) const
+float LPyramid::Get_Value(unsigned int x, unsigned int y,
+                          unsigned int level) const
 {
-	const unsigned int index = x + y * Width;
-	assert(level < MAX_PYR_LEVELS);
-	return Levels[level][index];
+    const unsigned int index = x + y * Width;
+    assert(level < MAX_PYR_LEVELS);
+    return Levels[level][index];
 }

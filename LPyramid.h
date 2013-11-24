@@ -23,18 +23,19 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 class LPyramid
 {
 public:
-	LPyramid(const float *image, unsigned int width, unsigned int height);
-	~LPyramid();
-	float Get_Value(unsigned int x, unsigned int y, unsigned int level) const;
+    LPyramid(const float *image, unsigned int width, unsigned int height);
+    ~LPyramid();
+    float Get_Value(unsigned int x, unsigned int y, unsigned int level) const;
+
 private:
-	float *Copy(const float *img) const;
-	void Convolve(float *a, const float *b) const;
+    float *Copy(const float *img) const;
+    void Convolve(float *a, const float *b) const;
 
-	// Successively blurred versions of the original image
-	float *Levels[MAX_PYR_LEVELS];
+    // Successively blurred versions of the original image
+    float *Levels[MAX_PYR_LEVELS];
 
-	unsigned int Width;
-	unsigned int Height;
+    unsigned int Width;
+    unsigned int Height;
 };
 
 #endif // _LPYRAMID_H

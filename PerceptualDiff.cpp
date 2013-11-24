@@ -1,7 +1,8 @@
 /*
 PerceptualDiff - a program that compares two images using a perceptual metric
 based on the paper :
-A perceptual metric for production testing. Journal of graphics tools, 9(4):33-40, 2004, Hector Yee
+A perceptual metric for production testing. Journal of graphics tools,
+9(4):33-40, 2004, Hector Yee
 Copyright (C) 2006 Yangli Hector Yee
 
 This program is free software; you can redistribute it and/or modify it under
@@ -27,25 +28,33 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 int main(int argc, char **argv)
 {
-	CompareArgs args;
+    CompareArgs args;
 
-	if (not args.Parse_Args(argc, argv)) {
-		printf("%s", args.ErrorStr.c_str());
-		return -1;
-	} else {
-		if (args.Verbose) {
-			args.Print_Args();
-		}
-	}
+    if (not args.Parse_Args(argc, argv))
+    {
+        printf("%s", args.ErrorStr.c_str());
+        return -1;
+    }
+    else
+    {
+        if (args.Verbose)
+        {
+            args.Print_Args();
+        }
+    }
 
-	const bool passed = Yee_Compare(args);
-	if (passed) {
-		if (args.Verbose) {
-			printf("PASS: %s", args.ErrorStr.c_str());
-		}
-	} else {
-		printf("FAIL: %s", args.ErrorStr.c_str());
-	}
+    const bool passed = Yee_Compare(args);
+    if (passed)
+    {
+        if (args.Verbose)
+        {
+            printf("PASS: %s", args.ErrorStr.c_str());
+        }
+    }
+    else
+    {
+        printf("FAIL: %s", args.ErrorStr.c_str());
+    }
 
-	return passed ? 0 : 1;
+    return passed ? 0 : 1;
 }

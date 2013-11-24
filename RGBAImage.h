@@ -32,72 +32,86 @@ Place, Suite 330, Boston, MA 02111-1307 USA
  */
 class RGBAImage
 {
-	RGBAImage(const RGBAImage &);
-	RGBAImage &operator= (const RGBAImage &);
+    RGBAImage(const RGBAImage &);
+    RGBAImage &operator=(const RGBAImage &);
+
 public:
-	RGBAImage(unsigned int w, unsigned int h, const std::string &name="") :
-		Width(w),
-		Height(h),
-		Name(name),
-		Data(new unsigned int[w * h])
-	{
-	}
-	~RGBAImage() {
-		delete [] Data;
-	}
-	unsigned char Get_Red(unsigned int i) const {
-		return (Data[i] & 0xFF);
-	}
-	unsigned char Get_Green(unsigned int i) const {
-		return ((Data[i] >> 8) & 0xFF);
-	}
-	unsigned char Get_Blue(unsigned int i) const {
-		return ((Data[i] >> 16) & 0xFF);
-	}
-	unsigned char Get_Alpha(unsigned int i) const {
-		return ((Data[i] >> 24) & 0xFF);
-	}
-	void Set(unsigned char r, unsigned char g, unsigned char b, unsigned char a, unsigned int i)
-	{
-		Data[i] = r | (g << 8) | (b << 16) | (a << 24);
-	}
-	unsigned int Get_Width(void) const {
-		return Width;
-	}
-	unsigned int Get_Height(void) const {
-		return Height;
-	}
-	void Set(unsigned int x, unsigned int y, unsigned int d) {
-		Data[x + y * Width] = d;
-	}
-	unsigned int Get(unsigned int x, unsigned int y) const {
-		return Data[x + y * Width];
-	}
-	unsigned int Get(unsigned int i) const {
-		return Data[i];
-	}
-	const std::string &Get_Name(void) const {
-		return Name;
-	}
-	unsigned int *Get_Data() {
-		return Data;
-	}
-	const unsigned int *Get_Data() const {
-		return Data;
-	}
+    RGBAImage(unsigned int w, unsigned int h, const std::string &name = "")
+        : Width(w), Height(h), Name(name), Data(new unsigned int[w * h])
+    {
+    }
+    ~RGBAImage()
+    {
+        delete[] Data;
+    }
+    unsigned char Get_Red(unsigned int i) const
+    {
+        return (Data[i] & 0xFF);
+    }
+    unsigned char Get_Green(unsigned int i) const
+    {
+        return ((Data[i] >> 8) & 0xFF);
+    }
+    unsigned char Get_Blue(unsigned int i) const
+    {
+        return ((Data[i] >> 16) & 0xFF);
+    }
+    unsigned char Get_Alpha(unsigned int i) const
+    {
+        return ((Data[i] >> 24) & 0xFF);
+    }
+    void Set(unsigned char r, unsigned char g, unsigned char b,
+             unsigned char a, unsigned int i)
+    {
+        Data[i] = r | (g << 8) | (b << 16) | (a << 24);
+    }
+    unsigned int Get_Width(void) const
+    {
+        return Width;
+    }
+    unsigned int Get_Height(void) const
+    {
+        return Height;
+    }
+    void Set(unsigned int x, unsigned int y, unsigned int d)
+    {
+        Data[x + y * Width] = d;
+    }
+    unsigned int Get(unsigned int x, unsigned int y) const
+    {
+        return Data[x + y * Width];
+    }
+    unsigned int Get(unsigned int i) const
+    {
+        return Data[i];
+    }
+    const std::string &Get_Name(void) const
+    {
+        return Name;
+    }
+    unsigned int *Get_Data()
+    {
+        return Data;
+    }
+    const unsigned int *Get_Data() const
+    {
+        return Data;
+    }
 
-	/** By default down sample to half of each original dimension.
-	 */
-	std::shared_ptr<RGBAImage> DownSample(unsigned int w=0, unsigned int h=0) const;
+    /** By default down sample to half of each original dimension.
+     */
+    std::shared_ptr<RGBAImage> DownSample(unsigned int w = 0,
+                                          unsigned int h = 0) const;
 
-	bool WriteToFile(const std::string &filename) const;
-	static std::shared_ptr<RGBAImage> ReadFromFile(const std::string &filename);
+    bool WriteToFile(const std::string &filename) const;
+    static std::shared_ptr<RGBAImage>
+    ReadFromFile(const std::string &filename);
 
 private:
-	const unsigned int Width;
-	const unsigned int Height;
-	const std::string Name;
-	unsigned int *const Data;
+    const unsigned int Width;
+    const unsigned int Height;
+    const std::string Name;
+    unsigned int *const Data;
 };
 
 #endif

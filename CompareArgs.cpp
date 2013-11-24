@@ -25,8 +25,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <sstream>
 #include <stdexcept>
 
-
-static const char *copyright = "PerceptualDiff version 1.1.2, Copyright (C) 2006 Yangli Hector Yee\n\
+static const char *copyright =
+    "PerceptualDiff version 1.1.2, Copyright (C) 2006 Yangli Hector Yee\n\
 PerceptualDiff comes with ABSOLUTELY NO WARRANTY;\n\
 This is free software, and you are welcome\n\
 to redistribute it under certain conditions;\n\
@@ -52,166 +52,223 @@ Options:\n\
 Note: Input or Output files can also be in the PNG or JPG format or any format\n\
 that FreeImage supports.\n";
 
-
 template <typename Output, typename Input>
 static Output lexical_cast(const Input &input)
 {
-	std::stringstream ss;
-	ss << input;
-	Output output;
-	if (not (ss >> output)) {
-		throw std::invalid_argument("Bad cast");
-	}
-	return output;
+    std::stringstream ss;
+    ss << input;
+    Output output;
+    if (not(ss >> output))
+    {
+        throw std::invalid_argument("Bad cast");
+    }
+    return output;
 }
-
 
 CompareArgs::CompareArgs()
 {
-	Verbose = false;
-	LuminanceOnly = false;
-	SumErrors = false;
-	FieldOfView = 45.0f;
-	Gamma = 2.2f;
-	ThresholdPixels = 100;
-	Luminance = 100.0f;
-	ColorFactor = 1.0f;
-	DownSample = 0;
+    Verbose = false;
+    LuminanceOnly = false;
+    SumErrors = false;
+    FieldOfView = 45.0f;
+    Gamma = 2.2f;
+    ThresholdPixels = 100;
+    Luminance = 100.0f;
+    ColorFactor = 1.0f;
+    DownSample = 0;
 }
 
 bool CompareArgs::Parse_Args(int argc, char **argv)
 {
-	if (argc < 3) {
-		std::stringstream ss;
-		ss << copyright;
-		ss << usage;
-		ss << "\n" << "OpenMP status: ";
+    if (argc < 3)
+    {
+        std::stringstream ss;
+        ss << copyright;
+        ss << usage;
+        ss << "\n"
+           << "OpenMP status: ";
 #ifdef _OPENMP
-		ss << "enabled\n";
+        ss << "enabled\n";
 #else
-		ss << "disabled\n";
+        ss << "disabled\n";
 #endif
-		ErrorStr = ss.str();
-		return false;
-	}
-	unsigned int image_count = 0;
-	const char *output_file_name = nullptr;
-	bool scale = false;
-	for (int i = 1; i < argc; i++) {
-		try {
-			if (std::string(argv[i]) == "-fov") {
-				if (++i < argc) {
-					FieldOfView = lexical_cast<float>(argv[i]);
-				}
-			} else if (std::string(argv[i]) == "-verbose") {
-				Verbose = true;
-			} else if (std::string(argv[i]) == "-threshold") {
-				if (++i < argc) {
-					ThresholdPixels = lexical_cast<int>(argv[i]);
-				}
-			} else if (std::string(argv[i]) == "-gamma") {
-				if (++i < argc) {
-					Gamma = lexical_cast<float>(argv[i]);
-				}
-			} else if (std::string(argv[i]) == "-luminance") {
-				if (++i < argc) {
-					Luminance = lexical_cast<float>(argv[i]);
-				}
-			} else if (std::string(argv[i]) == "-luminanceonly") {
-				LuminanceOnly = true;
-			} else if (std::string(argv[i]) == "-sum-errors") {
-				SumErrors = true;
-			} else if (std::string(argv[i]) == "-colorfactor") {
-				if (++i < argc) {
-					ColorFactor = lexical_cast<float>(argv[i]);
-				}
-			} else if (std::string(argv[i]) == "-downsample") {
-				if (++i < argc) {
-					DownSample = lexical_cast<int>(argv[i]);
-				}
-			} else if (std::string(argv[i]) == "-scale") {
-				scale = true;
-			} else if (std::string(argv[i]) == "-output") {
-				if (++i < argc) {
-					output_file_name = argv[i];
-				}
-			} else if (image_count < 2) {
-				auto img = RGBAImage::ReadFromFile(argv[i]);
-				if (not img) {
-					ErrorStr = "FAIL: Cannot open ";
-					ErrorStr += argv[i];
-					ErrorStr += "\n";
-					return false;
-				} else {
-					++image_count;
-					if (image_count == 1) {
-						ImgA = img;
-					}
-					else {
-						ImgB = img;
-					}
-				}
-			} else {
-				fprintf(stderr, "Warning: option/file \"%s\" ignored\n", argv[i]);
-			}
-		} catch (const std::invalid_argument &)
-		{
-			std::cerr << "Invalid argument (" << argv[i] << ") for " << argv[i - 1] << std::endl;
-			return false;
-		}
-	} // i
-	if (not ImgA or not ImgB) {
-		ErrorStr = "FAIL: Not enough image files specified\n";
-		return false;
-	}
-	for (unsigned int i = 0; i < DownSample; i++) {
-		if (Verbose) {
-			printf("Downsampling by %d\n", 1 << (i + 1));
-		}
-		auto tmp = ImgA->DownSample();
-		if (tmp) {
-			ImgA = tmp;
-		}
-		tmp = ImgB->DownSample();
-		if (tmp) {
-			ImgB = tmp;
-		}
-	}
-	if (scale and
-	        (ImgA->Get_Width() != ImgB->Get_Width() or
-	         ImgA->Get_Height() != ImgB->Get_Height())) {
-		unsigned int min_width = ImgA->Get_Width();
-		if (ImgB->Get_Width() < min_width) {
-			min_width = ImgB->Get_Width();
-		}
+        ErrorStr = ss.str();
+        return false;
+    }
+    unsigned int image_count = 0;
+    const char *output_file_name = nullptr;
+    bool scale = false;
+    for (int i = 1; i < argc; i++)
+    {
+        try
+        {
+            if (std::string(argv[i]) == "-fov")
+            {
+                if (++i < argc)
+                {
+                    FieldOfView = lexical_cast<float>(argv[i]);
+                }
+            }
+            else if (std::string(argv[i]) == "-verbose")
+            {
+                Verbose = true;
+            }
+            else if (std::string(argv[i]) == "-threshold")
+            {
+                if (++i < argc)
+                {
+                    ThresholdPixels = lexical_cast<int>(argv[i]);
+                }
+            }
+            else if (std::string(argv[i]) == "-gamma")
+            {
+                if (++i < argc)
+                {
+                    Gamma = lexical_cast<float>(argv[i]);
+                }
+            }
+            else if (std::string(argv[i]) == "-luminance")
+            {
+                if (++i < argc)
+                {
+                    Luminance = lexical_cast<float>(argv[i]);
+                }
+            }
+            else if (std::string(argv[i]) == "-luminanceonly")
+            {
+                LuminanceOnly = true;
+            }
+            else if (std::string(argv[i]) == "-sum-errors")
+            {
+                SumErrors = true;
+            }
+            else if (std::string(argv[i]) == "-colorfactor")
+            {
+                if (++i < argc)
+                {
+                    ColorFactor = lexical_cast<float>(argv[i]);
+                }
+            }
+            else if (std::string(argv[i]) == "-downsample")
+            {
+                if (++i < argc)
+                {
+                    DownSample = lexical_cast<int>(argv[i]);
+                }
+            }
+            else if (std::string(argv[i]) == "-scale")
+            {
+                scale = true;
+            }
+            else if (std::string(argv[i]) == "-output")
+            {
+                if (++i < argc)
+                {
+                    output_file_name = argv[i];
+                }
+            }
+            else if (image_count < 2)
+            {
+                auto img = RGBAImage::ReadFromFile(argv[i]);
+                if (not img)
+                {
+                    ErrorStr = "FAIL: Cannot open ";
+                    ErrorStr += argv[i];
+                    ErrorStr += "\n";
+                    return false;
+                }
+                else
+                {
+                    ++image_count;
+                    if (image_count == 1)
+                    {
+                        ImgA = img;
+                    }
+                    else
+                    {
+                        ImgB = img;
+                    }
+                }
+            }
+            else
+            {
+                fprintf(stderr, "Warning: option/file \"%s\" ignored\n",
+                        argv[i]);
+            }
+        }
+        catch (const std::invalid_argument &)
+        {
+            std::cerr << "Invalid argument (" << argv[i] << ") for "
+                      << argv[i - 1] << std::endl;
+            return false;
+        }
+    } // i
+    if (not ImgA or not ImgB)
+    {
+        ErrorStr = "FAIL: Not enough image files specified\n";
+        return false;
+    }
+    for (unsigned int i = 0; i < DownSample; i++)
+    {
+        if (Verbose)
+        {
+            printf("Downsampling by %d\n", 1 << (i + 1));
+        }
+        auto tmp = ImgA->DownSample();
+        if (tmp)
+        {
+            ImgA = tmp;
+        }
+        tmp = ImgB->DownSample();
+        if (tmp)
+        {
+            ImgB = tmp;
+        }
+    }
+    if (scale and(ImgA->Get_Width() !=
+                  ImgB->Get_Width() or ImgA->Get_Height() !=
+                  ImgB->Get_Height()))
+    {
+        unsigned int min_width = ImgA->Get_Width();
+        if (ImgB->Get_Width() < min_width)
+        {
+            min_width = ImgB->Get_Width();
+        }
 
-		unsigned int min_height = ImgA->Get_Height();
-		if (ImgB->Get_Height() < min_height) {
-			min_height = ImgB->Get_Height();
-		}
+        unsigned int min_height = ImgA->Get_Height();
+        if (ImgB->Get_Height() < min_height)
+        {
+            min_height = ImgB->Get_Height();
+        }
 
-		if (Verbose) {
-			printf("Scaling to %u x %u\n", min_width, min_height);
-		}
-		auto tmp = ImgA->DownSample(min_width, min_height);
-		if (tmp) {
-			ImgA = tmp;
-		}
-		tmp = ImgB->DownSample(min_width, min_height);
-		if (tmp) {
-			ImgB = tmp;
-		}
-	}
-	if (output_file_name) {
-		ImgDiff.reset(new RGBAImage(ImgA->Get_Width(), ImgA->Get_Height(), output_file_name));
-	}
-	return true;
+        if (Verbose)
+        {
+            printf("Scaling to %u x %u\n", min_width, min_height);
+        }
+        auto tmp = ImgA->DownSample(min_width, min_height);
+        if (tmp)
+        {
+            ImgA = tmp;
+        }
+        tmp = ImgB->DownSample(min_width, min_height);
+        if (tmp)
+        {
+            ImgB = tmp;
+        }
+    }
+    if (output_file_name)
+    {
+        ImgDiff.reset(new RGBAImage(ImgA->Get_Width(), ImgA->Get_Height(),
+                                    output_file_name));
+    }
+    return true;
 }
 
 void CompareArgs::Print_Args() const
 {
-	printf("Field of view is %f degrees\n", FieldOfView);
-	printf("Threshold pixels is %u pixels\n", ThresholdPixels);
-	printf("The Gamma is %f\n", Gamma);
-	printf("The Display's luminance is %f candela per meter squared\n", Luminance);
+    printf("Field of view is %f degrees\n", FieldOfView);
+    printf("Threshold pixels is %u pixels\n", ThresholdPixels);
+    printf("The Gamma is %f\n", Gamma);
+    printf("The Display's luminance is %f candela per meter squared\n",
+           Luminance);
 }
