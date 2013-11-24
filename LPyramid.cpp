@@ -20,6 +20,21 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "LPyramid.h"
 
+
+static std::vector<float> Copy(const float *img,
+                               unsigned int width, unsigned int height)
+{
+    const unsigned int max = width * height;
+    std::vector<float> out(max);
+    for (unsigned int i = 0; i < max; i++)
+    {
+        out[i] = img[i];
+    }
+
+    return out;
+}
+
+
 LPyramid::LPyramid(const float *image, unsigned int width, unsigned int height)
     : Width(width), Height(height)
 {
@@ -29,38 +44,19 @@ LPyramid::LPyramid(const float *image, unsigned int width, unsigned int height)
     {
         if (i == 0)
         {
-            Levels[i] = Copy(image);
+            Levels[i] = Copy(image, width, height);
         }
         else
         {
-            Levels[i] = new float[Width * Height];
+            Levels[i].resize(Width * Height);
             Convolve(Levels[i], Levels[i - 1]);
         }
     }
 }
 
-LPyramid::~LPyramid()
-{
-    for (auto &elem : Levels)
-    {
-        delete[] elem;
-    }
-}
-
-float *LPyramid::Copy(const float *img) const
-{
-    unsigned int max = Width * Height;
-    auto out = new float[max];
-    for (unsigned int i = 0; i < max; i++)
-    {
-        out[i] = img[i];
-    }
-
-    return out;
-}
-
-void LPyramid::Convolve(float *a, const float *b) const
-// convolves image b with the filter kernel and stores it in a
+// Convolves image b with the filter kernel and stores it in a.
+void LPyramid::Convolve(std::vector<float> &a,
+                        const std::vector<float> &b) const
 {
     const float Kernel[] = { 0.05f, 0.25f, 0.4f, 0.25f, 0.05f };
 #pragma omp parallel for

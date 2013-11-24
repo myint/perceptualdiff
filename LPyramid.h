@@ -18,21 +18,23 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef _LPYRAMID_H
 #define _LPYRAMID_H
 
+#include <vector>
+
+
 #define MAX_PYR_LEVELS 8
+
 
 class LPyramid
 {
 public:
     LPyramid(const float *image, unsigned int width, unsigned int height);
-    ~LPyramid();
     float Get_Value(unsigned int x, unsigned int y, unsigned int level) const;
 
 private:
-    float *Copy(const float *img) const;
-    void Convolve(float *a, const float *b) const;
+    void Convolve(std::vector<float> &a, const std::vector<float> &b) const;
 
     // Successively blurred versions of the original image
-    float *Levels[MAX_PYR_LEVELS];
+    std::vector<float> Levels[MAX_PYR_LEVELS];
 
     unsigned int Width;
     unsigned int Height;
