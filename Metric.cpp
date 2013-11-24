@@ -16,12 +16,14 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <cstdio>
 #include "Metric.h"
 #include "CompareArgs.h"
 #include "RGBAImage.h"
 #include "LPyramid.h"
-#include <math.h>
+
+#include <cstdio>
+#include <cmath>
+#include <memory>
 
 #ifndef M_PI
 #define M_PI 3.14159265f
@@ -144,19 +146,19 @@ bool Yee_Compare(CompareArgs &args)
 	}
 
 	// assuming colorspaces are in Adobe RGB (1998) convert to XYZ
-	auto aX = new float[dim];
-	auto aY = new float[dim];
-	auto aZ = new float[dim];
-	auto bX = new float[dim];
-	auto bY = new float[dim];
-	auto bZ = new float[dim];
-	auto aLum = new float[dim];
-	auto bLum = new float[dim];
+	auto aX = std::unique_ptr<float[]>(new float[dim]);
+	auto aY = std::unique_ptr<float[]>(new float[dim]);
+	auto aZ = std::unique_ptr<float[]>(new float[dim]);
+	auto bX = std::unique_ptr<float[]>(new float[dim]);
+	auto bY = std::unique_ptr<float[]>(new float[dim]);
+	auto bZ = std::unique_ptr<float[]>(new float[dim]);
+	auto aLum = std::unique_ptr<float[]>(new float[dim]);
+	auto bLum = std::unique_ptr<float[]>(new float[dim]);
 
-	auto aA = new float[dim];
-	auto bA = new float[dim];
-	auto aB = new float[dim];
-	auto bB = new float[dim];
+	auto aA = std::unique_ptr<float[]>(new float[dim]);
+	auto bA = std::unique_ptr<float[]>(new float[dim]);
+	auto aB = std::unique_ptr<float[]>(new float[dim]);
+	auto bB = std::unique_ptr<float[]>(new float[dim]);
 
 	if (args.Verbose) {
 		printf("Converting RGB to XYZ\n");
@@ -188,8 +190,8 @@ bool Yee_Compare(CompareArgs &args)
 		printf("Constructing Laplacian Pyramids\n");
 	}
 
-	auto la = new LPyramid(aLum, w, h);
-	auto lb = new LPyramid(bLum, w, h);
+	LPyramid la(aLum.get(), w, h);
+	LPyramid lb(bLum.get(), w, h);
 
 	const float num_one_degree_pixels = 2 * tan(args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI;
 	const float pixels_per_degree = w / num_one_degree_pixels;
@@ -229,11 +231,11 @@ bool Yee_Compare(CompareArgs &args)
 			float contrast[MAX_PYR_LEVELS - 2];
 			float sum_contrast = 0;
 			for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++) {
-				float n1 = fabsf(la->Get_Value(x, y, i) - la->Get_Value(x, y, i + 1));
-				float n2 = fabsf(lb->Get_Value(x, y, i) - lb->Get_Value(x, y, i + 1));
+				float n1 = fabsf(la.Get_Value(x, y, i) - la.Get_Value(x, y, i + 1));
+				float n2 = fabsf(lb.Get_Value(x, y, i) - lb.Get_Value(x, y, i + 1));
 				float numerator = (n1 > n2) ? n1 : n2;
-				float d1 = fabsf(la->Get_Value(x, y, i + 2));
-				float d2 = fabsf(lb->Get_Value(x, y, i + 2));
+				float d1 = fabsf(la.Get_Value(x, y, i + 2));
+				float d2 = fabsf(lb.Get_Value(x, y, i + 2));
 				float denominator = (d1 > d2) ? d1 : d2;
 				if (denominator < 1e-5f) {
 					denominator = 1e-5f;
@@ -245,7 +247,7 @@ bool Yee_Compare(CompareArgs &args)
 				sum_contrast = 1e-5f;
 			}
 			float F_mask[MAX_PYR_LEVELS - 2];
-			float adapt = la->Get_Value(x, y, adaptation_level) + lb->Get_Value(x, y, adaptation_level);
+			float adapt = la.Get_Value(x, y, adaptation_level) + lb.Get_Value(x, y, adaptation_level);
 			adapt *= 0.5f;
 			if (adapt < 1e-5) {
 				adapt = 1e-5f;
@@ -263,7 +265,7 @@ bool Yee_Compare(CompareArgs &args)
 			if (factor > 10) {
 				factor = 10;
 			}
-			const float delta = fabsf(la->Get_Value(x, y, 0) - lb->Get_Value(x, y, 0));
+			const float delta = fabsf(la.Get_Value(x, y, 0) - lb.Get_Value(x, y, 0));
 			error_sum += delta;
 			bool pass = true;
 
@@ -303,21 +305,6 @@ bool Yee_Compare(CompareArgs &args)
 			}
 		}
 	}
-
-	delete[] aX;
-	delete[] aY;
-	delete[] aZ;
-	delete[] bX;
-	delete[] bY;
-	delete[] bZ;
-	delete[] aLum;
-	delete[] bLum;
-	delete la;
-	delete lb;
-	delete[] aA;
-	delete[] bA;
-	delete[] aB;
-	delete[] bB;
 
 	char error_sum_buff[100];
 	sprintf(error_sum_buff, "%f error sum\n", error_sum);
