@@ -42,7 +42,7 @@ static float tvi(float adaptation_luminance)
     // returns the threshold luminance given the adaptation luminance
     // units are candelas per meter squared
 
-    const float log_a = log10f(adaptation_luminance);
+    const auto log_a = log10f(adaptation_luminance);
 
     float r;
     if (log_a < -3.94f)
@@ -74,8 +74,8 @@ static float tvi(float adaptation_luminance)
 // given the cycles per degree (cpd) and luminance (lum)
 static float csf(float cpd, float lum)
 {
-    const float a = 440.0f * powf((1.0f + 0.7f / lum), -0.2f);
-    const float b = 0.3f * powf((1.0f + 100.0f / lum), 0.15f);
+    const auto a = 440.f * powf((1.f + 0.7f / lum), -0.2f);
+    const auto b = 0.3f * powf((1.0f + 100.0f / lum), 0.15f);
 
     return a * cpd * expf(-b * cpd) * sqrtf(1.0f + 0.06f * expf(b * cpd));
 }
@@ -87,15 +87,15 @@ static float csf(float cpd, float lum)
 */
 static float mask(float contrast)
 {
-    const float a = powf(392.498f * contrast, 0.7f);
-    const float b = powf(0.0153f * a, 4.0f);
+    const auto a = powf(392.498f * contrast, 0.7f);
+    const auto b = powf(0.0153f * a, 4.f);
     return powf(1.0f + b, 0.25f);
 }
 
 
 // convert Adobe RGB (1998) with reference white D65 to XYZ
-static void AdobeRGBToXYZ(float r, float g, float b, float &x, float &y,
-                          float &z)
+static void AdobeRGBToXYZ(float r, float g, float b,
+                          float &x, float &y, float &z)
 {
     // matrix is from http://www.brucelindbloom.com/
     x = r * 0.576700f + g * 0.185556f + b * 0.188212f;
@@ -148,9 +148,9 @@ static void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
 
 static unsigned int adaptation(float num_one_degree_pixels)
 {
-    float num_pixels = 1;
-    unsigned int adaptation_level = 0;
-    for (unsigned int i = 0; i < MAX_PYR_LEVELS; i++)
+    auto num_pixels = 1.f;
+    auto adaptation_level = 0u;
+    for (auto i = 0u; i < MAX_PYR_LEVELS; i++)
     {
         adaptation_level = i;
         if (num_pixels > num_one_degree_pixels)
@@ -172,9 +172,9 @@ bool Yee_Compare(CompareArgs &args)
         return false;
     }
 
-    const unsigned int dim = args.ImgA->Get_Width() * args.ImgA->Get_Height();
-    bool identical = true;
-    for (unsigned int i = 0; i < dim; i++)
+    const auto dim = args.ImgA->Get_Width() * args.ImgA->Get_Height();
+    auto identical = true;
+    for (auto i = 0u; i < dim; i++)
     {
         if (args.ImgA->Get(i) != args.ImgB->Get(i))
         {
@@ -208,19 +208,19 @@ bool Yee_Compare(CompareArgs &args)
         printf("Converting RGB to XYZ\n");
     }
 
-    const unsigned int w = args.ImgA->Get_Width();
-    const unsigned int h = args.ImgA->Get_Height();
+    const auto w = args.ImgA->Get_Width();
+    const auto h = args.ImgA->Get_Height();
 #pragma omp parallel for
-    for (unsigned int y = 0; y < h; y++)
+    for (auto y = 0u; y < h; y++)
     {
-        for (unsigned int x = 0; x < w; x++)
+        for (auto x = 0u; x < w; x++)
         {
-            float r, g, b, l;
-            const unsigned int i = x + y * w;
-            r = powf(args.ImgA->Get_Red(i) / 255.0f, args.Gamma);
-            g = powf(args.ImgA->Get_Green(i) / 255.0f, args.Gamma);
-            b = powf(args.ImgA->Get_Blue(i) / 255.0f, args.Gamma);
+            const auto i = x + y * w;
+            auto r = powf(args.ImgA->Get_Red(i) / 255.0f, args.Gamma);
+            auto g = powf(args.ImgA->Get_Green(i) / 255.0f, args.Gamma);
+            auto b = powf(args.ImgA->Get_Blue(i) / 255.0f, args.Gamma);
             AdobeRGBToXYZ(r, g, b, aX[i], aY[i], aZ[i]);
+            float l;
             XYZToLAB(aX[i], aY[i], aZ[i], l, aA[i], aB[i]);
             r = powf(args.ImgB->Get_Red(i) / 255.0f, args.Gamma);
             g = powf(args.ImgB->Get_Green(i) / 255.0f, args.Gamma);
@@ -240,51 +240,51 @@ bool Yee_Compare(CompareArgs &args)
     const LPyramid la(aLum.get(), w, h);
     const LPyramid lb(bLum.get(), w, h);
 
-    const float num_one_degree_pixels =
-        2 * tan(args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI;
-    const float pixels_per_degree = w / num_one_degree_pixels;
+    const auto num_one_degree_pixels =
+        2.f * tan(args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI;
+    const auto pixels_per_degree = w / num_one_degree_pixels;
 
     if (args.Verbose)
     {
         printf("Performing test\n");
     }
 
-    const unsigned int adaptation_level = adaptation(num_one_degree_pixels);
+    const auto adaptation_level = adaptation(num_one_degree_pixels);
 
     float cpd[MAX_PYR_LEVELS];
     cpd[0] = 0.5f * pixels_per_degree;
-    for (unsigned int i = 1; i < MAX_PYR_LEVELS; i++)
+    for (auto i = 1u; i < MAX_PYR_LEVELS; i++)
     {
         cpd[i] = 0.5f * cpd[i - 1];
     }
     const float csf_max = csf(3.248f, 100.0f);
 
     float F_freq[MAX_PYR_LEVELS - 2];
-    for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++)
+    for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
     {
         F_freq[i] = csf_max / csf(cpd[i], 100.0f);
     }
 
-    unsigned int pixels_failed = 0;
-    double error_sum = 0.0;
+    auto pixels_failed = 0u;
+    auto error_sum = 0.;
 #pragma omp parallel for reduction(+ : pixels_failed) reduction(+ : error_sum)
-    for (unsigned int y = 0; y < h; y++)
+    for (auto y = 0u; y < h; y++)
     {
-        for (unsigned int x = 0; x < w; x++)
+        for (auto x = 0u; x < w; x++)
         {
-            const unsigned int index = x + y * w;
+            const auto index = x + y * w;
             float contrast[MAX_PYR_LEVELS - 2];
             float sum_contrast = 0;
-            for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++)
+            for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
             {
-                float n1 =
+                auto n1 =
                     fabsf(la.Get_Value(x, y, i) - la.Get_Value(x, y, i + 1));
-                float n2 =
+                auto n2 =
                     fabsf(lb.Get_Value(x, y, i) - lb.Get_Value(x, y, i + 1));
-                float numerator = (n1 > n2) ? n1 : n2;
-                float d1 = fabsf(la.Get_Value(x, y, i + 2));
-                float d2 = fabsf(lb.Get_Value(x, y, i + 2));
-                float denominator = (d1 > d2) ? d1 : d2;
+                auto numerator = (n1 > n2) ? n1 : n2;
+                auto d1 = fabsf(la.Get_Value(x, y, i + 2));
+                auto d2 = fabsf(lb.Get_Value(x, y, i + 2));
+                auto denominator = (d1 > d2) ? d1 : d2;
                 if (denominator < 1e-5f)
                 {
                     denominator = 1e-5f;
@@ -297,19 +297,19 @@ bool Yee_Compare(CompareArgs &args)
                 sum_contrast = 1e-5f;
             }
             float F_mask[MAX_PYR_LEVELS - 2];
-            float adapt = la.Get_Value(x, y, adaptation_level) +
-                          lb.Get_Value(x, y, adaptation_level);
+            auto adapt = la.Get_Value(x, y, adaptation_level) +
+                         lb.Get_Value(x, y, adaptation_level);
             adapt *= 0.5f;
             if (adapt < 1e-5)
             {
                 adapt = 1e-5f;
             }
-            for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++)
+            for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
             {
                 F_mask[i] = mask(contrast[i] * csf(cpd[i], adapt));
             }
-            float factor = 0;
-            for (unsigned int i = 0; i < MAX_PYR_LEVELS - 2; i++)
+            auto factor = 0.f;
+            for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
             {
                 factor += contrast[i] * F_freq[i] * F_mask[i] / sum_contrast;
             }
@@ -321,10 +321,10 @@ bool Yee_Compare(CompareArgs &args)
             {
                 factor = 10;
             }
-            const float delta =
+            const auto delta =
                 fabsf(la.Get_Value(x, y, 0) - lb.Get_Value(x, y, 0));
             error_sum += delta;
-            bool pass = true;
+            auto pass = true;
 
             // pure luminance test
             if (delta > factor * tvi(adapt))
@@ -335,18 +335,18 @@ bool Yee_Compare(CompareArgs &args)
             if (not args.LuminanceOnly)
             {
                 // CIE delta E test with modifications
-                float color_scale = args.ColorFactor;
+                auto color_scale = args.ColorFactor;
                 // ramp down the color test in scotopic regions
                 if (adapt < 10.0f)
                 {
                     // Don't do color test at all.
                     color_scale = 0.0;
                 }
-                float da = aA[index] - bA[index];
-                float db = aB[index] - bB[index];
+                auto da = aA[index] - bA[index];
+                auto db = aB[index] - bB[index];
                 da = da * da;
                 db = db * db;
-                const float delta_e = (da + db) * color_scale;
+                const auto delta_e = (da + db) * color_scale;
                 error_sum += delta_e;
                 if (delta_e > factor)
                 {
