@@ -49,12 +49,12 @@ static FIBITMAP *ToFreeImage(const RGBAImage &image)
 }
 
 
-static RGBAImage *ToRGBAImage(FIBITMAP *image, const std::string &filename="")
+static std::shared_ptr<RGBAImage> ToRGBAImage(FIBITMAP *image, const std::string &filename="")
 {
 	const unsigned int w = FreeImage_GetWidth(image);
 	const unsigned int h = FreeImage_GetHeight(image);
 
-	auto result = new RGBAImage(w, h, filename);
+	auto result = std::make_shared<RGBAImage>(w, h, filename);
 	// Copy the image over to our internal format, FreeImage has the scanlines bottom to top though.
 	unsigned int *dest = result->Get_Data();
 	for (unsigned int y = 0; y < h; y++, dest += w)
@@ -67,7 +67,7 @@ static RGBAImage *ToRGBAImage(FIBITMAP *image, const std::string &filename="")
 }
 
 
-RGBAImage *RGBAImage::DownSample(unsigned int w, unsigned int h) const {
+std::shared_ptr<RGBAImage> RGBAImage::DownSample(unsigned int w, unsigned int h) const {
 	if (w == 0)
 	{
 		w = Width / 2;
@@ -93,7 +93,7 @@ RGBAImage *RGBAImage::DownSample(unsigned int w, unsigned int h) const {
 	FreeImage_Unload(bitmap);
 	bitmap = nullptr;
 
-	RGBAImage *img = ToRGBAImage(converted, Name);
+	auto img = ToRGBAImage(converted, Name);
 
 	FreeImage_Unload(converted);
 
@@ -124,7 +124,7 @@ bool RGBAImage::WriteToFile(const std::string &filename) const
 	return result;
 }
 
-RGBAImage *RGBAImage::ReadFromFile(const std::string &filename)
+std::shared_ptr<RGBAImage> RGBAImage::ReadFromFile(const std::string &filename)
 {
 	const FREE_IMAGE_FORMAT fileType = FreeImage_GetFileType(filename.c_str());
 	if (FIF_UNKNOWN == fileType)
@@ -145,7 +145,7 @@ RGBAImage *RGBAImage::ReadFromFile(const std::string &filename)
 		return nullptr;
 	}
 
-	RGBAImage *result = ToRGBAImage(freeImage);
+	auto result = ToRGBAImage(freeImage);
 
 	FreeImage_Unload(freeImage);
 

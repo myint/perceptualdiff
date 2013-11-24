@@ -19,6 +19,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef _COMPAREARGS_H
 #define _COMPAREARGS_H
 
+#include <memory>
 #include <string>
 
 class RGBAImage;
@@ -32,9 +33,9 @@ public:
 	bool Parse_Args(int argc, char **argv);
 	void Print_Args() const;
 
-	RGBAImage *ImgA;  // Image A
-	RGBAImage *ImgB;  // Image B
-	RGBAImage *ImgDiff;  // Diff image
+	std::shared_ptr<RGBAImage> ImgA;  // Image A
+	std::shared_ptr<RGBAImage> ImgB;  // Image B
+	std::unique_ptr<RGBAImage> ImgDiff;  // Diff image
 	bool Verbose;  // Print lots of text or not
 	bool LuminanceOnly;  // Only consider luminance; ignore chroma channels in the comparison.
 	bool SumErrors; // Print a sum of the luminance and color differences of each pixel.

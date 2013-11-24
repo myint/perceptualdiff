@@ -19,6 +19,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef _RGBAIMAGE_H
 #define _RGBAIMAGE_H
 
+#include <memory>
 #include <string>
 
 /** Class encapsulating an image containing R,G,B,A channels.
@@ -87,10 +88,10 @@ public:
 
 	/** By default down sample to half of each original dimension.
 	 */
-	RGBAImage *DownSample(unsigned int w=0, unsigned int h=0) const;
+	std::shared_ptr<RGBAImage> DownSample(unsigned int w=0, unsigned int h=0) const;
 
 	bool WriteToFile(const std::string &filename) const;
-	static RGBAImage *ReadFromFile(const std::string &filename);
+	static std::shared_ptr<RGBAImage> ReadFromFile(const std::string &filename);
 
 private:
 	const unsigned int Width;

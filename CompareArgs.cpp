@@ -68,9 +68,6 @@ static Output lexical_cast(const Input &input)
 
 CompareArgs::CompareArgs()
 {
-	ImgA = nullptr;
-	ImgB = nullptr;
-	ImgDiff = nullptr;
 	Verbose = false;
 	LuminanceOnly = false;
 	SumErrors = false;
@@ -84,9 +81,6 @@ CompareArgs::CompareArgs()
 
 CompareArgs::~CompareArgs()
 {
-	delete ImgA;
-	delete ImgB;
-	delete ImgDiff;
 }
 
 bool CompareArgs::Parse_Args(int argc, char **argv)
@@ -146,7 +140,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 					output_file_name = argv[i];
 				}
 			} else if (image_count < 2) {
-				RGBAImage *img = RGBAImage::ReadFromFile(argv[i]);
+				auto img = RGBAImage::ReadFromFile(argv[i]);
 				if (not img) {
 					ErrorStr = "FAIL: Cannot open ";
 					ErrorStr += argv[i];
@@ -178,14 +172,12 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		if (Verbose) {
 			printf("Downsampling by %d\n", 1 << (i + 1));
 		}
-		RGBAImage *tmp = ImgA->DownSample();
+		auto tmp = ImgA->DownSample();
 		if (tmp) {
-			delete ImgA;
 			ImgA = tmp;
 		}
 		tmp = ImgB->DownSample();
 		if (tmp) {
-			delete ImgB;
 			ImgB = tmp;
 		}
 	}
@@ -205,19 +197,17 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 		if (Verbose) {
 			printf("Scaling to %u x %u\n", min_width, min_height);
 		}
-		RGBAImage *tmp = ImgA->DownSample(min_width, min_height);
+		auto tmp = ImgA->DownSample(min_width, min_height);
 		if (tmp) {
-			delete ImgA;
 			ImgA = tmp;
 		}
 		tmp = ImgB->DownSample(min_width, min_height);
 		if (tmp) {
-			delete ImgB;
 			ImgB = tmp;
 		}
 	}
 	if (output_file_name) {
-		ImgDiff = new RGBAImage(ImgA->Get_Width(), ImgA->Get_Height(), output_file_name);
+		ImgDiff.reset(new RGBAImage(ImgA->Get_Width(), ImgA->Get_Height(), output_file_name));
 	}
 	return true;
 }
