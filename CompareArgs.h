@@ -29,7 +29,6 @@ class CompareArgs
 {
 public:
 	CompareArgs();
-	~CompareArgs();
 	bool Parse_Args(int argc, char **argv);
 	void Print_Args() const;
 

@@ -79,10 +79,6 @@ CompareArgs::CompareArgs()
 	DownSample = 0;
 }
 
-CompareArgs::~CompareArgs()
-{
-}
-
 bool CompareArgs::Parse_Args(int argc, char **argv)
 {
 	if (argc < 3) {
