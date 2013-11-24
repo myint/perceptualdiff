@@ -25,9 +25,11 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <cmath>
 #include <memory>
 
+
 #ifndef M_PI
 #define M_PI 3.14159265f
 #endif
+
 
 /*
 * Given the adaptation luminance, this function returns the
@@ -67,6 +69,7 @@ static float tvi(float adaptation_luminance)
     return powf(10.0f, r);
 }
 
+
 // computes the contrast sensitivity function (Barten SPIE 1989)
 // given the cycles per degree (cpd) and luminance (lum)
 static float csf(float cpd, float lum)
@@ -76,6 +79,7 @@ static float csf(float cpd, float lum)
 
     return a * cpd * expf(-b * cpd) * sqrtf(1.0f + 0.06f * expf(b * cpd));
 }
+
 
 /*
 * Visual Masking Function
@@ -88,6 +92,7 @@ static float mask(float contrast)
     return powf(1.0f + b, 0.25f);
 }
 
+
 // convert Adobe RGB (1998) with reference white D65 to XYZ
 static void AdobeRGBToXYZ(float r, float g, float b, float &x, float &y,
                           float &z)
@@ -97,6 +102,7 @@ static void AdobeRGBToXYZ(float r, float g, float b, float &x, float &y,
     y = r * 0.297361f + g * 0.627355f + b * 0.0752847f;
     z = r * 0.0270328f + g * 0.0706879f + b * 0.991248f;
 }
+
 
 struct White
 {
@@ -110,7 +116,9 @@ struct White
     float z;
 };
 
+
 static const White global_white;
+
 
 static void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
 {
@@ -136,6 +144,24 @@ static void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
     A = 500.0f * (f[0] - f[1]);
     B = 200.0f * (f[1] - f[2]);
 }
+
+
+static unsigned int adaptation(float num_one_degree_pixels)
+{
+    float num_pixels = 1;
+    unsigned int adaptation_level = 0;
+    for (unsigned int i = 0; i < MAX_PYR_LEVELS; i++)
+    {
+        adaptation_level = i;
+        if (num_pixels > num_one_degree_pixels)
+        {
+            break;
+        }
+        num_pixels *= 2;
+    }
+    return adaptation_level;
+}
+
 
 bool Yee_Compare(CompareArgs &args)
 {
@@ -211,8 +237,8 @@ bool Yee_Compare(CompareArgs &args)
         printf("Constructing Laplacian Pyramids\n");
     }
 
-    LPyramid la(aLum.get(), w, h);
-    LPyramid lb(bLum.get(), w, h);
+    const LPyramid la(aLum.get(), w, h);
+    const LPyramid lb(bLum.get(), w, h);
 
     const float num_one_degree_pixels =
         2 * tan(args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI;
@@ -223,17 +249,7 @@ bool Yee_Compare(CompareArgs &args)
         printf("Performing test\n");
     }
 
-    float num_pixels = 1;
-    unsigned int adaptation_level = 0;
-    for (unsigned int i = 0; i < MAX_PYR_LEVELS; i++)
-    {
-        adaptation_level = i;
-        if (num_pixels > num_one_degree_pixels)
-        {
-            break;
-        }
-        num_pixels *= 2;
-    }
+    const unsigned int adaptation_level = adaptation(num_one_degree_pixels);
 
     float cpd[MAX_PYR_LEVELS];
     cpd[0] = 0.5f * pixels_per_degree;
