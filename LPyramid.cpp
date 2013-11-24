@@ -24,7 +24,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 static std::vector<float> Copy(const float *img,
                                unsigned int width, unsigned int height)
 {
-    const unsigned int max = width * height;
+    const auto max = width * height;
     std::vector<float> out(max);
     for (unsigned int i = 0; i < max; i++)
     {
@@ -60,15 +60,15 @@ void LPyramid::Convolve(std::vector<float> &a,
 {
     const float Kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
 #pragma omp parallel for
-    for (unsigned int y = 0; y < Height; y++)
+    for (auto y = 0u; y < Height; y++)
     {
-        for (unsigned int x = 0; x < Width; x++)
+        for (auto x = 0u; x < Width; x++)
         {
-            unsigned int index = y * Width + x;
+            auto index = y * Width + x;
             a[index] = 0.0f;
-            for (int i = -2; i <= 2; i++)
+            for (auto i = -2; i <= 2; i++)
             {
-                for (int j = -2; j <= 2; j++)
+                for (auto j = -2; j <= 2; j++)
                 {
                     int nx = x + i;
                     int ny = y + j;
@@ -99,7 +99,7 @@ void LPyramid::Convolve(std::vector<float> &a,
 float LPyramid::Get_Value(unsigned int x, unsigned int y,
                           unsigned int level) const
 {
-    const unsigned int index = x + y * Width;
+    const auto index = x + y * Width;
     assert(level < MAX_PYR_LEVELS);
     return Levels[level][index];
 }

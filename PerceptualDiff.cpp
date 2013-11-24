@@ -43,7 +43,7 @@ int main(int argc, char **argv)
         }
     }
 
-    const bool passed = Yee_Compare(args);
+    const auto passed = Yee_Compare(args);
     if (passed)
     {
         if (args.Verbose)

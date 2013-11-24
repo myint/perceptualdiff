@@ -257,7 +257,7 @@ bool Yee_Compare(CompareArgs &args)
     {
         cpd[i] = 0.5f * cpd[i - 1];
     }
-    const float csf_max = csf(3.248f, 100.0f);
+    const auto csf_max = csf(3.248f, 100.0f);
 
     float F_freq[MAX_PYR_LEVELS - 2];
     for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)

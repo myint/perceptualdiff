@@ -25,14 +25,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <sstream>
 #include <stdexcept>
 
-static const char *copyright =
+static const auto copyright =
     "PerceptualDiff version 1.1.2, Copyright (C) 2006 Yangli Hector Yee\n\
 PerceptualDiff comes with ABSOLUTELY NO WARRANTY;\n\
 This is free software, and you are welcome\n\
 to redistribute it under certain conditions;\n\
 See the GPL page for details: http://www.gnu.org/copyleft/gpl.html\n\n";
 
-static const char *usage = "Usage: peceptualdiff image1 image2\n\
+static const auto usage = "Usage: peceptualdiff image1 image2\n\
 \n\
 Compares image1 and image2 using a perceptually based image metric.\n\
 \n\
@@ -95,10 +95,10 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
         ErrorStr = ss.str();
         return false;
     }
-    unsigned int image_count = 0;
+    auto image_count = 0u;
     const char *output_file_name = nullptr;
-    bool scale = false;
-    for (int i = 1; i < argc; i++)
+    auto scale = false;
+    for (auto i = 1; i < argc; i++)
     {
         try
         {
@@ -208,7 +208,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
         ErrorStr = "FAIL: Not enough image files specified\n";
         return false;
     }
-    for (unsigned int i = 0; i < DownSample; i++)
+    for (auto i = 0u; i < DownSample; i++)
     {
         if (Verbose)
         {
@@ -229,13 +229,13 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
                   ImgB->Get_Width() or ImgA->Get_Height() !=
                   ImgB->Get_Height()))
     {
-        unsigned int min_width = ImgA->Get_Width();
+        auto min_width = ImgA->Get_Width();
         if (ImgB->Get_Width() < min_width)
         {
             min_width = ImgB->Get_Width();
         }
 
-        unsigned int min_height = ImgA->Get_Height();
+        auto min_height = ImgA->Get_Height();
         if (ImgB->Get_Height() < min_height)
         {
             min_height = ImgB->Get_Height();
