@@ -21,6 +21,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <memory>
 #include <string>
+#include <vector>
 
 /** Class encapsulating an image containing R,G,B,A channels.
  *
@@ -37,12 +38,8 @@ class RGBAImage
 
 public:
     RGBAImage(unsigned int w, unsigned int h, const std::string &name="")
-        : Width(w), Height(h), Name(name), Data(new unsigned int[w * h])
+        : Width(w), Height(h), Name(name), Data(w * h)
     {
-    }
-    ~RGBAImage()
-    {
-        delete[] Data;
     }
     unsigned char Get_Red(unsigned int i) const
     {
@@ -91,11 +88,11 @@ public:
     }
     unsigned int *Get_Data()
     {
-        return Data;
+        return &Data[0];
     }
     const unsigned int *Get_Data() const
     {
-        return Data;
+        return &Data[0];
     }
 
     /** By default down sample to half of each original dimension.
@@ -111,7 +108,7 @@ private:
     const unsigned int Width;
     const unsigned int Height;
     const std::string Name;
-    unsigned int *const Data;
+    std::vector<unsigned int> Data;
 };
 
 #endif
