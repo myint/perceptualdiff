@@ -58,7 +58,7 @@ LPyramid::LPyramid(const float *image, unsigned int width, unsigned int height)
 void LPyramid::Convolve(std::vector<float> &a,
                         const std::vector<float> &b) const
 {
-    const float Kernel[] = { 0.05f, 0.25f, 0.4f, 0.25f, 0.05f };
+    const float Kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
 #pragma omp parallel for
     for (unsigned int y = 0; y < Height; y++)
     {
