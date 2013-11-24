@@ -26,13 +26,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <cstring>
 #include <cassert>
 
+
 static FIBITMAP *ToFreeImage(const RGBAImage &image)
 {
     const auto *data = image.Get_Data();
 
-    FIBITMAP *bitmap =
-        FreeImage_Allocate(image.Get_Width(), image.Get_Height(), 32,
-                           0x000000ff, 0x0000ff00, 0x00ff0000);
+    auto bitmap = FreeImage_Allocate(image.Get_Width(), image.Get_Height(), 32,
+                                     0x000000ff, 0x0000ff00, 0x00ff0000);
     assert(bitmap);
 
     for (auto y = 0u; y < image.Get_Height();
@@ -45,6 +45,7 @@ static FIBITMAP *ToFreeImage(const RGBAImage &image)
 
     return bitmap;
 }
+
 
 static std::shared_ptr<RGBAImage> ToRGBAImage(FIBITMAP *image,
                                               const std::string &filename = "")
@@ -64,6 +65,7 @@ static std::shared_ptr<RGBAImage> ToRGBAImage(FIBITMAP *image,
     }
 
     return result;
+
 }
 
 std::shared_ptr<RGBAImage> RGBAImage::DownSample(unsigned int w,
@@ -90,8 +92,8 @@ std::shared_ptr<RGBAImage> RGBAImage::DownSample(unsigned int w,
     assert(w <= Width);
     assert(h <= Height);
 
-    FIBITMAP *bitmap = ToFreeImage(*this);
-    FIBITMAP *converted = FreeImage_Rescale(bitmap, w, h, FILTER_BICUBIC);
+    auto bitmap = ToFreeImage(*this);
+    auto converted = FreeImage_Rescale(bitmap, w, h, FILTER_BICUBIC);
 
     FreeImage_Unload(bitmap);
     bitmap = nullptr;
