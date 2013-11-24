@@ -26,7 +26,7 @@ static std::vector<float> Copy(const float *img,
 {
     const auto max = width * height;
     std::vector<float> out(max);
-    for (unsigned int i = 0; i < max; i++)
+    for (auto i = 0u; i < max; i++)
     {
         out[i] = img[i];
     }
@@ -40,7 +40,7 @@ LPyramid::LPyramid(const float *image, unsigned int width, unsigned int height)
 {
     // Make the Laplacian pyramid by successively
     // copying the earlier levels and blurring them
-    for (unsigned int i = 0; i < MAX_PYR_LEVELS; i++)
+    for (auto i = 0u; i < MAX_PYR_LEVELS; i++)
     {
         if (i == 0)
         {
