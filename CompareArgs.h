@@ -32,21 +32,21 @@ public:
     bool Parse_Args(int argc, char **argv);
     void Print_Args() const;
 
-    std::shared_ptr<RGBAImage> ImgA;    // Image A
-    std::shared_ptr<RGBAImage> ImgB;    // Image B
-    std::unique_ptr<RGBAImage> ImgDiff; // Diff image
-    bool Verbose;                       // Print lots of text or not
-    bool LuminanceOnly; // Only consider luminance; ignore chroma channels in
-                        // the
-                        // comparison.
-    bool SumErrors;    // Print a sum of the luminance and color differences of
-                       // each
-                       // pixel.
-    float FieldOfView; // Field of view in degrees
-    float Gamma;       // The gamma to convert to linear color space
-    float Luminance;   // the display's luminance
-    unsigned int ThresholdPixels; // How many pixels different to ignore
-    std::string ErrorStr;         // Error string
+    std::shared_ptr<RGBAImage> ImgA;     // Image A
+    std::shared_ptr<RGBAImage> ImgB;     // Image B
+    std::unique_ptr<RGBAImage> ImgDiff;  // Diff image
+    bool Verbose;                        // Print lots of text or not
+    bool LuminanceOnly;  // Only consider luminance; ignore chroma channels in
+                         // the
+                         // comparison.
+    bool SumErrors;  // Print a sum of the luminance and color differences of
+                     // each
+                     // pixel.
+    float FieldOfView;  // Field of view in degrees
+    float Gamma;        // The gamma to convert to linear color space
+    float Luminance;    // the display's luminance
+    unsigned int ThresholdPixels;  // How many pixels different to ignore
+    std::string ErrorStr;          // Error string
 
     // How much color to use in the metric.
     // 0.0 is the same as LuminanceOnly = true,

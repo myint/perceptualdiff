@@ -202,7 +202,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
                       << argv[i - 1] << std::endl;
             return false;
         }
-    } // i
+    }  // i
     if (not ImgA or not ImgB)
     {
         ErrorStr = "FAIL: Not enough image files specified\n";

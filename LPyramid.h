@@ -38,4 +38,4 @@ private:
     unsigned int Height;
 };
 
-#endif // _LPYRAMID_H
+#endif  // _LPYRAMID_H

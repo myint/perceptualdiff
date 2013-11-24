@@ -36,7 +36,7 @@ class RGBAImage
     RGBAImage &operator=(const RGBAImage &);
 
 public:
-    RGBAImage(unsigned int w, unsigned int h, const std::string &name = "")
+    RGBAImage(unsigned int w, unsigned int h, const std::string &name="")
         : Width(w), Height(h), Name(name), Data(new unsigned int[w * h])
     {
     }
@@ -100,8 +100,8 @@ public:
 
     /** By default down sample to half of each original dimension.
      */
-    std::shared_ptr<RGBAImage> DownSample(unsigned int w = 0,
-                                          unsigned int h = 0) const;
+    std::shared_ptr<RGBAImage> DownSample(unsigned int w=0,
+                                          unsigned int h=0) const;
 
     bool WriteToFile(const std::string &filename) const;
     static std::shared_ptr<RGBAImage>
