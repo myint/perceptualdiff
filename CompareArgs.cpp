@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "CompareArgs.h"
 #include "RGBAImage.h"
+
 #include <cstdio>
 #include <cstdlib>
 #include <cassert>
@@ -25,12 +26,14 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <sstream>
 #include <stdexcept>
 
+
 static const auto copyright =
     "PerceptualDiff version 1.1.2, Copyright (C) 2006 Yangli Hector Yee\n\
 PerceptualDiff comes with ABSOLUTELY NO WARRANTY;\n\
 This is free software, and you are welcome\n\
 to redistribute it under certain conditions;\n\
 See the GPL page for details: http://www.gnu.org/copyleft/gpl.html\n\n";
+
 
 static const auto usage = "Usage: peceptualdiff image1 image2\n\
 \n\
@@ -52,6 +55,7 @@ Options:\n\
 Note: Input or Output files can also be in the PNG or JPG format or any format\n\
 that FreeImage supports.\n";
 
+
 template <typename Output, typename Input>
 static Output lexical_cast(const Input &input)
 {
@@ -64,6 +68,7 @@ static Output lexical_cast(const Input &input)
     }
     return output;
 }
+
 
 CompareArgs::CompareArgs()
 {
