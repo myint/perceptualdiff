@@ -1,8 +1,7 @@
 {
    <OpenMP false positive>
    Memcheck:Leak
-   fun:calloc
    ...
-   obj:*/libgomp.so.*
+   obj:*/libgomp.*
    ...
 }
