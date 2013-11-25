@@ -197,8 +197,8 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
             }
             else
             {
-                fprintf(stderr, "Warning: option/file \"%s\" ignored\n",
-                        argv[i]);
+                std::cerr << "Warning: option/file \"" << argv[i]
+                          << "\" ignored\n";
             }
         }
         catch (const std::invalid_argument &)
@@ -217,7 +217,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
     {
         if (Verbose)
         {
-            printf("Downsampling by %d\n", 1 << (i + 1));
+            std::cout << "Downsampling by " << (1 << (i + 1)) << "\n";
         }
         auto tmp = ImgA->DownSample();
         if (tmp)
@@ -248,7 +248,8 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 
         if (Verbose)
         {
-            printf("Scaling to %u x %u\n", min_width, min_height);
+            std::cout << "Scaling to " << min_width << " x " << min_height
+                      << "\n";
         }
         auto tmp = ImgA->DownSample(min_width, min_height);
         if (tmp)
@@ -271,9 +272,9 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
 
 void CompareArgs::Print_Args() const
 {
-    printf("Field of view is %f degrees\n", FieldOfView);
-    printf("Threshold pixels is %u pixels\n", ThresholdPixels);
-    printf("The Gamma is %f\n", Gamma);
-    printf("The Display's luminance is %f candela per meter squared\n",
-           Luminance);
+    std::cout << "Field of view is " << FieldOfView << " degrees\n"
+              << "Threshold pixels is " << ThresholdPixels << " pixels\n"
+              << "The Gamma is " << Gamma << "\n"
+              << "The Display's luminance is " << Luminance
+              << " candela per meter squared\n";
 }
