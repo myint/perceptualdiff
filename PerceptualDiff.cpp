@@ -19,12 +19,14 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include <stdio.h>
-#include <string>
 #include "LPyramid.h"
 #include "RGBAImage.h"
 #include "CompareArgs.h"
 #include "Metric.h"
+
+#include <iostream>
+#include <string>
+
 
 int main(int argc, char **argv)
 {
@@ -32,7 +34,7 @@ int main(int argc, char **argv)
 
     if (not args.Parse_Args(argc, argv))
     {
-        printf("%s", args.ErrorStr.c_str());
+        std::cout << args.ErrorStr;
         return -1;
     }
     else
@@ -48,12 +50,12 @@ int main(int argc, char **argv)
     {
         if (args.Verbose)
         {
-            printf("PASS: %s", args.ErrorStr.c_str());
+            std::cout << "PASS: " << args.ErrorStr;
         }
     }
     else
     {
-        printf("FAIL: %s", args.ErrorStr.c_str());
+        std::cout << "FAIL: " << args.ErrorStr;
     }
 
     return passed ? 0 : 1;
