@@ -21,8 +21,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "RGBAImage.h"
 #include "LPyramid.h"
 
-#include <cstdio>
 #include <cmath>
+#include <iostream>
 #include <memory>
 
 
@@ -205,7 +205,7 @@ bool Yee_Compare(CompareArgs &args)
 
     if (args.Verbose)
     {
-        printf("Converting RGB to XYZ\n");
+        std::cout << "Converting RGB to XYZ\n";
     }
 
     const auto w = args.ImgA->Get_Width();
@@ -234,7 +234,7 @@ bool Yee_Compare(CompareArgs &args)
 
     if (args.Verbose)
     {
-        printf("Constructing Laplacian Pyramids\n");
+        std::cout << "Constructing Laplacian Pyramids\n";
     }
 
     const LPyramid la(aLum.get(), w, h);
@@ -246,7 +246,7 @@ bool Yee_Compare(CompareArgs &args)
 
     if (args.Verbose)
     {
-        printf("Performing test\n");
+        std::cout << "Performing test\n";
     }
 
     const auto adaptation_level = adaptation(num_one_degree_pixels);
@@ -372,11 +372,11 @@ bool Yee_Compare(CompareArgs &args)
         }
     }
 
-    char error_sum_buff[100];
-    sprintf(error_sum_buff, "%f error sum\n", error_sum);
+    const auto error_sum_buff =
+        std::to_string(error_sum) + " error sum\n";
 
-    char different[100];
-    sprintf(different, "%u pixels are different\n", pixels_failed);
+    const auto different =
+        std::to_string(pixels_failed) + " pixels are different\n";
 
     // Always output image difference if requested.
     if (args.ImgDiff)
