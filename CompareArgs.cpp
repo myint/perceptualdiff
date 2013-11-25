@@ -19,7 +19,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "CompareArgs.h"
 #include "RGBAImage.h"
 
-#include <cstdio>
 #include <cstdlib>
 #include <cassert>
 #include <iostream>
