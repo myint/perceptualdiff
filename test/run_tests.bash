@@ -72,6 +72,8 @@ rm -f fake.png
 
 $pdiff fish[12].png -output foo 2>&1 | grep -q 'unknown filetype'
 $pdiff -verbose fish1.png 2>&1 | grep -q 'Not enough'
+$pdiff -downsample -3 fish1.png Aqsis_vase.png 2>&1 | grep -q 'Invalid'
+$pdiff -threshold -3 fish1.png Aqsis_vase.png 2>&1 | grep -q 'Invalid'
 $pdiff cam_mb_ref.tif cam_mb.tif -fake-option
 $pdiff -verbose -scale fish1.png Aqsis_vase.png 2>&1 | grep -q 'FAIL'
 $pdiff -downsample 2 fish1.png Aqsis_vase.png 2>&1 | grep -q 'FAIL'
