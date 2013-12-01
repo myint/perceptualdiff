@@ -70,6 +70,10 @@ head fish1.png > fake.png
 $pdiff -verbose fish1.png fake.png 2>&1 | grep -q 'Failed to load'
 rm -f fake.png
 
+mkdir -p unwritable.png
+$pdiff -output unwritable.png -verbose fish[12].png 2>&1 | grep -q 'Failed to save'
+rmdir unwritable.png
+
 $pdiff fish[12].png -output foo 2>&1 | grep -q 'unknown filetype'
 $pdiff -verbose fish1.png 2>&1 | grep -q 'Not enough'
 $pdiff -downsample -3 fish1.png Aqsis_vase.png 2>&1 | grep -q 'Invalid'
