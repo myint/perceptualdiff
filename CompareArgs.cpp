@@ -63,7 +63,7 @@ static Output lexical_cast(const Input &input)
     Output output;
     if (not(ss >> output))
     {
-        throw std::invalid_argument("Bad cast");
+        throw std::invalid_argument("");
     }
     return output;
 }
@@ -121,7 +121,13 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
             {
                 if (++i < argc)
                 {
-                    ThresholdPixels = lexical_cast<int>(argv[i]);
+                    auto temporary = lexical_cast<int>(argv[i]);
+                    if (temporary < 0)
+                    {
+                        throw std::invalid_argument(
+                            "-threshold must be positive");
+                    }
+                    ThresholdPixels = static_cast<unsigned int>(temporary);
                 }
             }
             else if (std::string(argv[i]) == "-gamma")
@@ -157,7 +163,13 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
             {
                 if (++i < argc)
                 {
-                    DownSample = lexical_cast<int>(argv[i]);
+                    auto temporary = lexical_cast<int>(argv[i]);
+                    if (temporary < 0)
+                    {
+                        throw std::invalid_argument(
+                            "-downsample must be positive");
+                    }
+                    DownSample = static_cast<unsigned int>(temporary);
                 }
             }
             else if (std::string(argv[i]) == "-scale")
@@ -200,10 +212,15 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
                           << "\" ignored\n";
             }
         }
-        catch (const std::invalid_argument &)
+        catch (const std::invalid_argument &exception)
         {
+            std::string reason = "";
+            if (not std::string(exception.what()).empty())
+            {
+                reason = std::string("; ") + exception.what();
+            }
             std::cerr << "Invalid argument (" << argv[i] << ") for "
-                      << argv[i - 1] << std::endl;
+                      << argv[i - 1] << reason << std::endl;
             return false;
         }
     }  // i
