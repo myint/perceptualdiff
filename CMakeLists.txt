@@ -1,24 +1,23 @@
-PROJECT (PerceptualDiff)
+project(PerceptualDiff)
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
+cmake_minimum_required(VERSION 2.4)
 
-set(DIFF_SRC PerceptualDiff.cpp LPyramid.cpp RGBAImage.cpp
-CompareArgs.cpp Metric.cpp)
-
-add_executable (perceptualdiff ${DIFF_SRC})
+add_executable(
+  perceptualdiff
+  PerceptualDiff.cpp LPyramid.cpp RGBAImage.cpp CompareArgs.cpp Metric.cpp)
 
 install(TARGETS perceptualdiff DESTINATION bin)
 
-SET(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
-SET(FREEIMAGE_FIND_REQUIRED, TRUE)
-FIND_PACKAGE(FreeImage)
+set(FREEIMAGE_FIND_REQUIRED, TRUE)
+find_package(FreeImage)
 include_directories(${FREEIMAGE_INCLUDE_DIRS})
 target_link_libraries(perceptualdiff ${FREEIMAGE_LIBRARIES})
 
 set(CMAKE_BUILD_TYPE Debug)
 
-FIND_PACKAGE(OpenMP)
+find_package(OpenMP)
 if(OPENMP_FOUND)
   set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
@@ -35,9 +34,9 @@ set(CPACK_PACKAGE_VENDOR "pdiff dev team")
 set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README.rst)
 set(CPACK_GENERATOR TGZ)
 set(
-CPACK_SOURCE_PACKAGE_FILE_NAME
-"PerceptualDiff-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}"
-CACHE INTERNAL "tarball basename"
+  CPACK_SOURCE_PACKAGE_FILE_NAME
+  "PerceptualDiff-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}"
+  CACHE INTERNAL "tarball basename"
 )
 set(CPACK_SOURCE_GENERATOR TGZ)
 # The following components are regex's to match anywhere (unless anchored)
