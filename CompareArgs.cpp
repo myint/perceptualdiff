@@ -69,6 +69,12 @@ static Output lexical_cast(const Input &input)
 }
 
 
+static bool option_matches(const char *arg, const std::string &option_name)
+{
+    return std::string(arg) == "-" + option_name;
+}
+
+
 CompareArgs::CompareArgs()
 {
     Verbose = false;
@@ -106,18 +112,18 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
     {
         try
         {
-            if (std::string(argv[i]) == "-fov")
+            if (option_matches(argv[i], "fov"))
             {
                 if (++i < argc)
                 {
                     FieldOfView = lexical_cast<float>(argv[i]);
                 }
             }
-            else if (std::string(argv[i]) == "-verbose")
+            else if (option_matches(argv[i], "verbose"))
             {
                 Verbose = true;
             }
-            else if (std::string(argv[i]) == "-threshold")
+            else if (option_matches(argv[i], "threshold"))
             {
                 if (++i < argc)
                 {
@@ -130,36 +136,36 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
                     ThresholdPixels = static_cast<unsigned int>(temporary);
                 }
             }
-            else if (std::string(argv[i]) == "-gamma")
+            else if (option_matches(argv[i], "gamma"))
             {
                 if (++i < argc)
                 {
                     Gamma = lexical_cast<float>(argv[i]);
                 }
             }
-            else if (std::string(argv[i]) == "-luminance")
+            else if (option_matches(argv[i], "luminance"))
             {
                 if (++i < argc)
                 {
                     Luminance = lexical_cast<float>(argv[i]);
                 }
             }
-            else if (std::string(argv[i]) == "-luminanceonly")
+            else if (option_matches(argv[i], "luminanceonly"))
             {
                 LuminanceOnly = true;
             }
-            else if (std::string(argv[i]) == "-sum-errors")
+            else if (option_matches(argv[i], "sum-errors"))
             {
                 SumErrors = true;
             }
-            else if (std::string(argv[i]) == "-colorfactor")
+            else if (option_matches(argv[i], "colorfactor"))
             {
                 if (++i < argc)
                 {
                     ColorFactor = lexical_cast<float>(argv[i]);
                 }
             }
-            else if (std::string(argv[i]) == "-downsample")
+            else if (option_matches(argv[i], "downsample"))
             {
                 if (++i < argc)
                 {
@@ -172,11 +178,11 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
                     DownSample = static_cast<unsigned int>(temporary);
                 }
             }
-            else if (std::string(argv[i]) == "-scale")
+            else if (option_matches(argv[i], "scale"))
             {
                 scale = true;
             }
-            else if (std::string(argv[i]) == "-output")
+            else if (option_matches(argv[i], "output"))
             {
                 if (++i < argc)
                 {
