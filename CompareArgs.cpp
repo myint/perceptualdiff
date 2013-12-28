@@ -71,7 +71,7 @@ static Output lexical_cast(const Input &input)
 
 static bool option_matches(const char *arg, const std::string &option_name)
 {
-    const std::string string_arg = std::string(arg);
+    const auto string_arg = std::string(arg);
 
     return (string_arg == "--" + option_name) or
            (string_arg == "-" + option_name);
