@@ -1,1 +1,2 @@
 -std=c++11
+-fopenmp
