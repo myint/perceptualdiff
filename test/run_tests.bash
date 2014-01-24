@@ -86,6 +86,6 @@ $pdiff  /dev/null /dev/null 2>&1 | grep -q 'FAIL'
 $pdiff --verbose --sum-errors fish[12].png 2>&1 | grep -q 'sum'
 $pdiff --colorfactor .5 -threshold 1000 --gamma 3 --luminance 90 cam_mb_ref.tif cam_mb.tif
 $pdiff --verbose -downsample 30 -scale --luminanceonly --fov 80 cam_mb_ref.tif cam_mb.tif
-echo "$($pdiff --fov wrong fish1.png fish1.png 2>&1)" 2>&1 | grep -q 'Invalid argument'
+$pdiff --fov wrong fish1.png fish1.png 2>&1 | grep -q 'Invalid argument'
 
 echo -e '\x1b[01;32mOK\x1b[0m'
