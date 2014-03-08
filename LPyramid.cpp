@@ -42,7 +42,7 @@ LPyramid::LPyramid(const float *image, unsigned int width, unsigned int height)
     // copying the earlier levels and blurring them
     for (auto i = 0u; i < MAX_PYR_LEVELS; i++)
     {
-        if (i == 0)
+        if (i == 0 or Levels[i].size() <= 1)
         {
             Levels[i] = Copy(image, width, height);
         }
@@ -58,6 +58,9 @@ LPyramid::LPyramid(const float *image, unsigned int width, unsigned int height)
 void LPyramid::Convolve(std::vector<float> &a,
                         const std::vector<float> &b) const
 {
+    assert(a.size() > 1);
+    assert(b.size() > 1);
+
     const float Kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
 #pragma omp parallel for
     for (auto y = 0u; y < Height; y++)

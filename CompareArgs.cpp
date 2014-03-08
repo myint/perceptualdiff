@@ -240,20 +240,23 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
     }
     for (auto i = 0u; i < DownSample; i++)
     {
+        if (auto tmp = ImgA->DownSample())
+        {
+            ImgA = tmp;
+        }
+        else
+        {
+            break;
+        }
+
         if (Verbose)
         {
             std::cout << "Downsampling by " << (1 << (i + 1)) << "\n";
         }
-        auto tmp = ImgA->DownSample();
-        if (tmp)
-        {
-            ImgA = tmp;
-        }
-        tmp = ImgB->DownSample();
-        if (tmp)
-        {
-            ImgB = tmp;
-        }
+
+        auto tmp = ImgB->DownSample();
+        assert(tmp);
+        ImgB = tmp;
     }
     if (scale and(ImgA->Get_Width() !=
                   ImgB->Get_Width() or ImgA->Get_Height() !=
