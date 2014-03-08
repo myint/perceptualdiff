@@ -12,6 +12,10 @@ A program that compares two images using a perceptually based image metric.
     :target: https://coveralls.io/r/myint/perceptualdiff
     :alt: Test coverage status
 
+.. image:: https://scan.coverity.com/projects/1561/badge.svg
+    :target: https://scan.coverity.com/projects/1561
+    :alt: Static analysis status
+
 Copyright (C) 2006 Yangli Hector Yee
 
 yeehector@users.sourceforge.net
