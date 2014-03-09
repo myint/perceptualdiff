@@ -240,9 +240,13 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
     }
     for (auto i = 0u; i < DownSample; i++)
     {
-        if (const auto tmp = ImgA->DownSample())
+        const auto tmp_a = ImgA->DownSample();
+        const auto tmp_b = ImgB->DownSample();
+
+        if (tmp_a and tmp_b)
         {
-            ImgA = tmp;
+            ImgA = tmp_a;
+            ImgB = tmp_b;
         }
         else
         {
@@ -253,10 +257,6 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
         {
             std::cout << "Downsampling by " << (1 << (i + 1)) << "\n";
         }
-
-        const auto tmp = ImgB->DownSample();
-        assert(tmp);
-        ImgB = tmp;
     }
     if (scale and(ImgA->Get_Width() !=
                   ImgB->Get_Width() or ImgA->Get_Height() !=
