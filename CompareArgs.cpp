@@ -28,7 +28,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 static const auto copyright =
-    "PerceptualDiff version 1.1.2, Copyright (C) 2006 Yangli Hector Yee\n\
+    "PerceptualDiff version 1.2, Copyright (C) 2006 Yangli Hector Yee\n\
 PerceptualDiff comes with ABSOLUTELY NO WARRANTY;\n\
 This is free software, and you are welcome\n\
 to redistribute it under certain conditions;\n\
