@@ -10,13 +10,13 @@ before_script:
 
 env:
     -
-    - CXXFLAGS=-O0
+    - EXTRA_CMAKE_FLAGS='-DOPTIMIZATION=FALSE'
     - OMP_NUM_THREADS=1
     - OMP_NUM_THREADS=4
 
 script:
     - cppcheck --error-exitcode=2 .
-    - cmake .
+    - cmake "$EXTRA_CMAKE_FLAGS" .
     - make VERBOSE=1 check
     - ./memcheck.bash
     - bash -c './perceptualdiff | grep -i openmp'
