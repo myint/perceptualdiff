@@ -1,6 +1,7 @@
 /*
 RGBAImage.cpp
-Copyright (C) 2006 Yangli Hector Yee
+Copyright (C) 2006-2011 Yangli Hector Yee
+Copyright (C) 2011-2014 Steven Myint
 
 (This entire file was rewritten by Jim Tilander)
 

@@ -12,9 +12,8 @@ A program that compares two images using a perceptually based image metric.
     :target: https://coveralls.io/r/myint/perceptualdiff
     :alt: Test coverage status
 
-Copyright (C) 2006 Yangli Hector Yee
-
-yeehector@users.sourceforge.net
+Copyright (C) 2006-2011 Yangli Hector Yee
+Copyright (C) 2011-2014 Steven Myint
 
 http://pdiff.sourceforge.net
 
