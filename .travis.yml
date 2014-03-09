@@ -10,7 +10,7 @@ before_script:
 
 env:
     -
-    - CXXFLAGS=-fno-elide-constructors EXTRA_CMAKE_FLAGS='-DOPTIMIZATION=FALSE'
+    - EXTRA_CMAKE_FLAGS='-DOPTIMIZATION=FALSE'
     - OMP_NUM_THREADS=1
     - OMP_NUM_THREADS=4
 
