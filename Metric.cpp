@@ -160,7 +160,7 @@ static unsigned int adaptation(float num_one_degree_pixels)
         }
         num_pixels *= 2;
     }
-    return adaptation_level;
+    return adaptation_level;  // LCOV_EXCL_LINE
 }
 
 
