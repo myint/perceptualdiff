@@ -5,3 +5,14 @@
    obj:*/libgomp.*
    ...
 }
+
+{
+   <FreeImage false positive>
+   Memcheck:Cond
+   fun:inflateReset2
+   ...
+   obj:*/libfreeimage-*.*
+   fun:FreeImage_LoadFromHandle
+   fun:FreeImage_Load
+   ...
+}
