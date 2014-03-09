@@ -240,7 +240,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
     }
     for (auto i = 0u; i < DownSample; i++)
     {
-        if (auto tmp = ImgA->DownSample())
+        if (const auto tmp = ImgA->DownSample())
         {
             ImgA = tmp;
         }
@@ -254,7 +254,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
             std::cout << "Downsampling by " << (1 << (i + 1)) << "\n";
         }
 
-        auto tmp = ImgB->DownSample();
+        const auto tmp = ImgB->DownSample();
         assert(tmp);
         ImgB = tmp;
     }
