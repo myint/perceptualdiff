@@ -73,11 +73,13 @@ Check that perceptualdiff is built with OpenMP support::
 Credits
 =======
 
-- Hector Yee, project administrator and originator - hectorgon.blogspot.com
-- Scott Corley, for png file IO code
-- Tobias Sauerwein, for make install, package_source Cmake configuration
-- Cairo Team for bugfixes
-- Jim Tilander, Rewrote the IO to use FreeImage.
+- Hector Yee, project administrator and originator - hectorgon.blogspot.com.
+- Scott Corley, for png file IO code.
+- Tobias Sauerwein, for make install, package_source Cmake configuration.
+- Cairo Team, for bugfixes.
+- Jim Tilander, rewrote the IO to use FreeImage.
+- Steven Myint, for OpenMP support and bug fixes.
+- Jeff Terrace, for better FreeImage support and new command-line options.
 
 
 Version History
