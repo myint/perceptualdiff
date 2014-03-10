@@ -33,7 +33,7 @@ Build Instructions
 
 #. Download cross platform make from http://www.cmake.org
 #. Download freeimage from https://sourceforge.net/projects/freeimage
-   (mac: ``brew install freeimage``,
+   (mac: ``port install freeimage`` or ``brew install freeimage``,
    ubuntu: ``apt-get install libfreeimage-dev``)
 #. Type ``cmake .``
 #. Type ``make .``
