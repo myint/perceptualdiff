@@ -15,6 +15,7 @@ PASS Bug1471457_ref.tif Bug1471457.tif
 PASS cam_mb_ref.tif cam_mb.tif
 FAIL fish2.png fish1.png
 PASS square.png square_scaled.png
+FAIL Aqsis_vase.png Aqsis_vase_ref.png
 EOF
 }
 
