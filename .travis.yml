@@ -1,0 +1,29 @@
+language: cpp
+
+compiler:
+    - clang
+    - gcc
+
+before_script:
+    - sudo apt-get update --quiet=2
+    - sudo apt-get --quiet=2 install cmake libfreeimage-dev cppcheck valgrind
+
+env:
+    -
+    - EXTRA_CMAKE_FLAGS='-DOPTIMIZATION=FALSE'
+    - OMP_NUM_THREADS=1
+    - OMP_NUM_THREADS=4
+
+script:
+    - cppcheck --error-exitcode=2 .
+    - cmake "$EXTRA_CMAKE_FLAGS" .
+    - make VERBOSE=1 check
+    - ./memcheck.bash
+    - bash -c './perceptualdiff | grep -i openmp'
+
+after_success:
+    - sudo pip install git+https://github.com/myint/cpp-coveralls
+    - if [ "$CC" == "gcc" ]; then ./coveralls.bash; fi
+
+    # Ignore header files in a stupid way.
+    - rm -f *.h

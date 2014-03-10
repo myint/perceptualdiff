@@ -1,52 +1,49 @@
-PROJECT (PerceptualDiff)
+project(PerceptualDiff)
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.4)
+cmake_minimum_required(VERSION 2.4)
 
-SET(DIFF_SRC PerceptualDiff.cpp LPyramid.cpp RGBAImage.cpp
-CompareArgs.cpp Metric.cpp)
+add_executable(
+  perceptualdiff
+  PerceptualDiff.cpp LPyramid.cpp RGBAImage.cpp CompareArgs.cpp Metric.cpp)
 
-ADD_EXECUTABLE (perceptualdiff ${DIFF_SRC})
+install(TARGETS perceptualdiff DESTINATION bin)
 
-INSTALL(TARGETS perceptualdiff DESTINATION bin)
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
-# look for freeimage
-FIND_PATH(FREEIMAGE_INCLUDE_DIR FreeImage.h
-  /usr/local/include
-  /usr/include
-  /opt/local/include
-)
-FIND_LIBRARY(FREEIMAGE_LIBRARY freeimage
-  /usr/lib
-  /usr/local/lib
-  /opt/local/lib
-)
+set(FREEIMAGE_FIND_REQUIRED, TRUE)
+find_package(FreeImage)
+include_directories(${FREEIMAGE_INCLUDE_DIRS})
+target_link_libraries(perceptualdiff ${FREEIMAGE_LIBRARIES})
 
-IF(FREEIMAGE_INCLUDE_DIR)
-  IF(FREEIMAGE_LIBRARY)
-    SET( FREEIMAGE_FOUND "YES" )
-    SET( FREEIMAGE_LIBRARIES ${FREEIMAGE_LIBRARY} )
-  ENDIF(FREEIMAGE_LIBRARY)
-ENDIF(FREEIMAGE_INCLUDE_DIR)
+set(CMAKE_BUILD_TYPE Debug)
 
-IF(FREEIMAGE_FOUND)
-  INCLUDE_DIRECTORIES(${FREEIMAGE_INCLUDE_DIR})
-  TARGET_LINK_LIBRARIES(perceptualdiff ${FREEIMAGE_LIBRARY})
-ENDIF(FREEIMAGE_FOUND)
+find_package(OpenMP)
+if(OPENMP_FOUND)
+  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
+endif()
 
-#
-# Packing stuff
-#
+option(OPTIMIZATION "Enable optimization" TRUE)
+if(OPTIMIZATION)
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
+else()
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
+endif()
+
+set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -pedantic -Wcast-qual -Wpointer-arith -Winit-self -Wswitch-default -Wmissing-include-dirs -Wold-style-cast -Wnon-virtual-dtor -Wshadow -Wno-unknown-pragmas")
+
+# Packing stuff.
 set(CPACK_PACKAGE_VERSION_MAJOR "1")
 set(CPACK_PACKAGE_VERSION_MINOR "1")
-set(CPACK_PACKAGE_VERSION_PATCH "1")
+set(CPACK_PACKAGE_VERSION_PATCH "2")
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An image comparison utility.")
 set(CPACK_PACKAGE_VENDOR "pdiff dev team")
-set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README.txt)
+set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README.rst)
 set(CPACK_GENERATOR TGZ)
 set(
-CPACK_SOURCE_PACKAGE_FILE_NAME
-"PerceptualDiff-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}"
-CACHE INTERNAL "tarball basename"
+  CPACK_SOURCE_PACKAGE_FILE_NAME
+  "PerceptualDiff-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}"
+  CACHE INTERNAL "tarball basename"
 )
 set(CPACK_SOURCE_GENERATOR TGZ)
 # The following components are regex's to match anywhere (unless anchored)
@@ -54,16 +51,30 @@ set(CPACK_SOURCE_GENERATOR TGZ)
 # from source tarball.
 set(CPACK_SOURCE_IGNORE_FILES
 "~$"
-"\\\\.cvsignore$"
+"/\\\\.gitignore$"
+"/\\\\..*\\\\.swp$"
+"^${PROJECT_SOURCE_DIR}/\\\\.git/"
 "^${PROJECT_SOURCE_DIR}/CMakeFiles/"
 "^${PROJECT_SOURCE_DIR}/CMakeCache.txt"
 "^${PROJECT_SOURCE_DIR}/CPackSourceConfig.cmake"
 "^${PROJECT_SOURCE_DIR}/CPackConfig.cmake"
+"^${PROJECT_SOURCE_DIR}/CTestTestfile.cmake"
 "^${PROJECT_SOURCE_DIR}/Makefile"
 "^${PROJECT_SOURCE_DIR}/_CPack_Packages"
-"^${PROJECT_SOURCE_DIR}/test/"
+"^${PROJECT_SOURCE_DIR}/cppcheck.bash"
 "^${PROJECT_SOURCE_DIR}/cmake_install.cmake"
+"^${PROJECT_SOURCE_DIR}/install_manifest.txt"
+"^${PROJECT_SOURCE_DIR}/perceptualdiff"
+"^${PROJECT_SOURCE_DIR}/PerceptualDiff-.*"
+"^${PROJECT_SOURCE_DIR}/Testing"
+"^${PROJECT_SOURCE_DIR}/lcov.info"
+"^${PROJECT_SOURCE_DIR}/lcov_tmp.info"
+"^${PROJECT_SOURCE_DIR}/coverage_output"
 )
 include(CPack)
 
-
+# Tests.
+enable_testing()
+add_test(run_tests.bash, "${PROJECT_SOURCE_DIR}/test/run_tests.bash")
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND}
+                  DEPENDS "perceptualdiff")
