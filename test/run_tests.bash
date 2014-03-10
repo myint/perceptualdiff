@@ -36,15 +36,15 @@ fi
 
 #------------------------------------------------------------------------------
 
-totalTests=0
-numTestsFailed=0
+total_tests=0
+num_tests_failed=0
 
 # Run all tests.
 while read expectedResult image1 image2 ; do
 	if $pdiff --verbose --scale "$image1" "$image2" 2>&1 | grep -q "^$expectedResult" ; then
-		totalTests=$((totalTests+1))
+		total_tests=$((total_tests+1))
 	else
-		numTestsFailed=$((numTestsFailed+1))
+		num_tests_failed=$((num_tests_failed+1))
 		echo "Regression failure: expected $expectedResult for \"$pdiff $image1 $image2\"" >&2
 	fi
 done <<EOF
@@ -54,11 +54,11 @@ EOF
 # in a subshell)
 
 # Give some diagnostics:
-if [[ $numTestsFailed == 0 ]] ; then
-	echo "*** all $totalTests tests passed"
+if [[ $num_tests_failed == 0 ]] ; then
+	echo "*** all $total_tests tests passed"
 else
-	echo "*** $numTestsFailed failed tests of $totalTests"
-	exit $numTestsFailed
+	echo "*** $num_tests_failed failed tests of $total_tests"
+	exit $num_tests_failed
 fi
 
 # Run additional tests.
