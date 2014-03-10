@@ -36,7 +36,7 @@ Build Instructions
    (mac: ``port install freeimage`` or ``brew install freeimage``,
    ubuntu: ``apt-get install libfreeimage-dev``)
 #. Type ``cmake .``
-#. Type ``make .``
+#. Type ``make``
 #. To specify the install directory,
    use ``make install DESTDIR="/home/me/mydist"``
 
