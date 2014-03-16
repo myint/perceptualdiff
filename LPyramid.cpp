@@ -23,7 +23,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 
 static std::vector<float> Copy(const float *img,
-                               unsigned int width, unsigned int height)
+                               const unsigned int width,
+                               const unsigned int height)
 {
     const auto max = width * height;
     std::vector<float> out(max);
@@ -36,7 +37,8 @@ static std::vector<float> Copy(const float *img,
 }
 
 
-LPyramid::LPyramid(const float *image, unsigned int width, unsigned int height)
+LPyramid::LPyramid(const float *image,
+                   const unsigned int width, const unsigned int height)
     : Width(width), Height(height)
 {
     // Make the Laplacian pyramid by successively
@@ -100,8 +102,8 @@ void LPyramid::Convolve(std::vector<float> &a,
     }
 }
 
-float LPyramid::Get_Value(unsigned int x, unsigned int y,
-                          unsigned int level) const
+float LPyramid::Get_Value(const unsigned int x, const unsigned int y,
+                          const unsigned int level) const
 {
     const auto index = x + y * Width;
     assert(level < MAX_PYR_LEVELS);
