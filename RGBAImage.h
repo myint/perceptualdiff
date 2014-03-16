@@ -63,11 +63,11 @@ public:
     {
         Data[i] = r | (g << 8) | (b << 16) | (a << 24);
     }
-    unsigned int Get_Width(void) const
+    unsigned int Get_Width() const
     {
         return Width;
     }
-    unsigned int Get_Height(void) const
+    unsigned int Get_Height() const
     {
         return Height;
     }
@@ -83,7 +83,7 @@ public:
     {
         return Data[i];
     }
-    const std::string &Get_Name(void) const
+    const std::string &Get_Name() const
     {
         return Name;
     }
