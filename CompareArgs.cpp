@@ -61,7 +61,7 @@ static T lexical_cast(const std::string &input)
 {
     std::stringstream ss(input);
     T output;
-    if (not(ss >> output))
+    if (not (ss >> output))
     {
         throw std::invalid_argument("");
     }
