@@ -56,12 +56,11 @@ Note: Input or Output files can also be in the PNG or JPG format or any format\n
 that FreeImage supports.\n";
 
 
-template <typename Output, typename Input>
-static Output lexical_cast(const Input &input)
+template <typename T>
+static T lexical_cast(const std::string &input)
 {
-    std::stringstream ss;
-    ss << input;
-    Output output;
+    std::stringstream ss(input);
+    T output;
     if (not(ss >> output))
     {
         throw std::invalid_argument("");
