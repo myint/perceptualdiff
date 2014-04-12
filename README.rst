@@ -4,13 +4,17 @@ perceptualdiff
 
 A program that compares two images using a perceptually based image metric.
 
-.. image:: https://travis-ci.org/myint/perceptualdiff.png?branch=master
+.. image:: https://travis-ci.org/myint/perceptualdiff.svg?branch=master
     :target: https://travis-ci.org/myint/perceptualdiff
     :alt: Build status
 
 .. image:: https://coveralls.io/repos/myint/perceptualdiff/badge.png?branch=master
     :target: https://coveralls.io/r/myint/perceptualdiff
     :alt: Test coverage status
+
+.. image:: https://scan.coverity.com/projects/1561/badge.svg?
+    :target: https://scan.coverity.com/projects/1561
+    :alt: Static analysis status
 
 Copyright (C) 2006-2011 Yangli Hector Yee
 
