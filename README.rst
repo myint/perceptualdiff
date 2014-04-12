@@ -8,10 +8,6 @@ A program that compares two images using a perceptually based image metric.
     :target: https://travis-ci.org/myint/perceptualdiff
     :alt: Build status
 
-.. image:: https://coveralls.io/repos/myint/perceptualdiff/badge.png?branch=master
-    :target: https://coveralls.io/r/myint/perceptualdiff
-    :alt: Test coverage status
-
 .. image:: https://scan.coverity.com/projects/1561/badge.svg?
     :target: https://scan.coverity.com/projects/1561
     :alt: Static analysis status
@@ -97,3 +93,11 @@ Version History
 - 1.1.1 - Turn off color test in low lighting conditions.
 - 1.1.2 - Add OpenMP parallel processing support and fix bugs.
 - 1.2 - Add ``--sum-errors``, use more standard option style, and fix bugs.
+
+
+Links
+=====
+
+* Coveralls_
+
+.. _`Coveralls`: https://coveralls.io/r/myint/perceptualdiff
