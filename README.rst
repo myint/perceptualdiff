@@ -8,7 +8,7 @@ A program that compares two images using a perceptually based image metric.
     :target: https://travis-ci.org/myint/perceptualdiff
     :alt: Build status
 
-.. image:: https://scan.coverity.com/projects/1561/badge.svg?
+.. image:: https://scan.coverity.com/projects/1561/badge.svg
     :target: https://scan.coverity.com/projects/1561
     :alt: Static analysis status
 
