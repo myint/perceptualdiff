@@ -30,8 +30,9 @@ file gpl.txt.
 Build Instructions
 ==================
 
-#. Download cross platform make from http://www.cmake.org.
-#. Download freeimage from https://sourceforge.net/projects/freeimage.
+#. Download CMake from http://www.cmake.org if you do not already have it on
+   your system.
+#. Download FreeImage from https://sourceforge.net/projects/freeimage.
     - On OS X with MacPorts: ``port install freeimage``
     - On OS X with Brew: ``brew install freeimage``
     - On Ubuntu: ``apt-get install libfreeimage-dev``
