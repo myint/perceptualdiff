@@ -22,7 +22,7 @@ script:
     - bash -c './perceptualdiff | grep -i openmp'
 
 after_success:
-    - sudo pip install git+https://github.com/myint/cpp-coveralls
+    - sudo pip install cpp-coveralls
     - if [ "$CC" == "gcc" ]; then ./coveralls.bash; fi
 
     # Ignore header files in a stupid way.
