@@ -17,8 +17,8 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#ifndef _COMPAREARGS_H
-#define _COMPAREARGS_H
+#ifndef PERCEPTUALDIFF_COMPARE_ARGS_H
+#define PERCEPTUALDIFF_COMPARE_ARGS_H
 
 #include <memory>
 #include <string>

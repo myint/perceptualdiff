@@ -17,8 +17,8 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#ifndef _METRIC_H
-#define _METRIC_H
+#ifndef PERCEPTUALDIFF_METRIC_H
+#define PERCEPTUALDIFF_METRIC_H
 
 class CompareArgs;
 
