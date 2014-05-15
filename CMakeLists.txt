@@ -12,7 +12,7 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(FREEIMAGE_FIND_REQUIRED, TRUE)
 find_package(FreeImage)
-include_directories(${FREEIMAGE_INCLUDE_DIRS})
+include_directories(SYSTEM ${FREEIMAGE_INCLUDE_DIRS})
 target_link_libraries(perceptualdiff ${FREEIMAGE_LIBRARIES})
 
 set(CMAKE_BUILD_TYPE Debug)
