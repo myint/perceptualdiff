@@ -385,18 +385,11 @@ bool Yee_Compare(CompareArgs &args)
     // Always output image difference if requested.
     if (args.ImgDiff)
     {
-        if (args.ImgDiff->WriteToFile(args.ImgDiff->Get_Name()))
-        {
-            args.ErrorStr += "Wrote difference image to ";
-            args.ErrorStr += args.ImgDiff->Get_Name();
-            args.ErrorStr += "\n";
-        }
-        else
-        {
-            args.ErrorStr += "Could not write difference image to ";
-            args.ErrorStr += args.ImgDiff->Get_Name();
-            args.ErrorStr += "\n";
-        }
+        args.ImgDiff->WriteToFile(args.ImgDiff->Get_Name());
+
+        args.ErrorStr += "Wrote difference image to ";
+        args.ErrorStr += args.ImgDiff->Get_Name();
+        args.ErrorStr += "\n";
     }
 
     if (pixels_failed < args.ThresholdPixels)

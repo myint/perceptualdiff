@@ -21,8 +21,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define PERCEPTUALDIFF_RGBA_IMAGE_H
 
 #include <memory>
+#include <stdexcept>
 #include <string>
 #include <vector>
+
 
 /** Class encapsulating an image containing R,G,B,A channels.
  *
@@ -101,7 +103,7 @@ public:
     std::shared_ptr<RGBAImage> DownSample(unsigned int w=0,
                                           unsigned int h=0) const;
 
-    bool WriteToFile(const std::string &filename) const;
+    void WriteToFile(const std::string &filename) const;
     static std::shared_ptr<RGBAImage>
     ReadFromFile(const std::string &filename);
 
@@ -110,6 +112,17 @@ private:
     const unsigned int Height;
     const std::string Name;
     std::vector<unsigned int> Data;
+};
+
+
+class RGBImageException : public virtual std::invalid_argument
+{
+public:
+
+    RGBImageException(const std::string &message)
+        : std::invalid_argument(message)
+    {
+    }
 };
 
 #endif

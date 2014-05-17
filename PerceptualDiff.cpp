@@ -33,31 +33,44 @@ int main(int argc, char **argv)
 {
     CompareArgs args;
 
-    if (not args.Parse_Args(argc, argv))
+    try
     {
-        std::cout << args.ErrorStr;
-        return -1;
-    }
-    else
-    {
-        if (args.Verbose)
+        if (not args.Parse_Args(argc, argv))
         {
-            args.Print_Args();
+            std::cout << args.ErrorStr;
+            return -1;
         }
-    }
-
-    const auto passed = Yee_Compare(args);
-    if (passed)
-    {
-        if (args.Verbose)
+        else
         {
-            std::cout << "PASS: " << args.ErrorStr;
+            if (args.Verbose)
+            {
+                args.Print_Args();
+            }
         }
-    }
-    else
-    {
-        std::cout << "FAIL: " << args.ErrorStr;
-    }
 
-    return passed ? 0 : 1;
+        const auto passed = Yee_Compare(args);
+        if (passed)
+        {
+            if (args.Verbose)
+            {
+                std::cout << "PASS: " << args.ErrorStr;
+            }
+        }
+        else
+        {
+            std::cout << "FAIL: " << args.ErrorStr;
+        }
+
+        return passed ? 0 : 1;
+    }
+    catch (const ParseException &exception)
+    {
+        std::cerr << exception.what() << std::endl;
+        return 1;
+    }
+    catch (const RGBImageException &exception)
+    {
+        std::cerr << exception.what() << std::endl;
+        return 2;
+    }
 }

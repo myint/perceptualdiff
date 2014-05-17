@@ -21,6 +21,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define PERCEPTUALDIFF_COMPARE_ARGS_H
 
 #include <memory>
+#include <stdexcept>
 #include <string>
 
 class RGBAImage;
@@ -56,6 +57,17 @@ public:
 
     // How much to down sample image before comparing, in powers of 2.
     unsigned int DownSample;
+};
+
+
+class ParseException : public virtual std::invalid_argument
+{
+public:
+
+    ParseException(const std::string &message)
+        : std::invalid_argument(message)
+    {
+    }
 };
 
 #endif

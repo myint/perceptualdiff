@@ -22,7 +22,6 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "RGBAImage.h"
 #include "FreeImage.h"
 
-#include <iostream>
 #include <string>
 #include <cstring>
 #include <cassert>
@@ -116,14 +115,13 @@ std::shared_ptr<RGBAImage> RGBAImage::DownSample(unsigned int w,
     return img;
 }
 
-bool RGBAImage::WriteToFile(const std::string &filename) const
+void RGBAImage::WriteToFile(const std::string &filename) const
 {
     const auto file_type = FreeImage_GetFIFFromFilename(filename.c_str());
     if (FIF_UNKNOWN == file_type)
     {
-        std::cerr << "Can't save to unknown filetype " << filename
-                  << std::endl;
-        return false;
+        throw RGBImageException("Can't save to unknown filetype '" +
+                                filename + "'");
     }
 
     auto bitmap = ToFreeImage(*this);
@@ -136,10 +134,8 @@ bool RGBAImage::WriteToFile(const std::string &filename) const
         !!FreeImage_Save(file_type, converted.get(), filename.c_str());
     if (not result)
     {
-        std::cerr << "Failed to save to " << filename << std::endl;
+        throw RGBImageException("Failed to save to '" + filename + "'");
     }
-
-    return result;
 }
 
 std::shared_ptr<RGBAImage> RGBAImage::ReadFromFile(const std::string &filename)
@@ -147,8 +143,7 @@ std::shared_ptr<RGBAImage> RGBAImage::ReadFromFile(const std::string &filename)
     const auto file_type = FreeImage_GetFileType(filename.c_str());
     if (FIF_UNKNOWN == file_type)
     {
-        std::cerr << "Unknown filetype " << filename << std::endl;
-        return nullptr;
+        throw RGBImageException("Unknown filetype '" + filename + "'");
     }
 
     FIBITMAP *free_image = nullptr;
@@ -159,8 +154,7 @@ std::shared_ptr<RGBAImage> RGBAImage::ReadFromFile(const std::string &filename)
     }
     if (not free_image)
     {
-        std::cerr << "Failed to load the image " << filename << std::endl;
-        return nullptr;
+        throw RGBImageException("Failed to load the image " + filename);
     }
 
     auto result = ToRGBAImage(free_image);

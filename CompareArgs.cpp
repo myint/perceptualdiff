@@ -23,8 +23,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <cstdlib>
 #include <cassert>
 #include <iostream>
-#include <sstream>
 #include <stdexcept>
+#include <sstream>
 
 
 static const auto copyright =
@@ -228,16 +228,17 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
             {
                 reason = std::string("; ") + exception.what();
             }
-            std::cerr << "Invalid argument (" << argv[i] << ") for "
-                      << argv[i - 1] << reason << std::endl;
-            return false;
+            throw ParseException("Invalid argument (" + std::string(argv[i]) +
+                                 ") for " + argv[i - 1] + reason);
         }
-    }  // i
+    }
+
     if (not ImgA or not ImgB)
     {
         ErrorStr = "FAIL: Not enough image files specified\n";
         return false;
     }
+
     for (auto i = 0u; i < DownSample; i++)
     {
         const auto tmp_a = ImgA->DownSample();
@@ -258,6 +259,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
             std::cout << "Downsampling by " << (1 << (i + 1)) << "\n";
         }
     }
+
     if (scale and(ImgA->Get_Width() !=
                   ImgB->Get_Width() or ImgA->Get_Height() !=
                   ImgB->Get_Height()))

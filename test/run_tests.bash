@@ -83,7 +83,7 @@ $pdiff --threshold -3 fish1.png Aqsis_vase.png 2>&1 | grep -q 'Invalid'
 $pdiff cam_mb_ref.tif cam_mb.tif --fake-option
 $pdiff --verbose --scale fish1.png Aqsis_vase.png 2>&1 | grep -q 'FAIL'
 $pdiff --downsample 2 fish1.png Aqsis_vase.png 2>&1 | grep -q 'FAIL'
-$pdiff  /dev/null /dev/null 2>&1 | grep -q 'FAIL'
+$pdiff  /dev/null /dev/null 2>&1 | grep -q 'Unknown filetype'
 $pdiff --verbose --sum-errors fish[12].png 2>&1 | grep -q 'sum'
 $pdiff --colorfactor .5 -threshold 1000 --gamma 3 --luminance 90 cam_mb_ref.tif cam_mb.tif
 $pdiff --verbose -downsample 30 -scale --luminanceonly --fov 80 cam_mb_ref.tif cam_mb.tif
