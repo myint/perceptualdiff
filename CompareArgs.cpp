@@ -176,7 +176,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
                     if (temporary < 0)
                     {
                         throw std::invalid_argument(
-                            "-downsample must be positive");
+                            "--downsample must be positive");
                     }
                     DownSample = static_cast<unsigned int>(temporary);
                 }
