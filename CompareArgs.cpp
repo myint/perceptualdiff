@@ -80,14 +80,14 @@ static bool option_matches(const char *arg, const std::string &option_name)
 
 CompareArgs::CompareArgs()
 {
-    Verbose = false;
-    LuminanceOnly = false;
-    SumErrors = false;
-    FieldOfView = 45.0f;
-    Gamma = 2.2f;
-    ThresholdPixels = 100;
-    Luminance = 100.0f;
-    ColorFactor = 1.0f;
+    verbose_ = false;
+    luminance_only_ = false;
+    sum_errors_ = false;
+    field_of_view_ = 45.0f;
+    gamma_ = 2.2f;
+    threshold_pixels_ = 100;
+    luminance_ = 100.0f;
+    color_factor_ = 1.0f;
     down_sample = 0;
 }
 
@@ -105,7 +105,7 @@ bool CompareArgs::parse_args(int argc, char **argv)
 #else
         ss << "disabled\n";
 #endif
-        ErrorStr = ss.str();
+        error_string_ = ss.str();
         return false;
     }
     auto image_count = 0u;
@@ -119,12 +119,12 @@ bool CompareArgs::parse_args(int argc, char **argv)
             {
                 if (++i < argc)
                 {
-                    FieldOfView = lexical_cast<float>(argv[i]);
+                    field_of_view_ = lexical_cast<float>(argv[i]);
                 }
             }
             else if (option_matches(argv[i], "verbose"))
             {
-                Verbose = true;
+                verbose_ = true;
             }
             else if (option_matches(argv[i], "threshold"))
             {
@@ -136,36 +136,36 @@ bool CompareArgs::parse_args(int argc, char **argv)
                         throw std::invalid_argument(
                             "-threshold must be positive");
                     }
-                    ThresholdPixels = static_cast<unsigned int>(temporary);
+                    threshold_pixels_ = static_cast<unsigned int>(temporary);
                 }
             }
             else if (option_matches(argv[i], "gamma"))
             {
                 if (++i < argc)
                 {
-                    Gamma = lexical_cast<float>(argv[i]);
+                    gamma_ = lexical_cast<float>(argv[i]);
                 }
             }
             else if (option_matches(argv[i], "luminance"))
             {
                 if (++i < argc)
                 {
-                    Luminance = lexical_cast<float>(argv[i]);
+                    luminance_ = lexical_cast<float>(argv[i]);
                 }
             }
             else if (option_matches(argv[i], "luminanceonly"))
             {
-                LuminanceOnly = true;
+                luminance_only_ = true;
             }
             else if (option_matches(argv[i], "sum-errors"))
             {
-                SumErrors = true;
+                sum_errors_ = true;
             }
             else if (option_matches(argv[i], "colorfactor"))
             {
                 if (++i < argc)
                 {
-                    ColorFactor = lexical_cast<float>(argv[i]);
+                    color_factor_ = lexical_cast<float>(argv[i]);
                 }
             }
             else if (option_matches(argv[i], "downsample"))
@@ -197,9 +197,9 @@ bool CompareArgs::parse_args(int argc, char **argv)
                 auto img = RGBAImage::ReadFromFile(argv[i]);
                 if (not img)
                 {
-                    ErrorStr = "FAIL: Cannot open ";
-                    ErrorStr += argv[i];
-                    ErrorStr += "\n";
+                    error_string_ = "FAIL: Cannot open ";
+                    error_string_ += argv[i];
+                    error_string_ += "\n";
                     return false;
                 }
                 else
@@ -207,11 +207,11 @@ bool CompareArgs::parse_args(int argc, char **argv)
                     ++image_count;
                     if (image_count == 1)
                     {
-                        ImgA = img;
+                        image_a_ = img;
                     }
                     else
                     {
-                        ImgB = img;
+                        image_b_ = img;
                     }
                 }
             }
@@ -233,68 +233,68 @@ bool CompareArgs::parse_args(int argc, char **argv)
         }
     }
 
-    if (not ImgA or not ImgB)
+    if (not image_a_ or not image_b_)
     {
-        ErrorStr = "FAIL: Not enough image files specified\n";
+        error_string_ = "FAIL: Not enough image files specified\n";
         return false;
     }
 
     for (auto i = 0u; i < down_sample; i++)
     {
-        const auto tmp_a = ImgA->down_sample();
-        const auto tmp_b = ImgB->down_sample();
+        const auto tmp_a = image_a_->down_sample();
+        const auto tmp_b = image_b_->down_sample();
 
         if (tmp_a and tmp_b)
         {
-            ImgA = tmp_a;
-            ImgB = tmp_b;
+            image_a_ = tmp_a;
+            image_b_ = tmp_b;
         }
         else
         {
             break;
         }
 
-        if (Verbose)
+        if (verbose_)
         {
             std::cout << "Downsampling by " << (1 << (i + 1)) << "\n";
         }
     }
 
-    if (scale and(ImgA->get_width() !=
-                  ImgB->get_width() or ImgA->get_height() !=
-                  ImgB->get_height()))
+    if (scale and(image_a_->get_width() !=
+                  image_b_->get_width() or image_a_->get_height() !=
+                  image_b_->get_height()))
     {
-        auto min_width = ImgA->get_width();
-        if (ImgB->get_width() < min_width)
+        auto min_width = image_a_->get_width();
+        if (image_b_->get_width() < min_width)
         {
-            min_width = ImgB->get_width();
+            min_width = image_b_->get_width();
         }
 
-        auto min_height = ImgA->get_height();
-        if (ImgB->get_height() < min_height)
+        auto min_height = image_a_->get_height();
+        if (image_b_->get_height() < min_height)
         {
-            min_height = ImgB->get_height();
+            min_height = image_b_->get_height();
         }
 
-        if (Verbose)
+        if (verbose_)
         {
             std::cout << "Scaling to " << min_width << " x " << min_height
                       << "\n";
         }
-        auto tmp = ImgA->down_sample(min_width, min_height);
+        auto tmp = image_a_->down_sample(min_width, min_height);
         if (tmp)
         {
-            ImgA = tmp;
+            image_a_ = tmp;
         }
-        tmp = ImgB->down_sample(min_width, min_height);
+        tmp = image_b_->down_sample(min_width, min_height);
         if (tmp)
         {
-            ImgB = tmp;
+            image_b_ = tmp;
         }
     }
     if (output_file_name)
     {
-        ImgDiff.reset(new RGBAImage(ImgA->get_width(), ImgA->get_height(),
+        image_difference_.reset(new RGBAImage(image_a_->get_width(), image_a_->get_height(),
                                     output_file_name));
     }
     return true;
@@ -302,9 +302,9 @@ bool CompareArgs::parse_args(int argc, char **argv)
 
 void CompareArgs::print_args() const
 {
-    std::cout << "Field of view is " << FieldOfView << " degrees\n"
-              << "Threshold pixels is " << ThresholdPixels << " pixels\n"
-              << "The Gamma is " << Gamma << "\n"
-              << "The Display's luminance is " << Luminance
+    std::cout << "Field of view is " << field_of_view_ << " degrees\n"
+              << "Threshold pixels is " << threshold_pixels_ << " pixels\n"
+              << "The gamma is " << gamma_ << "\n"
+              << "The display's luminance is " << luminance_
               << " candela per meter squared\n";
 }

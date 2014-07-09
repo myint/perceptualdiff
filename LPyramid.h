@@ -37,8 +37,8 @@ private:
     // Successively blurred versions of the original image
     std::vector<float> Levels[MAX_PYR_LEVELS];
 
-    unsigned int Width;
-    unsigned int Height;
+    unsigned int width_;
+    unsigned int weight_;
 };
 
 #endif  // _LPYRAMID_H

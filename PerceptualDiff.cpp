@@ -37,12 +37,12 @@ int main(int argc, char **argv)
     {
         if (not args.parse_args(argc, argv))
         {
-            std::cout << args.ErrorStr;
+            std::cout << args.error_string_;
             return -1;
         }
         else
         {
-            if (args.Verbose)
+            if (args.verbose_)
             {
                 args.print_args();
             }
@@ -51,14 +51,14 @@ int main(int argc, char **argv)
         const auto passed = yee_compare(args);
         if (passed)
         {
-            if (args.Verbose)
+            if (args.verbose_)
             {
-                std::cout << "PASS: " << args.ErrorStr;
+                std::cout << "PASS: " << args.error_string_;
             }
         }
         else
         {
-            std::cout << "FAIL: " << args.ErrorStr;
+            std::cout << "FAIL: " << args.error_string_;
         }
 
         return passed ? 0 : 1;

@@ -39,7 +39,7 @@ static std::vector<float> Copy(const float *img,
 
 LPyramid::LPyramid(const float *image,
                    const unsigned int width, const unsigned int height)
-    : Width(width), Height(height)
+    : width_(width), weight_(height)
 {
     // Make the Laplacian pyramid by successively
     // copying the earlier levels and blurring them
@@ -51,7 +51,7 @@ LPyramid::LPyramid(const float *image,
         }
         else
         {
-            Levels[i].resize(Width * Height);
+            Levels[i].resize(width_ * weight_);
             convolve(Levels[i], Levels[i - 1]);
         }
     }
@@ -66,11 +66,11 @@ void LPyramid::convolve(std::vector<float> &a,
 
     const float Kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
 #pragma omp parallel for
-    for (auto y = 0u; y < Height; y++)
+    for (auto y = 0u; y < weight_; y++)
     {
-        for (auto x = 0u; x < Width; x++)
+        for (auto x = 0u; x < width_; x++)
         {
-            auto index = y * Width + x;
+            auto index = y * width_ + x;
             a[index] = 0.0f;
             for (auto i = -2; i <= 2; i++)
             {
@@ -86,16 +86,16 @@ void LPyramid::convolve(std::vector<float> &a,
                     {
                         ny = -ny;
                     }
-                    if (nx >= static_cast<long>(Width))
+                    if (nx >= static_cast<long>(width_))
                     {
-                        nx = 2 * Width - nx - 1;
+                        nx = 2 * width_ - nx - 1;
                     }
-                    if (ny >= static_cast<long>(Height))
+                    if (ny >= static_cast<long>(weight_))
                     {
-                        ny = 2 * Height - ny - 1;
+                        ny = 2 * weight_ - ny - 1;
                     }
                     a[index] +=
-                        Kernel[i + 2] * Kernel[j + 2] * b[ny * Width + nx];
+                        Kernel[i + 2] * Kernel[j + 2] * b[ny * width_ + nx];
                 }
             }
         }
@@ -105,7 +105,7 @@ void LPyramid::convolve(std::vector<float> &a,
 float LPyramid::get_value(const unsigned int x, const unsigned int y,
                           const unsigned int level) const
 {
-    const auto index = x + y * Width;
+    const auto index = x + y * width_;
     assert(level < MAX_PYR_LEVELS);
     return Levels[level][index];
 }

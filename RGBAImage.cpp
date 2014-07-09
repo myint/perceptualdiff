@@ -87,30 +87,30 @@ std::shared_ptr<RGBAImage> RGBAImage::down_sample(unsigned int w,
 {
     if (w == 0)
     {
-        w = Width / 2;
+        w = width_ / 2;
     }
 
     if (h == 0)
     {
-        h = Height / 2;
+        h = weight_ / 2;
     }
 
-    if (Width <= 1 or Height <= 1)
+    if (width_ <= 1 or weight_ <= 1)
     {
         return nullptr;
     }
-    if (Width == w and Height == h)
+    if (width_ == w and weight_ == h)
     {
         return nullptr;
     }
-    assert(w <= Width);
-    assert(h <= Height);
+    assert(w <= width_);
+    assert(h <= weight_);
 
     auto bitmap = ToFreeImage(*this);
     std::unique_ptr<FIBITMAP, FreeImageDeleter> converted(
         FreeImage_Rescale(bitmap.get(), w, h, FILTER_BICUBIC));
 
-    auto img = ToRGBAImage(converted.get(), Name);
+    auto img = ToRGBAImage(converted.get(), name_);
 
     return img;
 }

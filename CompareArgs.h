@@ -34,26 +34,26 @@ public:
     bool parse_args(int argc, char **argv);
     void print_args() const;
 
-    std::shared_ptr<RGBAImage> ImgA;     // Image A
-    std::shared_ptr<RGBAImage> ImgB;     // Image B
-    std::unique_ptr<RGBAImage> ImgDiff;  // Diff image
-    bool Verbose;                        // Print lots of text or not
-    bool LuminanceOnly;  // Only consider luminance; ignore chroma channels in
+    std::shared_ptr<RGBAImage> image_a_;     // Image A
+    std::shared_ptr<RGBAImage> image_b_;     // Image B
+    std::unique_ptr<RGBAImage> image_difference_;  // Diff image
+    bool verbose_;                        // Print lots of text or not
+    bool luminance_only_;  // Only consider luminance; ignore chroma channels in
                          // the
                          // comparison.
-    bool SumErrors;  // Print a sum of the luminance and color differences of
+    bool sum_errors_;  // Print a sum of the luminance and color differences of
                      // each
                      // pixel.
-    float FieldOfView;  // Field of view in degrees
-    float Gamma;        // The gamma to convert to linear color space
-    float Luminance;    // the display's luminance
-    unsigned int ThresholdPixels;  // How many pixels different to ignore
-    std::string ErrorStr;          // Error string
+    float field_of_view_;  // Field of view in degrees
+    float gamma_;        // The gamma to convert to linear color space
+    float luminance_;    // the display's luminance
+    unsigned int threshold_pixels_;  // How many pixels different to ignore
+    std::string error_string_;          // Error string
 
     // How much color to use in the metric.
-    // 0.0 is the same as LuminanceOnly = true,
+    // 0.0 is the same as luminance_only_ = true,
     // 1.0 means full strength.
-    float ColorFactor;
+    float color_factor_;
 
     // How much to down sample image before comparing, in powers of 2.
     unsigned int down_sample;

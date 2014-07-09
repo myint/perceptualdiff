@@ -41,61 +41,61 @@ class RGBAImage
 
 public:
     RGBAImage(unsigned int w, unsigned int h, const std::string &name="")
-        : Width(w), Height(h), Name(name), Data(w * h)
+        : width_(w), weight_(h), name_(name), data_(w * h)
     {
     }
     unsigned char get_red(unsigned int i) const
     {
-        return (Data[i] & 0xFF);
+        return (data_[i] & 0xFF);
     }
     unsigned char get_green(unsigned int i) const
     {
-        return ((Data[i] >> 8) & 0xFF);
+        return ((data_[i] >> 8) & 0xFF);
     }
     unsigned char get_blue(unsigned int i) const
     {
-        return ((Data[i] >> 16) & 0xFF);
+        return ((data_[i] >> 16) & 0xFF);
     }
     unsigned char get_alpha(unsigned int i) const
     {
-        return ((Data[i] >> 24) & 0xFF);
+        return ((data_[i] >> 24) & 0xFF);
     }
     void set(unsigned char r, unsigned char g, unsigned char b,
              unsigned char a, unsigned int i)
     {
-        Data[i] = r | (g << 8) | (b << 16) | (a << 24);
+        data_[i] = r | (g << 8) | (b << 16) | (a << 24);
     }
     unsigned int get_width() const
     {
-        return Width;
+        return width_;
     }
     unsigned int get_height() const
     {
-        return Height;
+        return weight_;
     }
     void set(unsigned int x, unsigned int y, unsigned int d)
     {
-        Data[x + y * Width] = d;
+        data_[x + y * width_] = d;
     }
     unsigned int get(unsigned int x, unsigned int y) const
     {
-        return Data[x + y * Width];
+        return data_[x + y * width_];
     }
     unsigned int get(unsigned int i) const
     {
-        return Data[i];
+        return data_[i];
     }
     const std::string &Get_Name() const
     {
-        return Name;
+        return name_;
     }
     unsigned int *Get_Data()
     {
-        return &Data[0];
+        return &data_[0];
     }
     const unsigned int *Get_Data() const
     {
-        return &Data[0];
+        return &data_[0];
     }
 
     /** By default down sample to half of each original dimension.
@@ -108,10 +108,10 @@ public:
     ReadFromFile(const std::string &filename);
 
 private:
-    const unsigned int Width;
-    const unsigned int Height;
-    const std::string Name;
-    std::vector<unsigned int> Data;
+    const unsigned int width_;
+    const unsigned int weight_;
+    const std::string name_;
+    std::vector<unsigned int> data_;
 };
 
 

@@ -166,18 +166,18 @@ static unsigned int adaptation(float num_one_degree_pixels)
 
 bool yee_compare(CompareArgs &args)
 {
-    if ((args.ImgA->get_width() != args.ImgB->get_width())or(
-            args.ImgA->get_height() != args.ImgB->get_height()))
+    if ((args.image_a_->get_width() != args.image_b_->get_width())or(
+            args.image_a_->get_height() != args.image_b_->get_height()))
     {
-        args.ErrorStr = "Image dimensions do not match\n";
+        args.error_string_ = "Image dimensions do not match\n";
         return false;
     }
 
-    const auto dim = args.ImgA->get_width() * args.ImgA->get_height();
+    const auto dim = args.image_a_->get_width() * args.image_a_->get_height();
     auto identical = true;
     for (auto i = 0u; i < dim; i++)
     {
-        if (args.ImgA->get(i) != args.ImgB->get(i))
+        if (args.image_a_->get(i) != args.image_b_->get(i))
         {
             identical = false;
             break;
@@ -185,7 +185,7 @@ bool yee_compare(CompareArgs &args)
     }
     if (identical)
     {
-        args.ErrorStr = "Images are binary identical\n";
+        args.error_string_ = "Images are binary identical\n";
         return true;
     }
 
@@ -204,36 +204,36 @@ bool yee_compare(CompareArgs &args)
     auto aB = std::unique_ptr<float[]>(new float[dim]);
     auto bB = std::unique_ptr<float[]>(new float[dim]);
 
-    if (args.Verbose)
+    if (args.verbose_)
     {
         std::cout << "Converting RGB to XYZ\n";
     }
 
-    const auto w = args.ImgA->get_width();
-    const auto h = args.ImgA->get_height();
+    const auto w = args.image_a_->get_width();
+    const auto h = args.image_a_->get_height();
 #pragma omp parallel for
     for (auto y = 0u; y < h; y++)
     {
         for (auto x = 0u; x < w; x++)
         {
             const auto i = x + y * w;
-            auto r = powf(args.ImgA->get_red(i) / 255.0f, args.Gamma);
-            auto g = powf(args.ImgA->get_green(i) / 255.0f, args.Gamma);
-            auto b = powf(args.ImgA->get_blue(i) / 255.0f, args.Gamma);
+            auto r = powf(args.image_a_->get_red(i) / 255.0f, args.gamma_);
+            auto g = powf(args.image_a_->get_green(i) / 255.0f, args.gamma_);
+            auto b = powf(args.image_a_->get_blue(i) / 255.0f, args.gamma_);
             AdobeRGBToXYZ(r, g, b, aX[i], aY[i], aZ[i]);
             float l;
             XYZToLAB(aX[i], aY[i], aZ[i], l, aA[i], aB[i]);
-            r = powf(args.ImgB->get_red(i) / 255.0f, args.Gamma);
-            g = powf(args.ImgB->get_green(i) / 255.0f, args.Gamma);
-            b = powf(args.ImgB->get_blue(i) / 255.0f, args.Gamma);
+            r = powf(args.image_b_->get_red(i) / 255.0f, args.gamma_);
+            g = powf(args.image_b_->get_green(i) / 255.0f, args.gamma_);
+            b = powf(args.image_b_->get_blue(i) / 255.0f, args.gamma_);
             AdobeRGBToXYZ(r, g, b, bX[i], bY[i], bZ[i]);
             XYZToLAB(bX[i], bY[i], bZ[i], l, bA[i], bB[i]);
-            aLum[i] = aY[i] * args.Luminance;
-            bLum[i] = bY[i] * args.Luminance;
+            aLum[i] = aY[i] * args.luminance_;
+            bLum[i] = bY[i] * args.luminance_;
         }
     }
 
-    if (args.Verbose)
+    if (args.verbose_)
     {
         std::cout << "Constructing Laplacian Pyramids\n";
     }
@@ -242,10 +242,10 @@ bool yee_compare(CompareArgs &args)
     const LPyramid lb(bLum.get(), w, h);
 
     const auto num_one_degree_pixels =
-        2.f * tan(args.FieldOfView * 0.5 * M_PI / 180) * 180 / M_PI;
+        2.f * tan(args.field_of_view_ * 0.5 * M_PI / 180) * 180 / M_PI;
     const auto pixels_per_degree = w / num_one_degree_pixels;
 
-    if (args.Verbose)
+    if (args.verbose_)
     {
         std::cout << "Performing test\n";
     }
@@ -336,10 +336,10 @@ bool yee_compare(CompareArgs &args)
                 pass = false;
             }
 
-            if (not args.LuminanceOnly)
+            if (not args.luminance_only_)
             {
                 // CIE delta E test with modifications
-                auto color_scale = args.ColorFactor;
+                auto color_scale = args.color_factor_;
                 // ramp down the color test in scotopic regions
                 if (adapt < 10.0f)
                 {
@@ -361,16 +361,16 @@ bool yee_compare(CompareArgs &args)
             if (not pass)
             {
                 pixels_failed++;
-                if (args.ImgDiff)
+                if (args.image_difference_)
                 {
-                    args.ImgDiff->set(255, 0, 0, 255, index);
+                    args.image_difference_->set(255, 0, 0, 255, index);
                 }
             }
             else
             {
-                if (args.ImgDiff)
+                if (args.image_difference_)
                 {
-                    args.ImgDiff->set(0, 0, 0, 255, index);
+                    args.image_difference_->set(0, 0, 0, 255, index);
                 }
             }
         }
@@ -383,27 +383,27 @@ bool yee_compare(CompareArgs &args)
         std::to_string(pixels_failed) + " pixels are different\n";
 
     // Always output image difference if requested.
-    if (args.ImgDiff)
+    if (args.image_difference_)
     {
-        args.ImgDiff->write_to_tile(args.ImgDiff->Get_Name());
+        args.image_difference_->write_to_tile(args.image_difference_->Get_Name());
 
-        args.ErrorStr += "Wrote difference image to ";
-        args.ErrorStr += args.ImgDiff->Get_Name();
-        args.ErrorStr += "\n";
+        args.error_string_ += "Wrote difference image to ";
+        args.error_string_ += args.image_difference_->Get_Name();
+        args.error_string_ += "\n";
     }
 
-    if (pixels_failed < args.ThresholdPixels)
+    if (pixels_failed < args.threshold_pixels_)
     {
-        args.ErrorStr = "Images are perceptually indistinguishable\n";
-        args.ErrorStr += different;
+        args.error_string_ = "Images are perceptually indistinguishable\n";
+        args.error_string_ += different;
         return true;
     }
 
-    args.ErrorStr = "Images are visibly different\n";
-    args.ErrorStr += different;
-    if (args.SumErrors)
+    args.error_string_ = "Images are visibly different\n";
+    args.error_string_ += different;
+    if (args.sum_errors_)
     {
-        args.ErrorStr += error_sum_buff;
+        args.error_string_ += error_sum_buff;
     }
 
     return false;
