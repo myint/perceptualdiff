@@ -56,7 +56,7 @@ public:
     float color_factor_;
 
     // How much to down sample image before comparing, in powers of 2.
-    unsigned int down_sample;
+    unsigned int down_sample_;
 };
 
 

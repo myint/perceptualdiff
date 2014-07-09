@@ -88,7 +88,7 @@ CompareArgs::CompareArgs()
     threshold_pixels_ = 100;
     luminance_ = 100.0f;
     color_factor_ = 1.0f;
-    down_sample = 0;
+    down_sample_ = 0;
 }
 
 bool CompareArgs::parse_args(int argc, char **argv)
@@ -178,7 +178,7 @@ bool CompareArgs::parse_args(int argc, char **argv)
                         throw std::invalid_argument(
                             "--downsample must be positive");
                     }
-                    down_sample = static_cast<unsigned int>(temporary);
+                    down_sample_ = static_cast<unsigned int>(temporary);
                 }
             }
             else if (option_matches(argv[i], "scale"))
@@ -239,7 +239,7 @@ bool CompareArgs::parse_args(int argc, char **argv)
         return false;
     }
 
-    for (auto i = 0u; i < down_sample; i++)
+    for (auto i = 0u; i < down_sample_; i++)
     {
         const auto tmp_a = image_a_->down_sample();
         const auto tmp_b = image_b_->down_sample();
