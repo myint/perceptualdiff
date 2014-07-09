@@ -29,7 +29,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 struct FreeImageDeleter
 {
-    void operator()(FIBITMAP *image)
+    inline void operator()(FIBITMAP *image)
     {
         if (image)
         {
