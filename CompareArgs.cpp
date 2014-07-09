@@ -88,10 +88,10 @@ CompareArgs::CompareArgs()
     ThresholdPixels = 100;
     Luminance = 100.0f;
     ColorFactor = 1.0f;
-    DownSample = 0;
+    down_sample = 0;
 }
 
-bool CompareArgs::Parse_Args(int argc, char **argv)
+bool CompareArgs::parse_args(int argc, char **argv)
 {
     if (argc < 3)
     {
@@ -178,7 +178,7 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
                         throw std::invalid_argument(
                             "--downsample must be positive");
                     }
-                    DownSample = static_cast<unsigned int>(temporary);
+                    down_sample = static_cast<unsigned int>(temporary);
                 }
             }
             else if (option_matches(argv[i], "scale"))
@@ -239,10 +239,10 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
         return false;
     }
 
-    for (auto i = 0u; i < DownSample; i++)
+    for (auto i = 0u; i < down_sample; i++)
     {
-        const auto tmp_a = ImgA->DownSample();
-        const auto tmp_b = ImgB->DownSample();
+        const auto tmp_a = ImgA->down_sample();
+        const auto tmp_b = ImgB->down_sample();
 
         if (tmp_a and tmp_b)
         {
@@ -260,20 +260,20 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
         }
     }
 
-    if (scale and(ImgA->Get_Width() !=
-                  ImgB->Get_Width() or ImgA->Get_Height() !=
-                  ImgB->Get_Height()))
+    if (scale and(ImgA->get_width() !=
+                  ImgB->get_width() or ImgA->get_height() !=
+                  ImgB->get_height()))
     {
-        auto min_width = ImgA->Get_Width();
-        if (ImgB->Get_Width() < min_width)
+        auto min_width = ImgA->get_width();
+        if (ImgB->get_width() < min_width)
         {
-            min_width = ImgB->Get_Width();
+            min_width = ImgB->get_width();
         }
 
-        auto min_height = ImgA->Get_Height();
-        if (ImgB->Get_Height() < min_height)
+        auto min_height = ImgA->get_height();
+        if (ImgB->get_height() < min_height)
         {
-            min_height = ImgB->Get_Height();
+            min_height = ImgB->get_height();
         }
 
         if (Verbose)
@@ -281,12 +281,12 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
             std::cout << "Scaling to " << min_width << " x " << min_height
                       << "\n";
         }
-        auto tmp = ImgA->DownSample(min_width, min_height);
+        auto tmp = ImgA->down_sample(min_width, min_height);
         if (tmp)
         {
             ImgA = tmp;
         }
-        tmp = ImgB->DownSample(min_width, min_height);
+        tmp = ImgB->down_sample(min_width, min_height);
         if (tmp)
         {
             ImgB = tmp;
@@ -294,13 +294,13 @@ bool CompareArgs::Parse_Args(int argc, char **argv)
     }
     if (output_file_name)
     {
-        ImgDiff.reset(new RGBAImage(ImgA->Get_Width(), ImgA->Get_Height(),
+        ImgDiff.reset(new RGBAImage(ImgA->get_width(), ImgA->get_height(),
                                     output_file_name));
     }
     return true;
 }
 
-void CompareArgs::Print_Args() const
+void CompareArgs::print_args() const
 {
     std::cout << "Field of view is " << FieldOfView << " degrees\n"
               << "Threshold pixels is " << ThresholdPixels << " pixels\n"

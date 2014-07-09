@@ -31,8 +31,8 @@ class CompareArgs
 {
 public:
     CompareArgs();
-    bool Parse_Args(int argc, char **argv);
-    void Print_Args() const;
+    bool parse_args(int argc, char **argv);
+    void print_args() const;
 
     std::shared_ptr<RGBAImage> ImgA;     // Image A
     std::shared_ptr<RGBAImage> ImgB;     // Image B
@@ -56,7 +56,7 @@ public:
     float ColorFactor;
 
     // How much to down sample image before comparing, in powers of 2.
-    unsigned int DownSample;
+    unsigned int down_sample;
 };
 
 

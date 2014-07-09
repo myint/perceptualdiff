@@ -52,13 +52,13 @@ LPyramid::LPyramid(const float *image,
         else
         {
             Levels[i].resize(Width * Height);
-            Convolve(Levels[i], Levels[i - 1]);
+            convolve(Levels[i], Levels[i - 1]);
         }
     }
 }
 
 // Convolves image b with the filter kernel and stores it in a.
-void LPyramid::Convolve(std::vector<float> &a,
+void LPyramid::convolve(std::vector<float> &a,
                         const std::vector<float> &b) const
 {
     assert(a.size() > 1);
@@ -102,7 +102,7 @@ void LPyramid::Convolve(std::vector<float> &a,
     }
 }
 
-float LPyramid::Get_Value(const unsigned int x, const unsigned int y,
+float LPyramid::get_value(const unsigned int x, const unsigned int y,
                           const unsigned int level) const
 {
     const auto index = x + y * Width;

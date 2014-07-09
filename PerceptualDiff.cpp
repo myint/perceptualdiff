@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 
     try
     {
-        if (not args.Parse_Args(argc, argv))
+        if (not args.parse_args(argc, argv))
         {
             std::cout << args.ErrorStr;
             return -1;
@@ -44,11 +44,11 @@ int main(int argc, char **argv)
         {
             if (args.Verbose)
             {
-                args.Print_Args();
+                args.print_args();
             }
         }
 
-        const auto passed = Yee_Compare(args);
+        const auto passed = yee_compare(args);
         if (passed)
         {
             if (args.Verbose)

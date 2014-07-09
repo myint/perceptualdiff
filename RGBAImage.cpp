@@ -44,17 +44,17 @@ static std::shared_ptr<FIBITMAP> ToFreeImage(const RGBAImage &image)
     const auto *data = image.Get_Data();
 
     std::shared_ptr<FIBITMAP> bitmap(
-        FreeImage_Allocate(image.Get_Width(), image.Get_Height(), 32,
+        FreeImage_Allocate(image.get_width(), image.get_height(), 32,
                            0x000000ff, 0x0000ff00, 0x00ff0000),
         FreeImageDeleter());
     assert(bitmap.get());
 
-    for (auto y = 0u; y < image.Get_Height();
-         y++, data += image.Get_Width())
+    for (auto y = 0u; y < image.get_height();
+         y++, data += image.get_width())
     {
         auto scanline = reinterpret_cast<unsigned int *>(
-            FreeImage_GetScanLine(bitmap.get(), image.Get_Height() - y - 1));
-        memcpy(scanline, data, sizeof(data[0]) * image.Get_Width());
+            FreeImage_GetScanLine(bitmap.get(), image.get_height() - y - 1));
+        memcpy(scanline, data, sizeof(data[0]) * image.get_width());
     }
 
     return bitmap;
@@ -82,7 +82,7 @@ static std::shared_ptr<RGBAImage> ToRGBAImage(FIBITMAP *image,
 
 }
 
-std::shared_ptr<RGBAImage> RGBAImage::DownSample(unsigned int w,
+std::shared_ptr<RGBAImage> RGBAImage::down_sample(unsigned int w,
                                                  unsigned int h) const
 {
     if (w == 0)
@@ -115,7 +115,7 @@ std::shared_ptr<RGBAImage> RGBAImage::DownSample(unsigned int w,
     return img;
 }
 
-void RGBAImage::WriteToFile(const std::string &filename) const
+void RGBAImage::write_to_tile(const std::string &filename) const
 {
     const auto file_type = FreeImage_GetFIFFromFilename(filename.c_str());
     if (FIF_UNKNOWN == file_type)

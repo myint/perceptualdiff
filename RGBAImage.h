@@ -44,44 +44,44 @@ public:
         : Width(w), Height(h), Name(name), Data(w * h)
     {
     }
-    unsigned char Get_Red(unsigned int i) const
+    unsigned char get_red(unsigned int i) const
     {
         return (Data[i] & 0xFF);
     }
-    unsigned char Get_Green(unsigned int i) const
+    unsigned char get_green(unsigned int i) const
     {
         return ((Data[i] >> 8) & 0xFF);
     }
-    unsigned char Get_Blue(unsigned int i) const
+    unsigned char get_blue(unsigned int i) const
     {
         return ((Data[i] >> 16) & 0xFF);
     }
-    unsigned char Get_Alpha(unsigned int i) const
+    unsigned char get_alpha(unsigned int i) const
     {
         return ((Data[i] >> 24) & 0xFF);
     }
-    void Set(unsigned char r, unsigned char g, unsigned char b,
+    void set(unsigned char r, unsigned char g, unsigned char b,
              unsigned char a, unsigned int i)
     {
         Data[i] = r | (g << 8) | (b << 16) | (a << 24);
     }
-    unsigned int Get_Width() const
+    unsigned int get_width() const
     {
         return Width;
     }
-    unsigned int Get_Height() const
+    unsigned int get_height() const
     {
         return Height;
     }
-    void Set(unsigned int x, unsigned int y, unsigned int d)
+    void set(unsigned int x, unsigned int y, unsigned int d)
     {
         Data[x + y * Width] = d;
     }
-    unsigned int Get(unsigned int x, unsigned int y) const
+    unsigned int get(unsigned int x, unsigned int y) const
     {
         return Data[x + y * Width];
     }
-    unsigned int Get(unsigned int i) const
+    unsigned int get(unsigned int i) const
     {
         return Data[i];
     }
@@ -100,10 +100,10 @@ public:
 
     /** By default down sample to half of each original dimension.
      */
-    std::shared_ptr<RGBAImage> DownSample(unsigned int w=0,
+    std::shared_ptr<RGBAImage> down_sample(unsigned int w=0,
                                           unsigned int h=0) const;
 
-    void WriteToFile(const std::string &filename) const;
+    void write_to_tile(const std::string &filename) const;
     static std::shared_ptr<RGBAImage>
     ReadFromFile(const std::string &filename);
 

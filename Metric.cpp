@@ -164,20 +164,20 @@ static unsigned int adaptation(float num_one_degree_pixels)
 }
 
 
-bool Yee_Compare(CompareArgs &args)
+bool yee_compare(CompareArgs &args)
 {
-    if ((args.ImgA->Get_Width() != args.ImgB->Get_Width())or(
-            args.ImgA->Get_Height() != args.ImgB->Get_Height()))
+    if ((args.ImgA->get_width() != args.ImgB->get_width())or(
+            args.ImgA->get_height() != args.ImgB->get_height()))
     {
         args.ErrorStr = "Image dimensions do not match\n";
         return false;
     }
 
-    const auto dim = args.ImgA->Get_Width() * args.ImgA->Get_Height();
+    const auto dim = args.ImgA->get_width() * args.ImgA->get_height();
     auto identical = true;
     for (auto i = 0u; i < dim; i++)
     {
-        if (args.ImgA->Get(i) != args.ImgB->Get(i))
+        if (args.ImgA->get(i) != args.ImgB->get(i))
         {
             identical = false;
             break;
@@ -209,23 +209,23 @@ bool Yee_Compare(CompareArgs &args)
         std::cout << "Converting RGB to XYZ\n";
     }
 
-    const auto w = args.ImgA->Get_Width();
-    const auto h = args.ImgA->Get_Height();
+    const auto w = args.ImgA->get_width();
+    const auto h = args.ImgA->get_height();
 #pragma omp parallel for
     for (auto y = 0u; y < h; y++)
     {
         for (auto x = 0u; x < w; x++)
         {
             const auto i = x + y * w;
-            auto r = powf(args.ImgA->Get_Red(i) / 255.0f, args.Gamma);
-            auto g = powf(args.ImgA->Get_Green(i) / 255.0f, args.Gamma);
-            auto b = powf(args.ImgA->Get_Blue(i) / 255.0f, args.Gamma);
+            auto r = powf(args.ImgA->get_red(i) / 255.0f, args.Gamma);
+            auto g = powf(args.ImgA->get_green(i) / 255.0f, args.Gamma);
+            auto b = powf(args.ImgA->get_blue(i) / 255.0f, args.Gamma);
             AdobeRGBToXYZ(r, g, b, aX[i], aY[i], aZ[i]);
             float l;
             XYZToLAB(aX[i], aY[i], aZ[i], l, aA[i], aB[i]);
-            r = powf(args.ImgB->Get_Red(i) / 255.0f, args.Gamma);
-            g = powf(args.ImgB->Get_Green(i) / 255.0f, args.Gamma);
-            b = powf(args.ImgB->Get_Blue(i) / 255.0f, args.Gamma);
+            r = powf(args.ImgB->get_red(i) / 255.0f, args.Gamma);
+            g = powf(args.ImgB->get_green(i) / 255.0f, args.Gamma);
+            b = powf(args.ImgB->get_blue(i) / 255.0f, args.Gamma);
             AdobeRGBToXYZ(r, g, b, bX[i], bY[i], bZ[i]);
             XYZToLAB(bX[i], bY[i], bZ[i], l, bA[i], bB[i]);
             aLum[i] = aY[i] * args.Luminance;
@@ -282,12 +282,12 @@ bool Yee_Compare(CompareArgs &args)
             for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
             {
                 auto n1 =
-                    fabsf(la.Get_Value(x, y, i) - la.Get_Value(x, y, i + 1));
+                    fabsf(la.get_value(x, y, i) - la.get_value(x, y, i + 1));
                 auto n2 =
-                    fabsf(lb.Get_Value(x, y, i) - lb.Get_Value(x, y, i + 1));
+                    fabsf(lb.get_value(x, y, i) - lb.get_value(x, y, i + 1));
                 auto numerator = (n1 > n2) ? n1 : n2;
-                auto d1 = fabsf(la.Get_Value(x, y, i + 2));
-                auto d2 = fabsf(lb.Get_Value(x, y, i + 2));
+                auto d1 = fabsf(la.get_value(x, y, i + 2));
+                auto d2 = fabsf(lb.get_value(x, y, i + 2));
                 auto denominator = (d1 > d2) ? d1 : d2;
                 if (denominator < 1e-5f)
                 {
@@ -301,8 +301,8 @@ bool Yee_Compare(CompareArgs &args)
                 sum_contrast = 1e-5f;
             }
             float F_mask[MAX_PYR_LEVELS - 2];
-            auto adapt = la.Get_Value(x, y, adaptation_level) +
-                         lb.Get_Value(x, y, adaptation_level);
+            auto adapt = la.get_value(x, y, adaptation_level) +
+                         lb.get_value(x, y, adaptation_level);
             adapt *= 0.5f;
             if (adapt < 1e-5)
             {
@@ -326,7 +326,7 @@ bool Yee_Compare(CompareArgs &args)
                 factor = 10;
             }
             const auto delta =
-                fabsf(la.Get_Value(x, y, 0) - lb.Get_Value(x, y, 0));
+                fabsf(la.get_value(x, y, 0) - lb.get_value(x, y, 0));
             error_sum += delta;
             auto pass = true;
 
@@ -363,14 +363,14 @@ bool Yee_Compare(CompareArgs &args)
                 pixels_failed++;
                 if (args.ImgDiff)
                 {
-                    args.ImgDiff->Set(255, 0, 0, 255, index);
+                    args.ImgDiff->set(255, 0, 0, 255, index);
                 }
             }
             else
             {
                 if (args.ImgDiff)
                 {
-                    args.ImgDiff->Set(0, 0, 0, 255, index);
+                    args.ImgDiff->set(0, 0, 0, 255, index);
                 }
             }
         }
@@ -385,7 +385,7 @@ bool Yee_Compare(CompareArgs &args)
     // Always output image difference if requested.
     if (args.ImgDiff)
     {
-        args.ImgDiff->WriteToFile(args.ImgDiff->Get_Name());
+        args.ImgDiff->write_to_tile(args.ImgDiff->Get_Name());
 
         args.ErrorStr += "Wrote difference image to ";
         args.ErrorStr += args.ImgDiff->Get_Name();
