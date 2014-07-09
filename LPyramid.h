@@ -34,11 +34,11 @@ public:
 private:
     void convolve(std::vector<float> &a, const std::vector<float> &b) const;
 
-    // Successively blurred versions of the original image
+    // Successively blurred versions of the original image.
     std::vector<float> Levels[MAX_PYR_LEVELS];
 
     unsigned int width_;
     unsigned int weight_;
 };
 
-#endif  // _LPYRAMID_H
+#endif

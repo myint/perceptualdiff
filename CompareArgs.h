@@ -26,7 +26,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 class RGBAImage;
 
-// Args to pass into the comparison function
+// Arguments to pass into the comparison function.
 class CompareArgs
 {
 public:
@@ -34,21 +34,29 @@ public:
     bool parse_args(int argc, char **argv);
     void print_args() const;
 
-    std::shared_ptr<RGBAImage> image_a_;     // Image A
-    std::shared_ptr<RGBAImage> image_b_;     // Image B
-    std::unique_ptr<RGBAImage> image_difference_;  // Diff image
-    bool verbose_;                        // Print lots of text or not
-    bool luminance_only_;  // Only consider luminance; ignore chroma channels in
-                         // the
-                         // comparison.
-    bool sum_errors_;  // Print a sum of the luminance and color differences of
-                     // each
-                     // pixel.
-    float field_of_view_;  // Field of view in degrees
-    float gamma_;        // The gamma to convert to linear color space
-    float luminance_;    // the display's luminance
-    unsigned int threshold_pixels_;  // How many pixels different to ignore
-    std::string error_string_;          // Error string
+    std::shared_ptr<RGBAImage> image_a_;
+    std::shared_ptr<RGBAImage> image_b_;
+    std::unique_ptr<RGBAImage> image_difference_;
+    bool verbose_;
+
+    // Only consider luminance; ignore chroma channels in the comparison.
+    bool luminance_only_;
+
+    // Print a sum of the luminance and color differences of each pixel.
+    bool sum_errors_;
+
+    // Field of view in degrees.
+    float field_of_view_;
+
+    // The gamma to convert to linear color space
+    float gamma_;
+
+    float luminance_;
+
+    // How many pixels different to ignore.
+    unsigned int threshold_pixels_;
+
+    std::string error_string_;
 
     // How much color to use in the metric.
     // 0.0 is the same as luminance_only_ = true,
