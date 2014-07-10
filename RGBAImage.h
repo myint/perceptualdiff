@@ -26,7 +26,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <vector>
 
 
-/** Class encapsulating an image containing R,G,B,A channels.
+/** Class encapsulating an image containing R, G, B, and A channels.
  *
  * Internal representation assumes data is in the ABGR format, with the RGB
  * color channels premultiplied by the alpha value. Premultiplied alpha is
@@ -36,63 +36,74 @@ Place, Suite 330, Boston, MA 02111-1307 USA
  */
 class RGBAImage
 {
-    RGBAImage(const RGBAImage &);
-    RGBAImage &operator=(const RGBAImage &);
-
 public:
+
     RGBAImage(unsigned int w, unsigned int h, const std::string &name="")
         : width_(w), weight_(h), name_(name), data_(w * h)
     {
     }
+
     unsigned char get_red(unsigned int i) const
     {
         return (data_[i] & 0xFF);
     }
+
     unsigned char get_green(unsigned int i) const
     {
         return ((data_[i] >> 8) & 0xFF);
     }
+
     unsigned char get_blue(unsigned int i) const
     {
         return ((data_[i] >> 16) & 0xFF);
     }
+
     unsigned char get_alpha(unsigned int i) const
     {
         return ((data_[i] >> 24) & 0xFF);
     }
+
     void set(unsigned char r, unsigned char g, unsigned char b,
              unsigned char a, unsigned int i)
     {
         data_[i] = r | (g << 8) | (b << 16) | (a << 24);
     }
+
     unsigned int get_width() const
     {
         return width_;
     }
+
     unsigned int get_height() const
     {
         return weight_;
     }
+
     void set(unsigned int x, unsigned int y, unsigned int d)
     {
         data_[x + y * width_] = d;
     }
+
     unsigned int get(unsigned int x, unsigned int y) const
     {
         return data_[x + y * width_];
     }
+
     unsigned int get(unsigned int i) const
     {
         return data_[i];
     }
+
     const std::string &get_name() const
     {
         return name_;
     }
+
     unsigned int *get_data()
     {
         return &data_[0];
     }
+
     const unsigned int *get_data() const
     {
         return &data_[0];
@@ -105,6 +116,10 @@ public:
     void write_to_tile(const std::string &filename) const;
 
 private:
+
+    RGBAImage(const RGBAImage &);
+    RGBAImage &operator=(const RGBAImage &);
+
     const unsigned int width_;
     const unsigned int weight_;
     const std::string name_;

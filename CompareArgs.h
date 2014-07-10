@@ -30,7 +30,9 @@ class RGBAImage;
 class CompareArgs
 {
 public:
+
     CompareArgs();
+
     bool parse_args(int argc, char **argv);
     void print_args() const;
 

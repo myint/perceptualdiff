@@ -28,10 +28,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 class LPyramid
 {
 public:
+
     LPyramid(const float *image, unsigned int width, unsigned int height);
+
     float get_value(unsigned int x, unsigned int y, unsigned int level) const;
 
 private:
+
     void convolve(std::vector<float> &a, const std::vector<float> &b) const;
 
     // Successively blurred versions of the original image.
