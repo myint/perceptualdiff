@@ -41,7 +41,7 @@ struct FreeImageDeleter
 
 static std::shared_ptr<FIBITMAP> to_free_image(const RGBAImage &image)
 {
-    const auto *data = image.Get_Data();
+    const auto *data = image.get_data();
 
     std::shared_ptr<FIBITMAP> bitmap(
         FreeImage_Allocate(image.get_width(), image.get_height(), 32,
@@ -70,7 +70,7 @@ static std::shared_ptr<RGBAImage> to_rgba_image(FIBITMAP *image,
     auto result = std::make_shared<RGBAImage>(w, h, filename);
     // Copy the image over to our internal format, FreeImage has the scanlines
     // bottom to top though.
-    auto dest = result->Get_Data();
+    auto dest = result->get_data();
     for (unsigned int y = 0; y < h; y++, dest += w)
     {
         const auto scanline = reinterpret_cast<const unsigned int *>(

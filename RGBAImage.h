@@ -85,15 +85,15 @@ public:
     {
         return data_[i];
     }
-    const std::string &Get_Name() const
+    const std::string &get_name() const
     {
         return name_;
     }
-    unsigned int *Get_Data()
+    unsigned int *get_data()
     {
         return &data_[0];
     }
-    const unsigned int *Get_Data() const
+    const unsigned int *get_data() const
     {
         return &data_[0];
     }
