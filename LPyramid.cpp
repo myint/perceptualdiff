@@ -22,7 +22,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "LPyramid.h"
 
 
-static std::vector<float> Copy(const float *img,
+static std::vector<float> copy(const float *img,
                                const unsigned int width,
                                const unsigned int height)
 {
@@ -47,7 +47,7 @@ LPyramid::LPyramid(const float *image,
     {
         if (i == 0 or width * height <= 1)
         {
-            Levels[i] = Copy(image, width, height);
+            Levels[i] = copy(image, width, height);
         }
         else
         {

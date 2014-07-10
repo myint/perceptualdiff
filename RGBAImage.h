@@ -103,8 +103,6 @@ public:
                                           unsigned int h=0) const;
 
     void write_to_tile(const std::string &filename) const;
-    static std::shared_ptr<RGBAImage>
-    ReadFromFile(const std::string &filename);
 
 private:
     const unsigned int width_;
@@ -112,6 +110,9 @@ private:
     const std::string name_;
     std::vector<unsigned int> data_;
 };
+
+
+std::shared_ptr<RGBAImage> read_from_file(const std::string &filename);
 
 
 class RGBImageException : public virtual std::invalid_argument

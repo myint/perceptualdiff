@@ -194,7 +194,7 @@ bool CompareArgs::parse_args(int argc, char **argv)
             }
             else if (image_count < 2)
             {
-                auto img = RGBAImage::ReadFromFile(argv[i]);
+                auto img = read_from_file(argv[i]);
                 if (not img)
                 {
                     error_string_ = "FAIL: Cannot open ";

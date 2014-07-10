@@ -39,7 +39,7 @@ struct FreeImageDeleter
 };
 
 
-static std::shared_ptr<FIBITMAP> ToFreeImage(const RGBAImage &image)
+static std::shared_ptr<FIBITMAP> to_free_image(const RGBAImage &image)
 {
     const auto *data = image.Get_Data();
 
@@ -61,8 +61,8 @@ static std::shared_ptr<FIBITMAP> ToFreeImage(const RGBAImage &image)
 }
 
 
-static std::shared_ptr<RGBAImage> ToRGBAImage(FIBITMAP *image,
-                                              const std::string &filename = "")
+static std::shared_ptr<RGBAImage> to_rgba_image(FIBITMAP *image,
+                                                const std::string &filename="")
 {
     const auto w = FreeImage_GetWidth(image);
     const auto h = FreeImage_GetHeight(image);
@@ -106,11 +106,11 @@ std::shared_ptr<RGBAImage> RGBAImage::down_sample(unsigned int w,
     assert(w <= width_);
     assert(h <= weight_);
 
-    auto bitmap = ToFreeImage(*this);
+    auto bitmap = to_free_image(*this);
     std::unique_ptr<FIBITMAP, FreeImageDeleter> converted(
         FreeImage_Rescale(bitmap.get(), w, h, FILTER_BICUBIC));
 
-    auto img = ToRGBAImage(converted.get(), name_);
+    auto img = to_rgba_image(converted.get(), name_);
 
     return img;
 }
@@ -124,7 +124,7 @@ void RGBAImage::write_to_tile(const std::string &filename) const
                                 filename + "'");
     }
 
-    auto bitmap = ToFreeImage(*this);
+    auto bitmap = to_free_image(*this);
 
     FreeImage_SetTransparent(bitmap.get(), false);
     std::unique_ptr<FIBITMAP, FreeImageDeleter> converted(
@@ -138,7 +138,7 @@ void RGBAImage::write_to_tile(const std::string &filename) const
     }
 }
 
-std::shared_ptr<RGBAImage> RGBAImage::ReadFromFile(const std::string &filename)
+std::shared_ptr<RGBAImage> read_from_file(const std::string &filename)
 {
     const auto file_type = FreeImage_GetFileType(filename.c_str());
     if (FIF_UNKNOWN == file_type)
@@ -157,7 +157,7 @@ std::shared_ptr<RGBAImage> RGBAImage::ReadFromFile(const std::string &filename)
         throw RGBImageException("Failed to load the image " + filename);
     }
 
-    auto result = ToRGBAImage(free_image);
+    auto result = to_rgba_image(free_image);
 
     FreeImage_Unload(free_image);
 

@@ -95,8 +95,8 @@ static float mask(float contrast)
 
 
 // convert Adobe RGB (1998) with reference white D65 to XYZ
-static void AdobeRGBToXYZ(float r, float g, float b,
-                          float &x, float &y, float &z)
+static void adobe_rgb_to_xyz(float r, float g, float b,
+                             float &x, float &y, float &z)
 {
     // matrix is from http://www.brucelindbloom.com/
     x = r * 0.576700f + g * 0.185556f + b * 0.188212f;
@@ -109,7 +109,7 @@ struct White
 {
     White()
     {
-        AdobeRGBToXYZ(1.f, 1.f, 1.f, x, y, z);
+        adobe_rgb_to_xyz(1.f, 1.f, 1.f, x, y, z);
     }
 
     float x;
@@ -121,7 +121,7 @@ struct White
 static const White global_white;
 
 
-static void XYZToLAB(float x, float y, float z, float &L, float &A, float &B)
+static void xyz_to_lab(float x, float y, float z, float &L, float &A, float &B)
 {
     const float epsilon = 216.0f / 24389.0f;
     const float kappa = 24389.0f / 27.0f;
@@ -220,14 +220,14 @@ bool yee_compare(CompareArgs &args)
             auto r = powf(args.image_a_->get_red(i) / 255.0f, args.gamma_);
             auto g = powf(args.image_a_->get_green(i) / 255.0f, args.gamma_);
             auto b = powf(args.image_a_->get_blue(i) / 255.0f, args.gamma_);
-            AdobeRGBToXYZ(r, g, b, aX[i], aY[i], aZ[i]);
+            adobe_rgb_to_xyz(r, g, b, aX[i], aY[i], aZ[i]);
             float l;
-            XYZToLAB(aX[i], aY[i], aZ[i], l, aA[i], aB[i]);
+            xyz_to_lab(aX[i], aY[i], aZ[i], l, aA[i], aB[i]);
             r = powf(args.image_b_->get_red(i) / 255.0f, args.gamma_);
             g = powf(args.image_b_->get_green(i) / 255.0f, args.gamma_);
             b = powf(args.image_b_->get_blue(i) / 255.0f, args.gamma_);
-            AdobeRGBToXYZ(r, g, b, bX[i], bY[i], bZ[i]);
-            XYZToLAB(bX[i], bY[i], bZ[i], l, bA[i], bB[i]);
+            adobe_rgb_to_xyz(r, g, b, bX[i], bY[i], bZ[i]);
+            xyz_to_lab(bX[i], bY[i], bZ[i], l, bA[i], bB[i]);
             aLum[i] = aY[i] * args.luminance_;
             bLum[i] = bY[i] * args.luminance_;
         }
