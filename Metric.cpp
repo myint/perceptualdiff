@@ -166,8 +166,8 @@ static unsigned int adaptation(float num_one_degree_pixels)
 
 bool yee_compare(CompareArgs &args)
 {
-    if ((args.image_a_->get_width() != args.image_b_->get_width())or(
-            args.image_a_->get_height() != args.image_b_->get_height()))
+    if ((args.image_a_->get_width() != args.image_b_->get_width()) or
+        (args.image_a_->get_height() != args.image_b_->get_height()))
     {
         args.error_string_ = "Image dimensions do not match\n";
         return false;
@@ -211,7 +211,8 @@ bool yee_compare(CompareArgs &args)
 
     const auto w = args.image_a_->get_width();
     const auto h = args.image_a_->get_height();
-#pragma omp parallel for
+
+    #pragma omp parallel for
     for (auto y = 0u; y < h; y++)
     {
         for (auto x = 0u; x < w; x++)
@@ -271,7 +272,8 @@ bool yee_compare(CompareArgs &args)
 
     auto pixels_failed = 0u;
     auto error_sum = 0.;
-#pragma omp parallel for reduction(+ : pixels_failed) reduction(+ : error_sum)
+
+    #pragma omp parallel for reduction(+ : pixels_failed) reduction(+ : error_sum)
     for (auto y = 0u; y < h; y++)
     {
         for (auto x = 0u; x < w; x++)

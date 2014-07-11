@@ -260,9 +260,9 @@ bool CompareArgs::parse_args(int argc, char **argv)
         }
     }
 
-    if (scale and(image_a_->get_width() !=
-                  image_b_->get_width() or image_a_->get_height() !=
-                  image_b_->get_height()))
+    if (scale and
+        (image_a_->get_width() != image_b_->get_width() or
+         image_a_->get_height() != image_b_->get_height()))
     {
         auto min_width = image_a_->get_width();
         if (image_b_->get_width() < min_width)
@@ -294,8 +294,9 @@ bool CompareArgs::parse_args(int argc, char **argv)
     }
     if (output_file_name)
     {
-        image_difference_.reset(new RGBAImage(image_a_->get_width(), image_a_->get_height(),
-                                    output_file_name));
+        image_difference_.reset(new RGBAImage(image_a_->get_width(),
+                                              image_a_->get_height(),
+                                              output_file_name));
     }
     return true;
 }

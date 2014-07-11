@@ -83,7 +83,7 @@ static std::shared_ptr<RGBAImage> to_rgba_image(FIBITMAP *image,
 }
 
 std::shared_ptr<RGBAImage> RGBAImage::down_sample(unsigned int w,
-                                                 unsigned int h) const
+                                                  unsigned int h) const
 {
     if (w == 0)
     {
