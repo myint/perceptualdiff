@@ -40,12 +40,12 @@ total_tests=0
 num_tests_failed=0
 
 # Run all tests.
-while read expectedResult image1 image2 ; do
-	if $pdiff --verbose --scale "$image1" "$image2" 2>&1 | grep -q "^$expectedResult" ; then
+while read expected_result image1 image2 ; do
+	if $pdiff --verbose --scale "$image1" "$image2" 2>&1 | grep -q "^$expected_result" ; then
 		total_tests=$((total_tests+1))
 	else
 		num_tests_failed=$((num_tests_failed+1))
-		echo "Regression failure: expected $expectedResult for \"$pdiff $image1 $image2\"" >&2
+		echo "Regression failure: expected $expected_result for \"$pdiff $image1 $image2\"" >&2
 	fi
 done <<EOF
 $(all_tests)

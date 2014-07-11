@@ -189,20 +189,20 @@ bool yee_compare(CompareArgs &args)
         return true;
     }
 
-    // assuming colorspaces are in Adobe RGB (1998) convert to XYZ
-    auto aX = std::unique_ptr<float[]>(new float[dim]);
-    auto aY = std::unique_ptr<float[]>(new float[dim]);
-    auto aZ = std::unique_ptr<float[]>(new float[dim]);
-    auto bX = std::unique_ptr<float[]>(new float[dim]);
-    auto bY = std::unique_ptr<float[]>(new float[dim]);
-    auto bZ = std::unique_ptr<float[]>(new float[dim]);
-    auto aLum = std::unique_ptr<float[]>(new float[dim]);
-    auto bLum = std::unique_ptr<float[]>(new float[dim]);
+    // Assuming colorspaces are in Adobe RGB (1998) convert to XYZ.
+    auto a_x = std::unique_ptr<float[]>(new float[dim]);
+    auto a_y = std::unique_ptr<float[]>(new float[dim]);
+    auto a_z = std::unique_ptr<float[]>(new float[dim]);
+    auto b_x = std::unique_ptr<float[]>(new float[dim]);
+    auto b_y = std::unique_ptr<float[]>(new float[dim]);
+    auto b_z = std::unique_ptr<float[]>(new float[dim]);
+    auto a_lum = std::unique_ptr<float[]>(new float[dim]);
+    auto b_lum = std::unique_ptr<float[]>(new float[dim]);
 
-    auto aA = std::unique_ptr<float[]>(new float[dim]);
-    auto bA = std::unique_ptr<float[]>(new float[dim]);
-    auto aB = std::unique_ptr<float[]>(new float[dim]);
-    auto bB = std::unique_ptr<float[]>(new float[dim]);
+    auto a_a = std::unique_ptr<float[]>(new float[dim]);
+    auto b_a = std::unique_ptr<float[]>(new float[dim]);
+    auto a_b = std::unique_ptr<float[]>(new float[dim]);
+    auto b_b = std::unique_ptr<float[]>(new float[dim]);
 
     if (args.verbose_)
     {
@@ -220,16 +220,16 @@ bool yee_compare(CompareArgs &args)
             auto r = powf(args.image_a_->get_red(i) / 255.0f, args.gamma_);
             auto g = powf(args.image_a_->get_green(i) / 255.0f, args.gamma_);
             auto b = powf(args.image_a_->get_blue(i) / 255.0f, args.gamma_);
-            adobe_rgb_to_xyz(r, g, b, aX[i], aY[i], aZ[i]);
+            adobe_rgb_to_xyz(r, g, b, a_x[i], a_y[i], a_z[i]);
             float l;
-            xyz_to_lab(aX[i], aY[i], aZ[i], l, aA[i], aB[i]);
+            xyz_to_lab(a_x[i], a_y[i], a_z[i], l, a_a[i], a_b[i]);
             r = powf(args.image_b_->get_red(i) / 255.0f, args.gamma_);
             g = powf(args.image_b_->get_green(i) / 255.0f, args.gamma_);
             b = powf(args.image_b_->get_blue(i) / 255.0f, args.gamma_);
-            adobe_rgb_to_xyz(r, g, b, bX[i], bY[i], bZ[i]);
-            xyz_to_lab(bX[i], bY[i], bZ[i], l, bA[i], bB[i]);
-            aLum[i] = aY[i] * args.luminance_;
-            bLum[i] = bY[i] * args.luminance_;
+            adobe_rgb_to_xyz(r, g, b, b_x[i], b_y[i], b_z[i]);
+            xyz_to_lab(b_x[i], b_y[i], b_z[i], l, b_a[i], b_b[i]);
+            a_lum[i] = a_y[i] * args.luminance_;
+            b_lum[i] = b_y[i] * args.luminance_;
         }
     }
 
@@ -238,8 +238,8 @@ bool yee_compare(CompareArgs &args)
         std::cout << "Constructing Laplacian Pyramids\n";
     }
 
-    const LPyramid la(aLum.get(), w, h);
-    const LPyramid lb(bLum.get(), w, h);
+    const LPyramid la(a_lum.get(), w, h);
+    const LPyramid lb(b_lum.get(), w, h);
 
     const auto num_one_degree_pixels =
         2.f * tan(args.field_of_view_ * 0.5 * M_PI / 180) * 180 / M_PI;
@@ -346,8 +346,8 @@ bool yee_compare(CompareArgs &args)
                     // Don't do color test at all.
                     color_scale = 0.0;
                 }
-                auto da = aA[index] - bA[index];
-                auto db = aB[index] - bB[index];
+                auto da = a_a[index] - b_a[index];
+                auto db = a_b[index] - b_b[index];
                 da = da * da;
                 db = db * db;
                 const auto delta_e = (da + db) * color_scale;
