@@ -45,22 +45,22 @@ public:
 
     unsigned char get_red(unsigned int i) const
     {
-        return (data_[i] & 0xFF);
+        return (data_[i] & 0xff);
     }
 
     unsigned char get_green(unsigned int i) const
     {
-        return ((data_[i] >> 8) & 0xFF);
+        return ((data_[i] >> 8) & 0xff);
     }
 
     unsigned char get_blue(unsigned int i) const
     {
-        return ((data_[i] >> 16) & 0xFF);
+        return ((data_[i] >> 16) & 0xff);
     }
 
     unsigned char get_alpha(unsigned int i) const
     {
-        return ((data_[i] >> 24) & 0xFF);
+        return ((data_[i] >> 24) & 0xff);
     }
 
     void set(unsigned char r, unsigned char g, unsigned char b,
