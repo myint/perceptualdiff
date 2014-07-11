@@ -17,8 +17,9 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include "CompareArgs.h"
-#include "RGBAImage.h"
+#include "compare_args.h"
+
+#include "rgba_image.h"
 
 #include <cstdlib>
 #include <cassert>

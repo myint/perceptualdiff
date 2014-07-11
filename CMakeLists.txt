@@ -4,7 +4,7 @@ cmake_minimum_required(VERSION 2.4)
 
 add_executable(
   perceptualdiff
-  PerceptualDiff.cpp LPyramid.cpp RGBAImage.cpp CompareArgs.cpp Metric.cpp)
+  perceptualdiff.cpp lpyramid.cpp rgba_image.cpp compare_args.cpp metric.cpp)
 
 install(TARGETS perceptualdiff DESTINATION bin)
 

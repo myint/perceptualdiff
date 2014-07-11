@@ -17,10 +17,11 @@ this program; if not, write to the Free Software Foundation, Inc., 59 Temple
 Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
-#include "Metric.h"
-#include "CompareArgs.h"
-#include "RGBAImage.h"
-#include "LPyramid.h"
+#include "metric.h"
+
+#include "compare_args.h"
+#include "rgba_image.h"
+#include "lpyramid.h"
 
 #include <cmath>
 #include <iostream>
