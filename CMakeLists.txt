@@ -61,14 +61,11 @@ set(CPACK_SOURCE_IGNORE_FILES
 "^${PROJECT_SOURCE_DIR}/CTestTestfile.cmake"
 "^${PROJECT_SOURCE_DIR}/Makefile"
 "^${PROJECT_SOURCE_DIR}/_CPack_Packages"
-"^${PROJECT_SOURCE_DIR}/cppcheck.bash"
 "^${PROJECT_SOURCE_DIR}/cmake_install.cmake"
 "^${PROJECT_SOURCE_DIR}/install_manifest.txt"
 "^${PROJECT_SOURCE_DIR}/perceptualdiff"
 "^${PROJECT_SOURCE_DIR}/PerceptualDiff-.*"
 "^${PROJECT_SOURCE_DIR}/Testing"
-"^${PROJECT_SOURCE_DIR}/lcov.info"
-"^${PROJECT_SOURCE_DIR}/lcov_tmp.info"
 "^${PROJECT_SOURCE_DIR}/coverage_output"
 )
 include(CPack)
