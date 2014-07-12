@@ -195,25 +195,16 @@ bool CompareArgs::parse_args(int argc, char **argv)
             }
             else if (image_count < 2)
             {
-                auto img = read_from_file(argv[i]);
-                if (not img)
+                auto image = read_from_file(argv[i]);
+
+                ++image_count;
+                if (image_count == 1)
                 {
-                    error_string_ = "FAIL: Cannot open ";
-                    error_string_ += argv[i];
-                    error_string_ += "\n";
-                    return false;
+                    image_a_ = image;
                 }
                 else
                 {
-                    ++image_count;
-                    if (image_count == 1)
-                    {
-                        image_a_ = img;
-                    }
-                    else
-                    {
-                        image_b_ = img;
-                    }
+                    image_b_ = image;
                 }
             }
             else
