@@ -37,8 +37,8 @@ int main(int argc, char **argv)
     {
         if (not args.parse_args(argc, argv))
         {
-            std::cout << args.error_string_;
-            return -1;
+            std::cerr << args.error_string_;
+            return 1;
         }
         else
         {

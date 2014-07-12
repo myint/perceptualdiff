@@ -28,7 +28,10 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <sstream>
 
 
-static const auto usage = "Usage: peceptualdiff image1 image2\n\
+static const auto VERSION = "1.2";
+
+
+static const auto USAGE = "Usage: peceptualdiff image1 image2\n\
 \n\
 Compares image1 and image2 using a perceptually based image metric.\n\
 \n\
@@ -46,6 +49,7 @@ Options:\n\
   --scale          Scale images to match each other's dimensions\n\
   --sum-errors     Print a sum of the luminance and color differences\n\
   --output o       Write difference to the file o\n\
+  --version        Print version\n\
 \n";
 
 
@@ -84,22 +88,27 @@ CompareArgs::CompareArgs()
     down_sample_ = 0;
 }
 
+
+static void print_help()
+{
+    std::cout << USAGE;
+    std::cout << "\n"
+       << "OpenMP status: ";
+#ifdef _OPENMP
+    std::cout << "enabled\n";
+#else
+    std::cout << "disabled\n";
+#endif
+}
+
 bool CompareArgs::parse_args(int argc, char **argv)
 {
-    if (argc < 3)
+    if (argc <= 1)
     {
-        std::stringstream ss;
-        ss << usage;
-        ss << "\n"
-           << "OpenMP status: ";
-#ifdef _OPENMP
-        ss << "enabled\n";
-#else
-        ss << "disabled\n";
-#endif
-        error_string_ = ss.str();
+        print_help();
         return false;
     }
+
     auto image_count = 0u;
     const char *output_file_name = nullptr;
     auto scale = false;
@@ -107,7 +116,12 @@ bool CompareArgs::parse_args(int argc, char **argv)
     {
         try
         {
-            if (option_matches(argv[i], "fov"))
+            if (option_matches(argv[i], "help"))
+            {
+                print_help();
+                exit(0);
+            }
+            else if (option_matches(argv[i], "fov"))
             {
                 if (++i < argc)
                 {
@@ -183,6 +197,11 @@ bool CompareArgs::parse_args(int argc, char **argv)
                 {
                     output_file_name = argv[i];
                 }
+            }
+            else if (option_matches(argv[i], "version"))
+            {
+                std::cout << "perceptualdiff " << VERSION << std::endl;
+                exit(0);
             }
             else if (image_count < 2)
             {
