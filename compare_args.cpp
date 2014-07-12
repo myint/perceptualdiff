@@ -28,33 +28,25 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <sstream>
 
 
-static const auto copyright =
-    "PerceptualDiff version 1.2, Copyright (C) 2006 Yangli Hector Yee\n\
-PerceptualDiff comes with ABSOLUTELY NO WARRANTY;\n\
-This is free software, and you are welcome\n\
-to redistribute it under certain conditions;\n\
-See the GPL page for details: http://www.gnu.org/copyleft/gpl.html\n\n";
-
-
 static const auto usage = "Usage: peceptualdiff image1 image2\n\
 \n\
 Compares image1 and image2 using a perceptually based image metric.\n\
 \n\
 Options:\n\
-    --verbose       : Turns on verbose mode\n\
-    --fov deg       : Field of view in degrees (0.1 to 89.9)\n\
-    --threshold p   : #pixels p below which differences are ignored\n\
-    --gamma g       : Value to convert rgb into linear space (default 2.2)\n\
-    --luminance l   : White luminance (default 100.0 cdm^-2)\n\
-    --luminanceonly : Only consider luminance; ignore chroma (color) in the comparison\n\
-    --colorfactor   : How much of color to use, 0.0 to 1.0, 0.0 = ignore color.\n\
-    --downsample    : How many powers of two to down sample the image.\n\
-    --scale         : Scale images to match each other's dimensions.\n\
-    --sum-errors    : Print a sum of the luminance and color differences.\n\
-    --output o.ppm  : Write difference to the file o.ppm\n\
-\n\
-Note: Input or Output files can also be in the PNG or JPG format or any format\n\
-that FreeImage supports.\n";
+  --verbose        Turn on verbose mode\n\
+  --fov deg        Field of view in degrees [0.1, 89.9] (default: 45.0)\n\
+  --threshold p    Number of pixels p below which differences are ignored\n\
+  --gamma g        Value to convert rgb into linear space (default: 2.2)\n\
+  --luminance l    White luminance (default: 100.0 cdm^-2)\n\
+  --luminanceonly  Only consider luminance; ignore chroma (color) in the\n\
+                   comparison\n\
+  --colorfactor    How much of color to use [0.0, 1.0] (default: 1.0)\n\
+  --downsample     How many powers of two to down sample the image\n\
+                   (default: 0)\n\
+  --scale          Scale images to match each other's dimensions\n\
+  --sum-errors     Print a sum of the luminance and color differences\n\
+  --output o       Write difference to the file o\n\
+\n";
 
 
 template <typename T>
@@ -97,7 +89,6 @@ bool CompareArgs::parse_args(int argc, char **argv)
     if (argc < 3)
     {
         std::stringstream ss;
-        ss << copyright;
         ss << usage;
         ss << "\n"
            << "OpenMP status: ";

@@ -15,4 +15,4 @@ lcov_tmp.info
 coverage_output
 .*.swp
 .project
-
+build/
