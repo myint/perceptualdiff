@@ -227,7 +227,7 @@ bool CompareArgs::parse_args(int argc, char **argv)
 
     if (not image_a_ or not image_b_)
     {
-        error_string_ = "FAIL: Not enough image files specified\n";
+        error_string_ = "Not enough image files specified\n";
         return false;
     }
 
