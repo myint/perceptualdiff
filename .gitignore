@@ -9,7 +9,7 @@ cmake_install.cmake
 install_manifest.txt
 perceptualdiff
 Testing
-PerceptualDiff-*
+perceptualdiff-*
 lcov.info
 lcov_tmp.info
 coverage_output

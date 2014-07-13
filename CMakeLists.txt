@@ -1,4 +1,4 @@
-project(PerceptualDiff)
+project(perceptualdiff)
 
 cmake_minimum_required(VERSION 2.4)
 
@@ -42,7 +42,7 @@ set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README.rst)
 set(CPACK_GENERATOR TGZ)
 set(
   CPACK_SOURCE_PACKAGE_FILE_NAME
-  "PerceptualDiff-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}"
+  "perceptualdiff-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}"
   CACHE INTERNAL "tarball basename"
 )
 set(CPACK_SOURCE_GENERATOR TGZ)
@@ -64,7 +64,7 @@ set(CPACK_SOURCE_IGNORE_FILES
 "^${PROJECT_SOURCE_DIR}/cmake_install.cmake"
 "^${PROJECT_SOURCE_DIR}/install_manifest.txt"
 "^${PROJECT_SOURCE_DIR}/perceptualdiff"
-"^${PROJECT_SOURCE_DIR}/PerceptualDiff-.*"
+"^${PROJECT_SOURCE_DIR}/perceptualdiff-.*"
 "^${PROJECT_SOURCE_DIR}/Testing"
 "^${PROJECT_SOURCE_DIR}/coverage_output"
 )
