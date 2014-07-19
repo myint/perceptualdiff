@@ -25,7 +25,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <cmath>
 #include <iostream>
-#include <memory>
+#include <vector>
 
 
 #ifndef M_PI
@@ -174,7 +174,10 @@ bool yee_compare(CompareArgs &args)
         return false;
     }
 
-    const auto dim = args.image_a_->get_width() * args.image_a_->get_height();
+    const auto w = args.image_a_->get_width();
+    const auto h = args.image_a_->get_height();
+    const auto dim = w * h;
+
     auto identical = true;
     for (auto i = 0u; i < dim; i++)
     {
@@ -191,27 +194,24 @@ bool yee_compare(CompareArgs &args)
     }
 
     // Assuming colorspaces are in Adobe RGB (1998) convert to XYZ.
-    auto a_x = std::unique_ptr<float[]>(new float[dim]);
-    auto a_y = std::unique_ptr<float[]>(new float[dim]);
-    auto a_z = std::unique_ptr<float[]>(new float[dim]);
-    auto b_x = std::unique_ptr<float[]>(new float[dim]);
-    auto b_y = std::unique_ptr<float[]>(new float[dim]);
-    auto b_z = std::unique_ptr<float[]>(new float[dim]);
-    auto a_lum = std::unique_ptr<float[]>(new float[dim]);
-    auto b_lum = std::unique_ptr<float[]>(new float[dim]);
+    std::vector<float> a_x(dim);
+    std::vector<float> a_y(dim);
+    std::vector<float> a_z(dim);
+    std::vector<float> b_x(dim);
+    std::vector<float> b_y(dim);
+    std::vector<float> b_z(dim);
+    std::vector<float> a_lum(dim);
+    std::vector<float> b_lum(dim);
 
-    auto a_a = std::unique_ptr<float[]>(new float[dim]);
-    auto b_a = std::unique_ptr<float[]>(new float[dim]);
-    auto a_b = std::unique_ptr<float[]>(new float[dim]);
-    auto b_b = std::unique_ptr<float[]>(new float[dim]);
+    std::vector<float> a_a(dim);
+    std::vector<float> b_a(dim);
+    std::vector<float> a_b(dim);
+    std::vector<float> b_b(dim);
 
     if (args.verbose_)
     {
         std::cout << "Converting RGB to XYZ\n";
     }
-
-    const auto w = args.image_a_->get_width();
-    const auto h = args.image_a_->get_height();
 
     #pragma omp parallel for
     for (auto y = 0u; y < h; y++)
@@ -240,8 +240,8 @@ bool yee_compare(CompareArgs &args)
         std::cout << "Constructing Laplacian Pyramids\n";
     }
 
-    const LPyramid la(a_lum.get(), w, h);
-    const LPyramid lb(b_lum.get(), w, h);
+    const LPyramid la(&a_lum[0], w, h);
+    const LPyramid lb(&b_lum[0], w, h);
 
     const auto num_one_degree_pixels =
         2.f * tan(args.field_of_view_ * 0.5 * M_PI / 180) * 180 / M_PI;

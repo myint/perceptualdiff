@@ -296,9 +296,9 @@ bool CompareArgs::parse_args(int argc, char **argv)
     }
     if (output_file_name)
     {
-        image_difference_.reset(new RGBAImage(image_a_->get_width(),
-                                              image_a_->get_height(),
-                                              output_file_name));
+        image_difference_ = std::make_shared<RGBAImage>(image_a_->get_width(),
+                                                        image_a_->get_height(),
+                                                        output_file_name);
     }
     return true;
 }

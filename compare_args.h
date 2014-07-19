@@ -38,7 +38,7 @@ public:
 
     std::shared_ptr<RGBAImage> image_a_;
     std::shared_ptr<RGBAImage> image_b_;
-    std::unique_ptr<RGBAImage> image_difference_;
+    std::shared_ptr<RGBAImage> image_difference_;
     bool verbose_;
 
     // Only consider luminance; ignore chroma channels in the comparison.
