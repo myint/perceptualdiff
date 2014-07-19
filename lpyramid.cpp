@@ -47,12 +47,12 @@ LPyramid::LPyramid(const float *image,
     {
         if (i == 0 or width * height <= 1)
         {
-            Levels[i] = copy(image, width, height);
+            levels_[i] = copy(image, width, height);
         }
         else
         {
-            Levels[i].resize(width_ * weight_);
-            convolve(Levels[i], Levels[i - 1]);
+            levels_[i].resize(width_ * weight_);
+            convolve(levels_[i], levels_[i - 1]);
         }
     }
 }
@@ -107,5 +107,5 @@ float LPyramid::get_value(const unsigned int x, const unsigned int y,
 {
     const auto index = x + y * width_;
     assert(level < MAX_PYR_LEVELS);
-    return Levels[level][index];
+    return levels_[level][index];
 }

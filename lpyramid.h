@@ -38,7 +38,7 @@ private:
     void convolve(std::vector<float> &a, const std::vector<float> &b) const;
 
     // Successively blurred versions of the original image.
-    std::vector<float> Levels[MAX_PYR_LEVELS];
+    std::vector<float> levels_[MAX_PYR_LEVELS];
 
     unsigned int width_;
     unsigned int weight_;
