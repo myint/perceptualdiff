@@ -62,7 +62,10 @@ else
 fi
 
 # Run additional tests.
-$pdiff 2>&1 | grep -i openmp
+$pdiff 2>&1 | grep -i 'openmp'
+$pdiff --version | grep -i 'perceptualdiff'
+$pdiff --help | grep -i 'usage'
+
 rm -f diff.png
 $pdiff --output diff.png --verbose fish[12].png 2>&1 | grep -q 'FAIL'
 ls diff.png
