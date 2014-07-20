@@ -24,7 +24,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <stdexcept>
 #include <string>
 
+
 class RGBAImage;
+
 
 // Arguments to pass into the comparison function.
 class CompareArgs
