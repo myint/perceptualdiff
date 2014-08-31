@@ -25,6 +25,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "metric.h"
 #include "rgba_image.h"
 
+#include <cstdlib>
 #include <iostream>
 #include <string>
 
@@ -38,7 +39,7 @@ int main(int argc, char **argv)
         if (not args.parse_args(argc, argv))
         {
             std::cerr << args.error_string_;
-            return 1;
+            return EXIT_FAILURE;
         }
         else
         {
@@ -61,16 +62,16 @@ int main(int argc, char **argv)
             std::cout << "FAIL: " << args.error_string_;
         }
 
-        return passed ? 0 : 1;
+        return passed ? EXIT_SUCCESS : EXIT_FAILURE;
     }
     catch (const ParseException &exception)
     {
         std::cerr << exception.what() << std::endl;
-        return 1;
+        return EXIT_FAILURE;
     }
     catch (const RGBImageException &exception)
     {
         std::cerr << exception.what() << std::endl;
-        return 2;
+        return EXIT_FAILURE;
     }
 }
