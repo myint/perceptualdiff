@@ -3,6 +3,8 @@
 # Script to run pdiff against a set of image file pairs, and check that the
 # PASS or FAIL status is as expected.
 
+trap "echo -e '\x1b[01;31mFailed\x1b[0m'" ERR
+
 #------------------------------------------------------------------------------
 # Image files and expected perceptualdiff PASS/FAIL status.  Line format is
 # (PASS|FAIL) image1.(tif|png) image2.(tif|png)
