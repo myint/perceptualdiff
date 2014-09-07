@@ -23,6 +23,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <cstdlib>
 #include <cassert>
+#include <climits>
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
@@ -185,6 +186,7 @@ bool CompareArgs::parse_args(int argc, char **argv)
                             "--downsample must be positive");
                     }
                     down_sample_ = static_cast<unsigned int>(temporary);
+                    assert(down_sample_ <= INT_MAX);
                 }
             }
             else if (option_matches(argv[i], "scale"))
