@@ -21,9 +21,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "rgba_image.h"
 
-#include <cstdlib>
 #include <cassert>
 #include <climits>
+#include <cstdlib>
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
