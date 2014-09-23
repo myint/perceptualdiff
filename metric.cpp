@@ -20,8 +20,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "metric.h"
 
 #include "compare_args.h"
-#include "rgba_image.h"
 #include "lpyramid.h"
+#include "rgba_image.h"
 
 #include <cmath>
 #include <iostream>
@@ -33,17 +33,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #endif
 
 
-/*
-* Given the adaptation luminance, this function returns the
-* threshold of visibility in cd per m^2
-* TVI means Threshold vs Intensity function
-* This version comes from Ward Larson Siggraph 1997
-*/
+// Given the adaptation luminance, this function returns the
+// threshold of visibility in cd per m^2.
+//
+// TVI means Threshold vs Intensity function.
+// This version comes from Ward Larson Siggraph 1997.
+//
+// Returns the threshold luminance given the adaptation luminance.
+// Units are candelas per meter squared.
 static float tvi(float adaptation_luminance)
 {
-    // returns the threshold luminance given the adaptation luminance
-    // units are candelas per meter squared
-
     const auto log_a = log10f(adaptation_luminance);
 
     float r;
