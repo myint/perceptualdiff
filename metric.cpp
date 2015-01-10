@@ -387,7 +387,7 @@ bool yee_compare(CompareArgs &args)
     // Always output image difference if requested.
     if (args.image_difference_)
     {
-        args.image_difference_->write_to_tile(args.image_difference_->get_name());
+        args.image_difference_->write_to_file(args.image_difference_->get_name());
 
         args.error_string_ += "Wrote difference image to ";
         args.error_string_ += args.image_difference_->get_name();

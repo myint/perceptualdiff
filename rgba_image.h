@@ -113,7 +113,7 @@ public:
     std::shared_ptr<RGBAImage> down_sample(unsigned int w=0,
                                            unsigned int h=0) const;
 
-    void write_to_tile(const std::string &filename) const;
+    void write_to_file(const std::string &filename) const;
 
 private:
 

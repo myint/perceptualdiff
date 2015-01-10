@@ -116,7 +116,7 @@ std::shared_ptr<RGBAImage> RGBAImage::down_sample(unsigned int w,
     return img;
 }
 
-void RGBAImage::write_to_tile(const std::string &filename) const
+void RGBAImage::write_to_file(const std::string &filename) const
 {
     const auto file_type = FreeImage_GetFIFFromFilename(filename.c_str());
     if (FIF_UNKNOWN == file_type)
