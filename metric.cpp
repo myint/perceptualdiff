@@ -28,7 +28,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <vector>
 
 
-static constexpr float pi = 3.14159265f;
+static constexpr auto pi = 3.14159265f;
 
 
 static constexpr float to_radians(const float degrees)
