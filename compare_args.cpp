@@ -120,7 +120,7 @@ bool CompareArgs::parse_args(int argc, char **argv)
             if (option_matches(argv[i], "help"))
             {
                 print_help();
-                exit(0);
+                exit(EXIT_SUCCESS);
             }
             else if (option_matches(argv[i], "fov"))
             {
@@ -203,7 +203,7 @@ bool CompareArgs::parse_args(int argc, char **argv)
             else if (option_matches(argv[i], "version"))
             {
                 std::cout << "perceptualdiff " << VERSION << std::endl;
-                exit(0);
+                exit(EXIT_SUCCESS);
             }
             else if (image_count < 2)
             {
