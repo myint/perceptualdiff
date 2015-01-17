@@ -33,13 +33,13 @@ static constexpr float pi = 3.14159265f;
 
 static constexpr float to_radians(const float degrees)
 {
-    return degrees * pi / 180.f;
+    return degrees * pi / 180.f;  // LCOV_EXCL_LINE
 }
 
 
 static constexpr float to_degrees(const float radians)
 {
-    return radians * 180.f / pi;
+    return radians * 180.f / pi;  // LCOV_EXCL_LINE
 }
 
 
