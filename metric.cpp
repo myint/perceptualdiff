@@ -28,9 +28,19 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <vector>
 
 
-#ifndef M_PI
-#define M_PI 3.14159265f
-#endif
+static constexpr float pi = 3.14159265f;
+
+
+static constexpr float to_radians(const float degrees)
+{
+    return degrees * pi / 180.f;
+}
+
+
+static constexpr float to_degrees(const float radians)
+{
+    return radians * 180.f / pi;
+}
 
 
 // Given the adaptation luminance, this function returns the
@@ -243,7 +253,8 @@ bool yee_compare(CompareArgs &args)
     const LPyramid lb(&b_lum[0], w, h);
 
     const auto num_one_degree_pixels =
-        2.f * tan(args.field_of_view_ * 0.5 * M_PI / 180) * 180 / M_PI;
+        to_degrees(2 *
+                   std::tan(args.field_of_view_ * to_radians(.5f)));
     const auto pixels_per_degree = w / num_one_degree_pixels;
 
     if (args.verbose_)
