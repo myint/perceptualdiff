@@ -4,7 +4,7 @@ based on the paper :
 A perceptual metric for production testing. Journal of graphics tools,
 9(4):33-40, 2004, Hector Yee
 Copyright (C) 2006-2011 Yangli Hector Yee
-Copyright (C) 2011-2014 Steven Myint
+Copyright (C) 2011-2015 Steven Myint, Jeff Terrace
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
