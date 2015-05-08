@@ -22,7 +22,7 @@ EOF
 }
 
 # Change to test directory
-script_directory=$(dirname "$0")
+readonly script_directory=$(dirname "$0")
 cd "$script_directory"
 
 if [ -f '../build/perceptualdiff' ]
