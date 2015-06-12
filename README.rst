@@ -38,15 +38,15 @@ Build Instructions
     - On Ubuntu: ``apt-get install libfreeimage-dev``
 #. Type::
 
-    cmake .
+    $ cmake .
 
 #. Type::
 
-    make
+    $ make
 
 #. To specify the install directory, use::
 
-    make install DESTDIR="/home/me/mydist"
+    $ make install DESTDIR="/home/me/mydist"
 
 
 Usage
