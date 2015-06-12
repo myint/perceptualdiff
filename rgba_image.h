@@ -134,7 +134,7 @@ class RGBImageException : public virtual std::invalid_argument
 {
 public:
 
-    RGBImageException(const std::string &message)
+    explicit RGBImageException(const std::string &message)
         : std::invalid_argument(message)
     {
     }

@@ -76,7 +76,7 @@ class ParseException : public virtual std::invalid_argument
 {
 public:
 
-    ParseException(const std::string &message)
+    explicit ParseException(const std::string &message)
         : std::invalid_argument(message)
     {
     }
