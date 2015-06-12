@@ -249,8 +249,8 @@ bool yee_compare(CompareArgs &args)
         std::cout << "Constructing Laplacian Pyramids\n";
     }
 
-    const LPyramid la(&a_lum[0], w, h);
-    const LPyramid lb(&b_lum[0], w, h);
+    const LPyramid la(a_lum, w, h);
+    const LPyramid lb(b_lum, w, h);
 
     const auto num_one_degree_pixels =
         to_degrees(2 *

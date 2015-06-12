@@ -22,22 +22,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <cassert>
 
 
-static std::vector<float> copy(const float *img,
-                               const unsigned int width,
-                               const unsigned int height)
-{
-    const auto max = width * height;
-    std::vector<float> out(max);
-    for (auto i = 0u; i < max; i++)
-    {
-        out[i] = img[i];
-    }
-
-    return out;
-}
-
-
-LPyramid::LPyramid(const float *image,
+LPyramid::LPyramid(const std::vector<float> &image,
                    const unsigned int width, const unsigned int height)
     : width_(width), weight_(height)
 {
@@ -47,7 +32,7 @@ LPyramid::LPyramid(const float *image,
     {
         if (i == 0 or width * height <= 1)
         {
-            levels_[i] = copy(image, width, height);
+            levels_[i] = image;
         }
         else
         {
@@ -98,6 +83,7 @@ void LPyramid::convolve(std::vector<float> &a,
                         Kernel[i + 2] * Kernel[j + 2] * b[ny * width_ + nx];
                 }
             }
+            a[index] = a_index;
         }
     }
 }
