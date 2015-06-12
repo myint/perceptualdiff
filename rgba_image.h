@@ -38,33 +38,33 @@ class RGBAImage
 {
 public:
 
-    RGBAImage(unsigned int w, unsigned int h, const std::string &name="")
+    RGBAImage(const unsigned int w, const unsigned int h, const std::string &name="")
         : width_(w), weight_(h), name_(name), data_(w * h)
     {
     }
 
-    unsigned char get_red(unsigned int i) const
+    unsigned char get_red(const unsigned int i) const
     {
         return (data_[i] & 0xff);
     }
 
-    unsigned char get_green(unsigned int i) const
+    unsigned char get_green(const unsigned int i) const
     {
         return ((data_[i] >> 8) & 0xff);
     }
 
-    unsigned char get_blue(unsigned int i) const
+    unsigned char get_blue(const unsigned int i) const
     {
         return ((data_[i] >> 16) & 0xff);
     }
 
-    unsigned char get_alpha(unsigned int i) const
+    unsigned char get_alpha(const unsigned int i) const
     {
         return ((data_[i] >> 24) & 0xff);
     }
 
-    void set(unsigned char r, unsigned char g, unsigned char b,
-             unsigned char a, unsigned int i)
+    void set(const unsigned char r, const unsigned char g, const unsigned char b,
+             const unsigned char a, const unsigned int i)
     {
         data_[i] = r | (g << 8) | (b << 16) | (a << 24);
     }
@@ -79,17 +79,17 @@ public:
         return weight_;
     }
 
-    void set(unsigned int x, unsigned int y, unsigned int d)
+    void set(const unsigned int x, const unsigned int y, const unsigned int d)
     {
         data_[x + y * width_] = d;
     }
 
-    unsigned int get(unsigned int x, unsigned int y) const
+    unsigned int get(const unsigned int x, const  unsigned int y) const
     {
         return data_[x + y * width_];
     }
 
-    unsigned int get(unsigned int i) const
+    unsigned int get(const unsigned int i) const
     {
         return data_[i];
     }

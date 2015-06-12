@@ -30,7 +30,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <string>
 
 
-int main(int argc, char **argv)
+int main(const int argc, const char **argv)
 {
     CompareArgs args;
 

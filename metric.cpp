@@ -51,7 +51,7 @@ static constexpr float to_degrees(const float radians)
 //
 // Returns the threshold luminance given the adaptation luminance.
 // Units are candelas per meter squared.
-static float tvi(float adaptation_luminance)
+static float tvi(const float adaptation_luminance)
 {
     const auto log_a = log10f(adaptation_luminance);
 
@@ -83,7 +83,7 @@ static float tvi(float adaptation_luminance)
 
 // computes the contrast sensitivity function (Barten SPIE 1989)
 // given the cycles per degree (cpd) and luminance (lum)
-static float csf(float cpd, float lum)
+static float csf(const float cpd, const float lum)
 {
     const auto a = 440.f * powf((1.f + 0.7f / lum), -0.2f);
     const auto b = 0.3f * powf((1.0f + 100.0f / lum), 0.15f);
@@ -96,7 +96,7 @@ static float csf(float cpd, float lum)
 * Visual Masking Function
 * from Daly 1993
 */
-static float mask(float contrast)
+static float mask(const float contrast)
 {
     const auto a = powf(392.498f * contrast, 0.7f);
     const auto b = powf(0.0153f * a, 4.f);
@@ -105,7 +105,7 @@ static float mask(float contrast)
 
 
 // convert Adobe RGB (1998) with reference white D65 to XYZ
-static void adobe_rgb_to_xyz(float r, float g, float b,
+static void adobe_rgb_to_xyz(const float r, const float g, const float b,
                              float &x, float &y, float &z)
 {
     // matrix is from http://www.brucelindbloom.com/
@@ -131,7 +131,7 @@ struct White
 static const White global_white;
 
 
-static void xyz_to_lab(float x, float y, float z, float &L, float &A, float &B)
+static void xyz_to_lab(const float x, const float y, const float z, float &L, float &A, float &B)
 {
     const float epsilon = 216.0f / 24389.0f;
     const float kappa = 24389.0f / 27.0f;
@@ -157,7 +157,7 @@ static void xyz_to_lab(float x, float y, float z, float &L, float &A, float &B)
 }
 
 
-static unsigned int adaptation(float num_one_degree_pixels)
+static unsigned int adaptation(const float num_one_degree_pixels)
 {
     auto num_pixels = 1.f;
     auto adaptation_level = 0u;
