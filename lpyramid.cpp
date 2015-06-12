@@ -50,27 +50,21 @@ void LPyramid::convolve(std::vector<float> &a,
     assert(b.size() > 1);
 
     const float Kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
-    #pragma omp parallel for
+    #pragma omp parallel for shared(a, b, Kernel)
     for (auto y = 0u; y < weight_; y++)
     {
         for (auto x = 0u; x < width_; x++)
         {
-            auto index = y * width_ + x;
-            a[index] = 0.0f;
+            const auto index = y * width_ + x;
+            auto a_index = 0.0f;
             for (auto i = -2; i <= 2; i++)
             {
                 for (auto j = -2; j <= 2; j++)
                 {
                     int nx = x + i;
                     int ny = y + j;
-                    if (nx < 0)
-                    {
-                        nx = -nx;
-                    }
-                    if (ny < 0)
-                    {
-                        ny = -ny;
-                    }
+                    nx = std::max(nx, -nx);
+                    ny = std::max(ny, -ny);
                     if (nx >= static_cast<long>(width_))
                     {
                         nx = 2 * width_ - nx - 1;
@@ -79,7 +73,7 @@ void LPyramid::convolve(std::vector<float> &a,
                     {
                         ny = 2 * weight_ - ny - 1;
                     }
-                    a[index] +=
+                    a_index +=
                         Kernel[i + 2] * Kernel[j + 2] * b[ny * width_ + nx];
                 }
             }

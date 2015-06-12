@@ -135,12 +135,13 @@ static void xyz_to_lab(const float x, const float y, const float z, float &L, fl
 {
     const float epsilon = 216.0f / 24389.0f;
     const float kappa = 24389.0f / 27.0f;
+    const float r[] = {
+        x / global_white.x,
+        y / global_white.y,
+        z / global_white.z
+    };
     float f[3];
-    float r[3];
-    r[0] = x / global_white.x;
-    r[1] = y / global_white.y;
-    r[2] = z / global_white.z;
-    for (unsigned int i = 0; i < 3; i++)
+    for (auto i = 0u; i < 3; i++)
     {
         if (r[i] > epsilon)
         {
@@ -203,12 +204,6 @@ bool yee_compare(CompareArgs &args)
     }
 
     // Assuming colorspaces are in Adobe RGB (1998) convert to XYZ.
-    std::vector<float> a_x(dim);
-    std::vector<float> a_y(dim);
-    std::vector<float> a_z(dim);
-    std::vector<float> b_x(dim);
-    std::vector<float> b_y(dim);
-    std::vector<float> b_z(dim);
     std::vector<float> a_lum(dim);
     std::vector<float> b_lum(dim);
 
@@ -222,25 +217,34 @@ bool yee_compare(CompareArgs &args)
         std::cout << "Converting RGB to XYZ\n";
     }
 
-    #pragma omp parallel for
+    const auto gamma = args.gamma_;
+    const auto luminance = args.luminance_;
+
+    #pragma omp parallel for shared(args, a_lum, b_lum, a_a, a_b, b_a, b_b)
     for (auto y = 0u; y < h; y++)
     {
         for (auto x = 0u; x < w; x++)
         {
             const auto i = x + y * w;
-            auto r = powf(args.image_a_->get_red(i) / 255.0f, args.gamma_);
-            auto g = powf(args.image_a_->get_green(i) / 255.0f, args.gamma_);
-            auto b = powf(args.image_a_->get_blue(i) / 255.0f, args.gamma_);
-            adobe_rgb_to_xyz(r, g, b, a_x[i], a_y[i], a_z[i]);
+            const auto a_color_r = powf(args.image_a_->get_red(i) / 255.0f, gamma);
+            const auto a_color_g = powf(args.image_a_->get_green(i) / 255.0f, gamma);
+            const auto a_color_b = powf(args.image_a_->get_blue(i) / 255.0f, gamma);
+            float a_x;
+            float a_y;
+            float a_z;
+            adobe_rgb_to_xyz(a_color_r, a_color_g, a_color_b, a_x, a_y, a_z);
             float l;
-            xyz_to_lab(a_x[i], a_y[i], a_z[i], l, a_a[i], a_b[i]);
-            r = powf(args.image_b_->get_red(i) / 255.0f, args.gamma_);
-            g = powf(args.image_b_->get_green(i) / 255.0f, args.gamma_);
-            b = powf(args.image_b_->get_blue(i) / 255.0f, args.gamma_);
-            adobe_rgb_to_xyz(r, g, b, b_x[i], b_y[i], b_z[i]);
-            xyz_to_lab(b_x[i], b_y[i], b_z[i], l, b_a[i], b_b[i]);
-            a_lum[i] = a_y[i] * args.luminance_;
-            b_lum[i] = b_y[i] * args.luminance_;
+            xyz_to_lab(a_x, a_y, a_z, l, a_a[i], a_b[i]);
+            const auto b_color_r = powf(args.image_b_->get_red(i) / 255.0f, gamma);
+            const auto b_color_g = powf(args.image_b_->get_green(i) / 255.0f, gamma);
+            const auto b_color_b = powf(args.image_b_->get_blue(i) / 255.0f, gamma);
+            float b_x;
+            float b_y;
+            float b_z;
+            adobe_rgb_to_xyz(b_color_r, b_color_g, b_color_b, b_x, b_y, b_z);
+            xyz_to_lab(b_x, b_y, b_z, l, b_a[i], b_b[i]);
+            a_lum[i] = a_y * luminance;
+            b_lum[i] = b_y * luminance;
         }
     }
 
@@ -284,60 +288,35 @@ bool yee_compare(CompareArgs &args)
     auto pixels_failed = 0u;
     auto error_sum = 0.;
 
-    #pragma omp parallel for reduction(+ : pixels_failed) reduction(+ : error_sum)
+    #pragma omp parallel for reduction(+ : pixels_failed, error_sum) shared(args, a_a, a_b, b_a, b_b, cpd, F_freq)
     for (auto y = 0u; y < h; y++)
     {
         for (auto x = 0u; x < w; x++)
         {
-            const auto index = x + y * w;
-            float contrast[MAX_PYR_LEVELS - 2];
-            float sum_contrast = 0;
-            for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
-            {
-                auto n1 =
-                    fabsf(la.get_value(x, y, i) - la.get_value(x, y, i + 1));
-                auto n2 =
-                    fabsf(lb.get_value(x, y, i) - lb.get_value(x, y, i + 1));
-                auto numerator = (n1 > n2) ? n1 : n2;
-                auto d1 = fabsf(la.get_value(x, y, i + 2));
-                auto d2 = fabsf(lb.get_value(x, y, i + 2));
-                auto denominator = (d1 > d2) ? d1 : d2;
-                if (denominator < 1e-5f)
-                {
-                    denominator = 1e-5f;
-                }
-                contrast[i] = numerator / denominator;
-                sum_contrast += contrast[i];
-            }
-            if (sum_contrast < 1e-5)
-            {
-                sum_contrast = 1e-5f;
-            }
-            float F_mask[MAX_PYR_LEVELS - 2];
-            auto adapt = la.get_value(x, y, adaptation_level) +
-                         lb.get_value(x, y, adaptation_level);
-            adapt *= 0.5f;
-            if (adapt < 1e-5)
-            {
-                adapt = 1e-5f;
-            }
-            for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
-            {
-                F_mask[i] = mask(contrast[i] * csf(cpd[i], adapt));
-            }
+            const auto index = y * w + x;
+            const auto adapt = std::max((la.get_value(x, y, adaptation_level) +
+                                         lb.get_value(x, y, adaptation_level)) * 0.5f,
+                                        1e-5f);
+            auto sum_contrast = 0.f;
             auto factor = 0.f;
             for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
             {
-                factor += contrast[i] * F_freq[i] * F_mask[i] / sum_contrast;
+                const auto n1 =
+                    fabsf(la.get_value(x, y, i) - la.get_value(x, y, i + 1));
+                const auto n2 =
+                    fabsf(lb.get_value(x, y, i) - lb.get_value(x, y, i + 1));
+                const auto numerator = std::max(n1, n2);
+                const auto d1 = fabsf(la.get_value(x, y, i + 2));
+                const auto d2 = fabsf(lb.get_value(x, y, i + 2));
+                const auto denominator = std::max(std::max(d1, d2), 1e-5f);
+                const auto contrast = numerator / denominator;
+                const auto F_mask = mask(contrast * csf(cpd[i], adapt));
+                factor += contrast * F_freq[i] * F_mask;
+                sum_contrast += contrast;
             }
-            if (factor < 1)
-            {
-                factor = 1;
-            }
-            if (factor > 10)
-            {
-                factor = 10;
-            }
+            sum_contrast = std::max(sum_contrast, 1e-5f);
+            factor /= sum_contrast;
+            factor = std::min(std::max(factor, 1.f), 10.f);
             const auto delta =
                 fabsf(la.get_value(x, y, 0) - lb.get_value(x, y, 0));
             error_sum += delta;
@@ -359,11 +338,9 @@ bool yee_compare(CompareArgs &args)
                     // Don't do color test at all.
                     color_scale = 0.0;
                 }
-                auto da = a_a[index] - b_a[index];
-                auto db = a_b[index] - b_b[index];
-                da = da * da;
-                db = db * db;
-                const auto delta_e = (da + db) * color_scale;
+                const auto da = a_a[index] - b_a[index];
+                const auto db = a_b[index] - b_b[index];
+                const auto delta_e = (da * da + db * db) * color_scale;
                 error_sum += delta_e;
                 if (delta_e > factor)
                 {
