@@ -35,7 +35,7 @@ public:
 
     CompareArgs();
 
-    bool parse_args(const int argc, const char **argv);
+    bool parse_args(int argc, const char **argv);
     void print_args() const;
 
     std::shared_ptr<RGBAImage> image_a_;

@@ -29,9 +29,11 @@ class LPyramid
 {
 public:
 
-    LPyramid(const std::vector<float> &image, const unsigned int width, const unsigned int height);
+    LPyramid(const std::vector<float> &image,
+             unsigned int width,
+             unsigned int height);
 
-    float get_value(unsigned int x, const unsigned int y, const unsigned int level) const;
+    float get_value(unsigned int x, unsigned int y, unsigned int level) const;
 
 private:
 
