@@ -109,8 +109,8 @@ static void adobe_rgb_to_xyz(const float r, const float g, const float b,
                              float &x, float &y, float &z)
 {
     // matrix is from http://www.brucelindbloom.com/
-    x = r * 0.576700f + g * 0.185556f + b * 0.188212f;
-    y = r * 0.297361f + g * 0.627355f + b * 0.0752847f;
+    x = r * 0.576700f  + g * 0.185556f  + b * 0.188212f;
+    y = r * 0.297361f  + g * 0.627355f  + b * 0.0752847f;
     z = r * 0.0270328f + g * 0.0706879f + b * 0.991248f;
 }
 
@@ -176,7 +176,7 @@ static unsigned int adaptation(const float num_one_degree_pixels)
 
 bool yee_compare(CompareArgs &args)
 {
-    if ((args.image_a_->get_width() != args.image_b_->get_width()) or
+    if ((args.image_a_->get_width()  != args.image_b_->get_width()) or
         (args.image_a_->get_height() != args.image_b_->get_height()))
     {
         args.error_string_ = "Image dimensions do not match\n";
