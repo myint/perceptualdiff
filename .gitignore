@@ -16,3 +16,4 @@ coverage_output
 .*.swp
 .project
 build/
+perceptualdiff.dSYM/
