@@ -49,14 +49,13 @@ void LPyramid::convolve(std::vector<float> &a,
     assert(a.size() > 1);
     assert(b.size() > 1);
 
-    const float Kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
-    #pragma omp parallel for shared(a, b, Kernel)
+    #pragma omp parallel for shared(a, b)
     for (auto y = 0u; y < weight_; y++)
     {
         for (auto x = 0u; x < width_; x++)
         {
             const auto index = y * width_ + x;
-            auto a_index = 0.0f;
+            auto result = 0.0f;
             for (auto i = -2; i <= 2; i++)
             {
                 for (auto j = -2; j <= 2; j++)
@@ -73,11 +72,14 @@ void LPyramid::convolve(std::vector<float> &a,
                     {
                         ny = 2 * weight_ - ny - 1;
                     }
-                    a_index +=
-                        Kernel[i + 2] * Kernel[j + 2] * b[ny * width_ + nx];
+
+                    const float kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
+
+                    result +=
+                        kernel[i + 2] * kernel[j + 2] * b[ny * width_ + nx];
                 }
             }
-            a[index] = a_index;
+            a[index] = result;
         }
     }
 }
