@@ -102,7 +102,7 @@ static void print_help()
 #endif
 }
 
-bool CompareArgs::parse_args(const int argc, const char **argv)
+bool CompareArgs::parse_args(const int argc, char **argv)
 {
     if (argc <= 1)
     {
