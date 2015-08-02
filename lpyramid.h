@@ -22,7 +22,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <vector>
 
 
-static constexpr auto MAX_PYR_LEVELS = 8u;
+constexpr auto MAX_PYR_LEVELS = 8u;
 
 
 class LPyramid

@@ -28,16 +28,16 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <vector>
 
 
-static constexpr auto pi = 3.14159265f;
+constexpr auto pi = 3.14159265f;
 
 
-static constexpr float to_radians(const float degrees)
+constexpr float to_radians(const float degrees)
 {
     return degrees * pi / 180.f;  // LCOV_EXCL_LINE
 }
 
 
-static constexpr float to_degrees(const float radians)
+constexpr float to_degrees(const float radians)
 {
     return radians * 180.f / pi;  // LCOV_EXCL_LINE
 }
