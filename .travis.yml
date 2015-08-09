@@ -1,12 +1,10 @@
+sudo: false
+
 language: cpp
 
 compiler:
     - clang
     - gcc
-
-before_script:
-    - sudo apt-get update --quiet=2
-    - sudo apt-get --quiet=2 install cmake libfreeimage-dev cppcheck valgrind
 
 env:
     -
@@ -22,8 +20,16 @@ script:
     - bash -c './perceptualdiff | grep -i openmp'
 
 after_success:
-    - sudo pip install cpp-coveralls
-    - if [ "$CC" == "gcc" ]; then ./coveralls.bash; fi
+    - pip install --user cpp-coveralls
+    - if [ "$CC" == "gcc" ]; then PATH="$PATH:$HOME/.local/bin" ./coveralls.bash; fi
 
     # Ignore header files in a stupid way.
     - rm -f *.h
+
+addons:
+    apt:
+        packages:
+            - cmake
+            - cppcheck
+            - libfreeimage-dev
+            - valgrind
