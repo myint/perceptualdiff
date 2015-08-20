@@ -22,6 +22,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <algorithm>
 #include <cassert>
 #include <ciso646>
+#include <cstddef>
 
 
 LPyramid::LPyramid(const std::vector<float> &image,

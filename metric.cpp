@@ -25,6 +25,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <ciso646>
 #include <cmath>
+#include <cstddef>
 #include <iostream>
 #include <vector>
 #include <algorithm>
