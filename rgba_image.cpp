@@ -26,6 +26,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <string>
 #include <cstring>
 #include <cassert>
+#include <iso646.h>
 
 
 struct FreeImageDeleter

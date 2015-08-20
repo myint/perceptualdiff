@@ -26,8 +26,24 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <cmath>
 #include <iostream>
 #include <vector>
+#include <iso646.h>
+#include <algorithm>
+
+#if _MSC_VER <= 1800
+auto const pi = 3.14159265f;
 
 
+float to_radians(const float degrees)  // LCOV_EXCL_LINE
+{
+  return degrees * pi / 180.f;  // LCOV_EXCL_LINE
+}
+
+
+float to_degrees(const float radians)  // LCOV_EXCL_LINE
+{
+  return radians * 180.f / pi;  // LCOV_EXCL_LINE
+}
+#else
 constexpr auto pi = 3.14159265f;
 
 
@@ -41,7 +57,7 @@ constexpr float to_degrees(const float radians)  // LCOV_EXCL_LINE
 {
     return radians * 180.f / pi;  // LCOV_EXCL_LINE
 }
-
+#endif
 
 // Given the adaptation luminance, this function returns the
 // threshold of visibility in cd per m^2.
@@ -221,7 +237,7 @@ bool yee_compare(CompareArgs &args)
     const auto luminance = args.luminance_;
 
     #pragma omp parallel for shared(args, a_lum, b_lum, a_a, a_b, b_a, b_b)
-    for (auto y = 0u; y < h; y++)
+    for (auto y = 0; y < h; y++)
     {
         for (auto x = 0u; x < w; x++)
         {
@@ -289,7 +305,7 @@ bool yee_compare(CompareArgs &args)
     auto error_sum = 0.;
 
     #pragma omp parallel for reduction(+ : pixels_failed, error_sum) shared(args, a_a, a_b, b_a, b_b, cpd, F_freq)
-    for (auto y = 0u; y < h; y++)
+    for (auto y = 0; y < h; y++)
     {
         for (auto x = 0u; x < w; x++)
         {

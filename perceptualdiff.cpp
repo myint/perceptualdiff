@@ -28,6 +28,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <cstdlib>
 #include <iostream>
 #include <string>
+#include <iso646.h>
 
 
 int main(const int argc, char **argv)
