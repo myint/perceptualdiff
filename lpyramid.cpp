@@ -19,9 +19,9 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include "lpyramid.h"
 
-#include <cassert>
 #include <algorithm>
-#include <iso646.h>
+#include <cassert>
+#include <ciso646>
 
 
 LPyramid::LPyramid(const std::vector<float> &image,
@@ -52,7 +52,7 @@ void LPyramid::convolve(std::vector<float> &a,
     assert(b.size() > 1);
 
     #pragma omp parallel for shared(a, b)
-    for (auto y = 0; y < weight_; y++)
+    for (auto y = 0; y < static_cast<ptrdiff_t>(weight_); y++)
     {
         for (auto x = 0u; x < width_; x++)
         {

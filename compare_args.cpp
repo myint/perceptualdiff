@@ -22,12 +22,12 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "rgba_image.h"
 
 #include <cassert>
+#include <ciso646>
 #include <climits>
 #include <cstdlib>
 #include <iostream>
 #include <stdexcept>
 #include <sstream>
-#include <iso646.h>
 
 
 static const auto VERSION = "1.2";
