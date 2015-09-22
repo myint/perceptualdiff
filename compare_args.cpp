@@ -94,13 +94,7 @@ CompareArgs::CompareArgs()
 static void print_help()
 {
     std::cout << USAGE;
-    std::cout << "\n"
-       << "OpenMP status: ";
-#ifdef _OPENMP
-    std::cout << "enabled\n";
-#else
-    std::cout << "disabled\n";
-#endif
+    std::cout << std::endl;
 }
 
 bool CompareArgs::parse_args(const int argc, char **argv)
