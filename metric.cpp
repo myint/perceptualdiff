@@ -392,8 +392,10 @@ bool yee_compare(CompareArgs &args)
                 }
             }
 
-            dispatch::dispatch_sync(queue, [pri_error_sum, &error_sum] () { error_sum += pri_error_sum; });
-            dispatch::dispatch_sync(queue, [&] () { pixels_failed += pri_pixels_failed; });
+            dispatch::dispatch_sync(queue, [&] () {
+                error_sum += pri_error_sum;
+                pixels_failed += pri_pixels_failed;
+            });
         }
     });
 
