@@ -304,7 +304,7 @@ bool yee_compare(CompareArgs &args)
     auto pixels_failed = 0u;
     auto error_sum = 0.;
 
-    dispatch_queue_t queue = dispatch_queue_create("", DISPATCH_QUEUE_SERIAL);
+    dispatch_queue_t queue = dispatch_queue_create("perceptualdiff.yee_compare", DISPATCH_QUEUE_SERIAL);
 
     const ptrdiff_t stride = 60;
 
