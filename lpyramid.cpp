@@ -18,6 +18,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 */
 
 #include "lpyramid.h"
+#include "dispatch_wrapper.h"
 
 #include <algorithm>
 #include <cassert>
@@ -52,9 +53,7 @@ void LPyramid::convolve(std::vector<float> &a,
     assert(a.size() > 1);
     assert(b.size() > 1);
 
-    #pragma omp parallel for shared(a, b)
-    for (auto y = 0; y < static_cast<ptrdiff_t>(weight_); y++)
-    {
+    dispatch::dispatch_apply(static_cast<ptrdiff_t>(weight_), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), [&] (size_t y) {
         for (auto x = 0u; x < width_; x++)
         {
             const auto index = y * width_ + x;
@@ -84,7 +83,7 @@ void LPyramid::convolve(std::vector<float> &a,
             }
             a[index] = result;
         }
-    }
+    });
 }
 
 float LPyramid::get_value(const unsigned int x, const unsigned int y,

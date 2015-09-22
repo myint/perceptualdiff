@@ -1,10 +1,10 @@
 project(perceptualdiff)
 
-cmake_minimum_required(VERSION 2.4)
+cmake_minimum_required(VERSION 2.8.7)
 
 add_executable(
   perceptualdiff
-  perceptualdiff.cpp lpyramid.cpp rgba_image.cpp compare_args.cpp metric.cpp)
+  perceptualdiff.cpp lpyramid.cpp rgba_image.cpp compare_args.cpp metric.cpp dispatch_wrapper.cpp)
 
 install(TARGETS perceptualdiff DESTINATION bin)
 
@@ -15,25 +15,15 @@ find_package(FreeImage)
 include_directories(SYSTEM ${FREEIMAGE_INCLUDE_DIRS})
 target_link_libraries(perceptualdiff ${FREEIMAGE_LIBRARIES})
 
-set(CMAKE_BUILD_TYPE Debug)
+set(CMAKE_BUILD_TYPE Release CACHE STRING "set build type to release")
 
-find_package(OpenMP)
-if(OPENMP_FOUND)
-  set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} ${OpenMP_C_FLAGS}")
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${OpenMP_CXX_FLAGS}")
-endif()
-
-option(OPTIMIZATION "Enable optimization" TRUE)
-if(OPTIMIZATION)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O3")
-else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -O0")
-endif()
+set(CMAKE_CXX_FLAGS_RELEASE "-O3 -flto -Wall")
+set(CMAKE_CXX_FLAGS_DEBUG "-g -O0 -Wall")
 
 if(MSVC)
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
 else()
-  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -pedantic -Wcast-qual -Wpointer-arith -Winit-self -Wswitch-default -Wmissing-include-dirs -Wold-style-cast -Wnon-virtual-dtor -Wshadow -Wno-unknown-pragmas")
+  set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wextra -pedantic -Wcast-qual -Wpointer-arith -Winit-self -Wswitch-default -Wmissing-include-dirs -Wold-style-cast -Wnon-virtual-dtor -Wshadow -Wno-unknown-pragmas")
 endif(MSVC)
 
 # Packing stuff.
