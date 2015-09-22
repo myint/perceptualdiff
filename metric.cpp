@@ -309,7 +309,7 @@ bool yee_compare(CompareArgs &args)
     const ptrdiff_t stride = 60;
 
     dispatch::dispatch_apply(static_cast<ptrdiff_t>(h) / stride + 1, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), [&] (size_t idx) {
-        for (auto y = idx * stride; y < std::min(static_cast<ptrdiff_t>((idx + 1) * stride), static_cast<ptrdiff_t>(h)); y++)
+        for (auto y = static_cast<ptrdiff_t>(idx * stride); y < std::min(static_cast<ptrdiff_t>((idx + 1) * stride), static_cast<ptrdiff_t>(h)); y++)
         {
             auto pri_pixels_failed = 0u;
             auto pri_error_sum = 0.;
