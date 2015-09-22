@@ -22,6 +22,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include "compare_args.h"
 #include "lpyramid.h"
 #include "rgba_image.h"
+#include "dispatch_wrapper.h"
 
 #include <ciso646>
 #include <cmath>
@@ -192,7 +193,6 @@ static unsigned int adaptation(const float num_one_degree_pixels)
     return adaptation_level;  // LCOV_EXCL_LINE
 }
 
-
 bool yee_compare(CompareArgs &args)
 {
     if ((args.image_a_->get_width()  != args.image_b_->get_width()) or
@@ -238,9 +238,7 @@ bool yee_compare(CompareArgs &args)
     const auto gamma = args.gamma_;
     const auto luminance = args.luminance_;
 
-    #pragma omp parallel for shared(args, a_lum, b_lum, a_a, a_b, b_a, b_b)
-    for (auto y = 0; y < static_cast<ptrdiff_t>(h); y++)
-    {
+    dispatch::dispatch_apply(static_cast<ptrdiff_t>(h), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), [&] (size_t y) {
         for (auto x = 0u; x < w; x++)
         {
             const auto i = x + y * w;
@@ -264,7 +262,7 @@ bool yee_compare(CompareArgs &args)
             a_lum[i] = a_y * luminance;
             b_lum[i] = b_y * luminance;
         }
-    }
+    });
 
     if (args.verbose_)
     {
@@ -306,83 +304,100 @@ bool yee_compare(CompareArgs &args)
     auto pixels_failed = 0u;
     auto error_sum = 0.;
 
-    #pragma omp parallel for reduction(+ : pixels_failed, error_sum) shared(args, a_a, a_b, b_a, b_b, cpd, F_freq)
-    for (auto y = 0; y < static_cast<ptrdiff_t>(h); y++)
-    {
-        for (auto x = 0u; x < w; x++)
+    dispatch_queue_t queue = dispatch_queue_create("", DISPATCH_QUEUE_SERIAL);
+
+    const ptrdiff_t stride = 60;
+
+    dispatch::dispatch_apply(static_cast<ptrdiff_t>(h) / stride + 1, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), [&] (size_t idx) {
+        for (auto y = idx * stride; y < std::min(static_cast<ptrdiff_t>((idx + 1) * stride), static_cast<ptrdiff_t>(h)); y++)
         {
-            const auto index = y * w + x;
-            const auto adapt = std::max((la.get_value(x, y, adaptation_level) +
-                                         lb.get_value(x, y, adaptation_level)) * 0.5f,
-                                        1e-5f);
-            auto sum_contrast = 0.f;
-            auto factor = 0.f;
-            for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
+            auto pri_pixels_failed = 0u;
+            auto pri_error_sum = 0.;
+            for (auto x = 0u; x < w; x++)
             {
-                const auto n1 =
-                    fabsf(la.get_value(x, y, i) - la.get_value(x, y, i + 1));
-                const auto n2 =
-                    fabsf(lb.get_value(x, y, i) - lb.get_value(x, y, i + 1));
-                const auto numerator = std::max(n1, n2);
-                const auto d1 = fabsf(la.get_value(x, y, i + 2));
-                const auto d2 = fabsf(lb.get_value(x, y, i + 2));
-                const auto denominator = std::max(std::max(d1, d2), 1e-5f);
-                const auto contrast = numerator / denominator;
-                const auto F_mask = mask(contrast * csf(cpd[i], adapt));
-                factor += contrast * F_freq[i] * F_mask;
-                sum_contrast += contrast;
-            }
-            sum_contrast = std::max(sum_contrast, 1e-5f);
-            factor /= sum_contrast;
-            factor = std::min(std::max(factor, 1.f), 10.f);
-            const auto delta =
-                fabsf(la.get_value(x, y, 0) - lb.get_value(x, y, 0));
-            error_sum += delta;
-            auto pass = true;
-
-            // pure luminance test
-            if (delta > factor * tvi(adapt))
-            {
-                pass = false;
-            }
-
-            if (not args.luminance_only_)
-            {
-                // CIE delta E test with modifications
-                auto color_scale = args.color_factor_;
-                // ramp down the color test in scotopic regions
-                if (adapt < 10.0f)
+                const auto index = y * w + x;
+                const auto adapt = std::max((la.get_value(x, y, adaptation_level) +
+                                             lb.get_value(x, y, adaptation_level)) * 0.5f,
+                                            1e-5f);
+                auto sum_contrast = 0.f;
+                auto factor = 0.f;
+                for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
                 {
-                    // Don't do color test at all.
-                    color_scale = 0.0;
+                    const auto n1 =
+                        fabsf(la.get_value(x, y, i) - la.get_value(x, y, i + 1));
+                    const auto n2 =
+                        fabsf(lb.get_value(x, y, i) - lb.get_value(x, y, i + 1));
+                    const auto numerator = std::max(n1, n2);
+                    const auto d1 = fabsf(la.get_value(x, y, i + 2));
+                    const auto d2 = fabsf(lb.get_value(x, y, i + 2));
+                    const auto denominator = std::max(std::max(d1, d2), 1e-5f);
+                    const auto contrast = numerator / denominator;
+                    const auto F_mask = mask(contrast * csf(cpd[i], adapt));
+                    factor += contrast * F_freq[i] * F_mask;
+                    sum_contrast += contrast;
                 }
-                const auto da = a_a[index] - b_a[index];
-                const auto db = a_b[index] - b_b[index];
-                const auto delta_e = (da * da + db * db) * color_scale;
-                error_sum += delta_e;
-                if (delta_e > factor)
+                sum_contrast = std::max(sum_contrast, 1e-5f);
+                factor /= sum_contrast;
+                factor = std::min(std::max(factor, 1.f), 10.f);
+                const auto delta =
+                    fabsf(la.get_value(x, y, 0) - lb.get_value(x, y, 0));
+
+                pri_error_sum += delta;
+
+                auto pass = true;
+
+                // pure luminance test
+                if (delta > factor * tvi(adapt))
                 {
                     pass = false;
                 }
+
+                if (not args.luminance_only_)
+                {
+                    // CIE delta E test with modifications
+                    auto color_scale = args.color_factor_;
+                    // ramp down the color test in scotopic regions
+                    if (adapt < 10.0f)
+                    {
+                        // Don't do color test at all.
+                        color_scale = 0.0;
+                    }
+                    const auto da = a_a[index] - b_a[index];
+                    const auto db = a_b[index] - b_b[index];
+                    const auto delta_e = (da * da + db * db) * color_scale;
+
+                    pri_error_sum += delta_e;
+
+                    if (delta_e > factor)
+                    {
+                        pass = false;
+                    }
+                }
+
+                if (not pass)
+                {
+                    pri_pixels_failed++;
+
+                    if (args.image_difference_)
+                    {
+                        args.image_difference_->set(255, 0, 0, 255, index);
+                    }
+                }
+                else
+                {
+                    if (args.image_difference_)
+                    {
+                        args.image_difference_->set(0, 0, 0, 255, index);
+                    }
+                }
             }
 
-            if (not pass)
-            {
-                pixels_failed++;
-                if (args.image_difference_)
-                {
-                    args.image_difference_->set(255, 0, 0, 255, index);
-                }
-            }
-            else
-            {
-                if (args.image_difference_)
-                {
-                    args.image_difference_->set(0, 0, 0, 255, index);
-                }
-            }
+            dispatch::dispatch_sync(queue, [pri_error_sum, &error_sum] () { error_sum += pri_error_sum; });
+            dispatch::dispatch_sync(queue, [&] () { pixels_failed += pri_pixels_failed; });
         }
-    }
+    });
+
+    dispatch_release(queue);
 
     const auto error_sum_buff =
         std::to_string(error_sum) + " error sum\n";
