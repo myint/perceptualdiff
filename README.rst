@@ -36,6 +36,9 @@ Build Instructions
     - On OS X with MacPorts: ``port install freeimage``
     - On OS X with Brew: ``brew install freeimage``
     - On Ubuntu: ``apt-get install libfreeimage-dev``
+#. Download libdispatch from http://libdispatch.macosforge.org.
+    - On OS X just install Xcode and it's done
+    - On Ubuntu: ``apt-get install libdispatch-dev``
 #. Type::
 
     $ cmake .
@@ -72,12 +75,6 @@ Command line::
       --scale          Scale images to match each other's dimensions
       --sum-errors     Print a sum of the luminance and color differences
       --output o       Write difference to the file o
-
-
-Check that perceptualdiff is built with OpenMP support::
-
-    $ ./perceptualdiff | grep -i openmp
-    OpenMP status: enabled
 
 
 Credits
