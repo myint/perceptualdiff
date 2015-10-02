@@ -203,7 +203,7 @@ bool CompareArgs::parse_args(const int argc, char **argv)
             }
             else if (option_matches(argv[i], "version"))
             {
-                std::cout << "perceptualdiff " << VERSION << std::endl;
+                std::cout << "perceptualdiff " << VERSION << "\n";
                 exit(EXIT_SUCCESS);
             }
             else if (image_count < 2)

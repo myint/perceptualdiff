@@ -149,7 +149,8 @@ struct White
 static const White global_white;
 
 
-static void xyz_to_lab(const float x, const float y, const float z, float &L, float &A, float &B)
+static void xyz_to_lab(const float x, const float y, const float z,
+                       float &l, float &a, float &b)
 {
     const float epsilon = 216.0f / 24389.0f;
     const float kappa = 24389.0f / 27.0f;
@@ -170,9 +171,9 @@ static void xyz_to_lab(const float x, const float y, const float z, float &L, fl
             f[i] = (kappa * r[i] + 16.0f) / 116.0f;
         }
     }
-    L = 116.0f * f[1] - 16.0f;
-    A = 500.0f * (f[0] - f[1]);
-    B = 200.0f * (f[1] - f[2]);
+    l = 116.0f * f[1] - 16.0f;
+    a = 500.0f * (f[0] - f[1]);
+    b = 200.0f * (f[1] - f[2]);
 }
 
 
@@ -244,18 +245,24 @@ bool yee_compare(CompareArgs &args)
         for (auto x = 0u; x < w; x++)
         {
             const auto i = x + y * w;
-            const auto a_color_r = powf(args.image_a_->get_red(i) / 255.0f, gamma);
-            const auto a_color_g = powf(args.image_a_->get_green(i) / 255.0f, gamma);
-            const auto a_color_b = powf(args.image_a_->get_blue(i) / 255.0f, gamma);
+            const auto a_color_r = powf(args.image_a_->get_red(i) / 255.0f,
+                                        gamma);
+            const auto a_color_g = powf(args.image_a_->get_green(i) / 255.0f,
+                                        gamma);
+            const auto a_color_b = powf(args.image_a_->get_blue(i) / 255.0f,
+                                        gamma);
             float a_x;
             float a_y;
             float a_z;
             adobe_rgb_to_xyz(a_color_r, a_color_g, a_color_b, a_x, a_y, a_z);
             float l;
             xyz_to_lab(a_x, a_y, a_z, l, a_a[i], a_b[i]);
-            const auto b_color_r = powf(args.image_b_->get_red(i) / 255.0f, gamma);
-            const auto b_color_g = powf(args.image_b_->get_green(i) / 255.0f, gamma);
-            const auto b_color_b = powf(args.image_b_->get_blue(i) / 255.0f, gamma);
+            const auto b_color_r = powf(args.image_b_->get_red(i) / 255.0f,
+                                        gamma);
+            const auto b_color_g = powf(args.image_b_->get_green(i) / 255.0f,
+                                        gamma);
+            const auto b_color_b = powf(args.image_b_->get_blue(i) / 255.0f,
+                                        gamma);
             float b_x;
             float b_y;
             float b_z;
@@ -297,16 +304,17 @@ bool yee_compare(CompareArgs &args)
     static_assert(MAX_PYR_LEVELS > 2,
                   "MAX_PYR_LEVELS must be greater than 2");
 
-    float F_freq[MAX_PYR_LEVELS - 2];
+    float f_freq[MAX_PYR_LEVELS - 2];
     for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
     {
-        F_freq[i] = csf_max / csf(cpd[i], 100.0f);
+        f_freq[i] = csf_max / csf(cpd[i], 100.0f);
     }
 
     auto pixels_failed = 0u;
     auto error_sum = 0.;
 
-    #pragma omp parallel for reduction(+ : pixels_failed, error_sum) shared(args, a_a, a_b, b_a, b_b, cpd, F_freq)
+    #pragma omp parallel for reduction(+ : pixels_failed, error_sum) \
+        shared(args, a_a, a_b, b_a, b_b, cpd, f_freq)
     for (auto y = 0; y < static_cast<ptrdiff_t>(h); y++)
     {
         for (auto x = 0u; x < w; x++)
@@ -328,8 +336,8 @@ bool yee_compare(CompareArgs &args)
                 const auto d2 = fabsf(lb.get_value(x, y, i + 2));
                 const auto denominator = std::max(std::max(d1, d2), 1e-5f);
                 const auto contrast = numerator / denominator;
-                const auto F_mask = mask(contrast * csf(cpd[i], adapt));
-                factor += contrast * F_freq[i] * F_mask;
+                const auto f_mask = mask(contrast * csf(cpd[i], adapt));
+                factor += contrast * f_freq[i] * f_mask;
                 sum_contrast += contrast;
             }
             sum_contrast = std::max(sum_contrast, 1e-5f);

@@ -31,7 +31,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <string>
 
 
-int main(const int argc, char **argv)
+int main(const int argc, char **const argv)
 {
     CompareArgs args;
 
@@ -67,12 +67,12 @@ int main(const int argc, char **argv)
     }
     catch (const ParseException &exception)
     {
-        std::cerr << exception.what() << std::endl;
+        std::cerr << exception.what() << "\n";
         return EXIT_FAILURE;
     }
     catch (const RGBImageException &exception)
     {
-        std::cerr << exception.what() << std::endl;
+        std::cerr << exception.what() << "\n";
         return EXIT_FAILURE;
     }
 }
