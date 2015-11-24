@@ -21,7 +21,8 @@ script:
 
 after_success:
     - pip install --user cpp-coveralls
-    - if [ "$CC" == "gcc" ]; then PATH="$PATH:$HOME/.local/bin" ./coveralls.bash; fi
+    - if [ "$CC" == "gcc" ];
+      then PATH="$PATH:$HOME/.local/bin" ./coveralls.bash; fi
 
     # Ignore header files in a stupid way.
     - rm -f *.h
