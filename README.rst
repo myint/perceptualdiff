@@ -54,7 +54,7 @@ Usage
 
 Command line::
 
-    Usage: peceptualdiff image1 image2
+    Usage: perceptualdiff image1 image2
 
     Compares image1 and image2 using a perceptually based image metric.
 
