@@ -33,7 +33,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 static const auto VERSION = "1.2";
 
 
-static const auto USAGE = "Usage: peceptualdiff image1 image2\n\
+static const auto USAGE = "Usage: perceptualdiff image1 image2\n\
 \n\
 Compares image1 and image2 using a perceptually based image metric.\n\
 \n\
