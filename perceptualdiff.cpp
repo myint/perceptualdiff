@@ -50,7 +50,8 @@ int main(const int argc, char **const argv)
             }
         }
 
-        const auto passed = yee_compare(args);
+        const auto passed = yee_compare(args,
+                                        args.verbose_ ? &std::cout : NULL);
         if (passed)
         {
             if (args.verbose_)

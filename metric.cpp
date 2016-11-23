@@ -194,7 +194,8 @@ static unsigned int adaptation(const float num_one_degree_pixels)
 }
 
 
-bool yee_compare(CompareArgs &args)
+bool yee_compare(CompareArgs &args,
+                 std::ostream *output_verbose)
 {
     if ((args.image_a_->get_width()  != args.image_b_->get_width()) or
         (args.image_a_->get_height() != args.image_b_->get_height()))
@@ -231,9 +232,9 @@ bool yee_compare(CompareArgs &args)
     std::vector<float> a_b(dim);
     std::vector<float> b_b(dim);
 
-    if (args.verbose_)
+    if (output_verbose)
     {
-        std::cout << "Converting RGB to XYZ\n";
+        *output_verbose << "Converting RGB to XYZ\n";
     }
 
     const auto gamma = args.gamma_;
@@ -294,9 +295,9 @@ bool yee_compare(CompareArgs &args)
         }
     }
 
-    if (args.verbose_)
+    if (output_verbose)
     {
-        std::cout << "Constructing Laplacian Pyramids\n";
+        *output_verbose << "Constructing Laplacian Pyramids\n";
     }
 
     const LPyramid la(a_lum, w, h);
@@ -307,9 +308,9 @@ bool yee_compare(CompareArgs &args)
                    std::tan(args.field_of_view_ * to_radians(.5f)));
     const auto pixels_per_degree = w / num_one_degree_pixels;
 
-    if (args.verbose_)
+    if (output_verbose)
     {
-        std::cout << "Performing test\n";
+        *output_verbose << "Performing test\n";
     }
 
     const auto adaptation_level = adaptation(num_one_degree_pixels);
