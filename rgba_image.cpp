@@ -128,12 +128,8 @@ void RGBAImage::write_to_file(const std::string &filename) const
 
     auto bitmap = to_free_image(*this);
 
-    FreeImage_SetTransparent(bitmap.get(), false);
-    std::unique_ptr<FIBITMAP, FreeImageDeleter> converted(
-        FreeImage_ConvertTo24Bits(bitmap.get()));
-
     const bool result =
-        !!FreeImage_Save(file_type, converted.get(), filename.c_str());
+        !!FreeImage_Save(file_type, bitmap.get(), filename.c_str());
     if (not result)
     {
         throw RGBImageException("Failed to save to '" + filename + "'");

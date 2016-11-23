@@ -245,29 +245,50 @@ bool yee_compare(CompareArgs &args)
         for (auto x = 0u; x < w; x++)
         {
             const auto i = x + y * w;
-            const auto a_color_r = powf(args.image_a_->get_red(i) / 255.0f,
-                                        gamma);
-            const auto a_color_g = powf(args.image_a_->get_green(i) / 255.0f,
-                                        gamma);
-            const auto a_color_b = powf(args.image_a_->get_blue(i) / 255.0f,
-                                        gamma);
+
+            // perceptualdiff used to use premultiplied alphas when loading the
+            // image. This is no longer the case since the switch to FreeImage.
+            // We need to do the multiplication here now. As was the case with
+            // premultiplied alphas, differences in alphas won't be detected
+            // where the color is black.
+
+            const auto a_alpha = args.image_a_->get_alpha(i) / 255.f;
+
+            const auto a_color_r = powf(
+                args.image_a_->get_red(i) / 255.f * a_alpha,
+                gamma);
+            const auto a_color_g = powf(
+                args.image_a_->get_green(i) / 255.f * a_alpha,
+                gamma);
+            const auto a_color_b = powf(
+                args.image_a_->get_blue(i) / 255.f * a_alpha,
+                gamma);
+
             float a_x;
             float a_y;
             float a_z;
             adobe_rgb_to_xyz(a_color_r, a_color_g, a_color_b, a_x, a_y, a_z);
             float l;
             xyz_to_lab(a_x, a_y, a_z, l, a_a[i], a_b[i]);
-            const auto b_color_r = powf(args.image_b_->get_red(i) / 255.0f,
-                                        gamma);
-            const auto b_color_g = powf(args.image_b_->get_green(i) / 255.0f,
-                                        gamma);
-            const auto b_color_b = powf(args.image_b_->get_blue(i) / 255.0f,
-                                        gamma);
+
+            const auto b_alpha = args.image_b_->get_alpha(i) / 255.f;
+
+            const auto b_color_r = powf(
+                args.image_b_->get_red(i) / 255.f * b_alpha,
+                gamma);
+            const auto b_color_g = powf(
+                args.image_b_->get_green(i) / 255.f * b_alpha,
+                gamma);
+            const auto b_color_b = powf(
+                args.image_b_->get_blue(i) / 255.f * b_alpha,
+                gamma);
+
             float b_x;
             float b_y;
             float b_z;
             adobe_rgb_to_xyz(b_color_r, b_color_g, b_color_b, b_x, b_y, b_z);
             xyz_to_lab(b_x, b_y, b_z, l, b_a[i], b_b[i]);
+
             a_lum[i] = a_y * luminance;
             b_lum[i] = b_y * luminance;
         }
