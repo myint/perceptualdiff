@@ -50,12 +50,13 @@ int main(const int argc, char **const argv)
         }
 
         std::string error_string;
-        const auto passed = yee_compare(args.parameters_,
-                                        *args.image_a_,
-                                        *args.image_b_,
-                                        error_string,
-                                        args.image_difference_.get(),
-                                        args.verbose_ ? &std::cout : NULL);
+        const auto passed = pdiff::yee_compare(
+            args.parameters_,
+            *args.image_a_,
+            *args.image_b_,
+            error_string,
+            args.image_difference_.get(),
+            args.verbose_ ? &std::cout : NULL);
 
         if (args.image_difference_.get())
         {
