@@ -69,7 +69,8 @@ namespace pdiff
 
     CompareArgs::CompareArgs(int argc, char **argv)
         : verbose_(false),
-          sum_errors_(false)
+          sum_errors_(false),
+          down_sample_(0)
     {
         parse_args(argc, argv);
     }
@@ -172,8 +173,8 @@ namespace pdiff
                             throw PerceptualDiffException(
                                 "--downsample must be positive");
                         }
-                        parameters_.down_sample = static_cast<unsigned int>(temporary);
-                        assert(parameters_.down_sample <= INT_MAX);
+                        down_sample_ = static_cast<unsigned int>(temporary);
+                        assert(down_sample_ <= INT_MAX);
                     }
                 }
                 else if (option_matches(argv[i], "scale"))
@@ -237,7 +238,7 @@ namespace pdiff
             exit(EXIT_FAILURE);
         }
 
-        for (auto i = 0u; i < parameters_.down_sample; i++)
+        for (auto i = 0u; i < down_sample_; i++)
         {
             const auto tmp_a = image_a_->down_sample();
             const auto tmp_b = image_b_->down_sample();

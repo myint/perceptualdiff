@@ -203,7 +203,6 @@ namespace pdiff
         threshold_pixels = 100;
         luminance = 100.0f;
         color_factor = 1.0f;
-        down_sample = 0;
     }
 
 

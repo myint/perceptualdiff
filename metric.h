@@ -52,9 +52,6 @@ namespace pdiff
         // 0.0 is the same as luminance_only_ = true,
         // 1.0 means full strength.
         float color_factor;
-
-        // How much to down sample image before comparing, in powers of 2.
-        unsigned int down_sample;
     };
 
 

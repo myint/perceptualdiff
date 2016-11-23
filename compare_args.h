@@ -47,6 +47,9 @@ namespace pdiff
         // Print a sum of the luminance and color differences of each pixel.
         bool sum_errors_;
 
+        // How much to down sample image before comparing, in powers of 2.
+        unsigned int down_sample_;
+
         PerceptualDiffParameters parameters_;
 
     private:
