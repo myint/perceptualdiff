@@ -68,7 +68,8 @@ namespace pdiff
 
 
     CompareArgs::CompareArgs()
-        : verbose_(false)
+        : verbose_(false),
+          sum_errors_(false)
     {
     }
 
