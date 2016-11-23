@@ -58,19 +58,6 @@ namespace pdiff
 "\n";
 
 
-    template <typename T>
-    static T lexical_cast(const std::string &input)
-    {
-        std::stringstream ss(input);
-        T output;
-        if (not (ss >> output))
-        {
-            throw std::invalid_argument("");
-        }
-        return output;
-    }
-
-
     static bool option_matches(const char *arg, const std::string &option_name)
     {
         const auto string_arg = std::string(arg);
@@ -122,7 +109,7 @@ namespace pdiff
                 {
                     if (++i < argc)
                     {
-                        parameters_.field_of_view = lexical_cast<float>(argv[i]);
+                        parameters_.field_of_view = std::stof(argv[i]);
                     }
                 }
                 else if (option_matches(argv[i], "verbose"))
@@ -133,27 +120,28 @@ namespace pdiff
                 {
                     if (++i < argc)
                     {
-                        auto temporary = lexical_cast<int>(argv[i]);
+                        auto temporary = std::stoi(argv[i]);
                         if (temporary < 0)
                         {
-                            throw std::invalid_argument(
+                            throw PerceptualDiffException(
                                 "-threshold must be positive");
                         }
-                        parameters_.threshold_pixels = static_cast<unsigned int>(temporary);
+                        parameters_.threshold_pixels =
+                            static_cast<unsigned int>(temporary);
                     }
                 }
                 else if (option_matches(argv[i], "gamma"))
                 {
                     if (++i < argc)
                     {
-                        parameters_.gamma = lexical_cast<float>(argv[i]);
+                        parameters_.gamma = std::stof(argv[i]);
                     }
                 }
                 else if (option_matches(argv[i], "luminance"))
                 {
                     if (++i < argc)
                     {
-                        parameters_.luminance = lexical_cast<float>(argv[i]);
+                        parameters_.luminance = std::stof(argv[i]);
                     }
                 }
                 else if (option_matches(argv[i], "luminanceonly"))
@@ -168,17 +156,17 @@ namespace pdiff
                 {
                     if (++i < argc)
                     {
-                        parameters_.color_factor = lexical_cast<float>(argv[i]);
+                        parameters_.color_factor = std::stof(argv[i]);
                     }
                 }
                 else if (option_matches(argv[i], "downsample"))
                 {
                     if (++i < argc)
                     {
-                        auto temporary = lexical_cast<int>(argv[i]);
+                        auto temporary = std::stoi(argv[i]);
                         if (temporary < 0)
                         {
-                            throw std::invalid_argument(
+                            throw PerceptualDiffException(
                                 "--downsample must be positive");
                         }
                         parameters_.down_sample = static_cast<unsigned int>(temporary);
@@ -221,15 +209,22 @@ namespace pdiff
                               << "\" ignored\n";
                 }
             }
-            catch (const std::invalid_argument &exception)
+            catch (const PerceptualDiffException &exception)
             {
                 std::string reason = "";
                 if (not std::string(exception.what()).empty())
                 {
                     reason = std::string("; ") + exception.what();
                 }
-                throw ParseException("Invalid argument (" + std::string(argv[i]) +
-                                     ") for " + argv[i - 1] + reason);
+                throw ParseException(
+                    "Invalid argument (" + std::string(argv[i]) + ") for " +
+                    argv[i - 1] + reason);
+            }
+            catch (const std::invalid_argument &exception)
+            {
+                throw ParseException(
+                    "Invalid argument (" + std::string(argv[i]) + ") for " +
+                    argv[i - 1]);
             }
         }
 

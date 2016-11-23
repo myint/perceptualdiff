@@ -20,6 +20,8 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef PERCEPTUALDIFF_RGBA_IMAGE_H
 #define PERCEPTUALDIFF_RGBA_IMAGE_H
 
+#include "exceptions.h"
+
 #include <memory>
 #include <stdexcept>
 #include <string>
@@ -133,12 +135,13 @@ namespace pdiff
     std::shared_ptr<RGBAImage> read_from_file(const std::string &filename);
 
 
-    class RGBImageException : public virtual std::invalid_argument
+    class RGBImageException : public virtual PerceptualDiffException
     {
     public:
 
         explicit RGBImageException(const std::string &message)
-            : std::invalid_argument(message)
+            : std::invalid_argument(message),
+              PerceptualDiffException(message)
         {
         }
     };
