@@ -104,6 +104,8 @@ Version History
 - 1.1.1 - Turn off color test in low lighting conditions.
 - 1.1.2 - Add OpenMP parallel processing support and fix bugs.
 - 1.2 - Add ``--sum-errors``, use more standard option style, and fix bugs.
+- 1.4 - Detect differences due to the alpha channel. This was lost in 1.0.2
+  when FreeImage was introduced.
 
 
 Links
