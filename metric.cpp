@@ -438,9 +438,6 @@ namespace pdiff
             }
         }
 
-        const auto error_sum_buff =
-            std::to_string(error_sum) + " error sum\n";
-
         const auto different =
             std::to_string(pixels_failed) + " pixels are different\n";
 
@@ -463,7 +460,14 @@ namespace pdiff
         {
             if (output_error_string)
             {
-                *output_error_string += error_sum_buff;
+                const auto normalized =
+                    error_sum /
+                    (image_a.get_width() * image_a.get_height() * 255.);
+
+                *output_error_string +=
+                    std::to_string(error_sum) + " error sum (" +
+                    std::to_string(normalized) + ")\n";
+
             }
         }
 
