@@ -35,26 +35,27 @@ namespace pdiff
     static const auto VERSION = "1.2";
 
 
-    static const auto USAGE = "Usage: perceptualdiff image1 image2\n\
-    \n\
-    Compares image1 and image2 using a perceptually based image metric.\n\
-    \n\
-    Options:\n\
-      --verbose        Turn on verbose mode\n\
-      --fov deg        Field of view in degrees [0.1, 89.9] (default: 45.0)\n\
-      --threshold p    Number of pixels p below which differences are ignored\n\
-      --gamma g        Value to convert rgb into linear space (default: 2.2)\n\
-      --luminance l    White luminance (default: 100.0 cdm^-2)\n\
-      --luminanceonly  Only consider luminance; ignore chroma (color) in the\n\
-                       comparison\n\
-      --colorfactor    How much of color to use [0.0, 1.0] (default: 1.0)\n\
-      --downsample     How many powers of two to down sample the image\n\
-                       (default: 0)\n\
-      --scale          Scale images to match each other's dimensions\n\
-      --sum-errors     Print a sum of the luminance and color differences\n\
-      --output o       Write difference to the file o\n\
-      --version        Print version\n\
-    \n";
+    static const auto USAGE =
+"Usage: perceptualdiff image1 image2\n"
+"\n"
+"Compares image1 and image2 using a perceptually based image metric.\n"
+"\n"
+"Options:\n"
+"  --verbose        Turn on verbose mode\n"
+"  --fov deg        Field of view in degrees [0.1, 89.9] (default: 45.0)\n"
+"  --threshold p    Number of pixels p below which differences are ignored\n"
+"  --gamma g        Value to convert rgb into linear space (default: 2.2)\n"
+"  --luminance l    White luminance (default: 100.0 cdm^-2)\n"
+"  --luminanceonly  Only consider luminance; ignore chroma (color) in the\n"
+"                   comparison\n"
+"  --colorfactor    How much of color to use [0.0, 1.0] (default: 1.0)\n"
+"  --downsample     How many powers of two to down sample the image\n"
+"                   (default: 0)\n"
+"  --scale          Scale images to match each other's dimensions\n"
+"  --sum-errors     Print a sum of the luminance and color differences\n"
+"  --output o       Write difference to the file o\n"
+"  --version        Print version\n"
+"\n";
 
 
     template <typename T>
