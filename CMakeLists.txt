@@ -49,8 +49,7 @@ set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "An image comparison utility.")
 set(CPACK_PACKAGE_VENDOR "pdiff dev team")
 set(CPACK_PACKAGE_DESCRIPTION_FILE ${CMAKE_CURRENT_SOURCE_DIR}/README.rst)
 set(CPACK_GENERATOR TGZ)
-set(
-    CPACK_SOURCE_PACKAGE_FILE_NAME
+set(CPACK_SOURCE_PACKAGE_FILE_NAME
     "perceptualdiff-${CPACK_PACKAGE_VERSION_MAJOR}.${CPACK_PACKAGE_VERSION_MINOR}.${CPACK_PACKAGE_VERSION_PATCH}"
     CACHE INTERNAL "tarball basename"
 )
@@ -59,23 +58,23 @@ set(CPACK_SOURCE_GENERATOR TGZ)
 # in absolute path + filename to find files or directories to be excluded
 # from source tarball.
 set(CPACK_SOURCE_IGNORE_FILES
-"~$"
-"/\\\\.gitignore$"
-"/\\\\..*\\\\.swp$"
-"^${PROJECT_SOURCE_DIR}/\\\\.git/"
-"^${PROJECT_SOURCE_DIR}/CMakeFiles/"
-"^${PROJECT_SOURCE_DIR}/CMakeCache.txt"
-"^${PROJECT_SOURCE_DIR}/CPackSourceConfig.cmake"
-"^${PROJECT_SOURCE_DIR}/CPackConfig.cmake"
-"^${PROJECT_SOURCE_DIR}/CTestTestfile.cmake"
-"^${PROJECT_SOURCE_DIR}/Makefile"
-"^${PROJECT_SOURCE_DIR}/_CPack_Packages"
-"^${PROJECT_SOURCE_DIR}/cmake_install.cmake"
-"^${PROJECT_SOURCE_DIR}/install_manifest.txt"
-"^${PROJECT_SOURCE_DIR}/perceptualdiff"
-"^${PROJECT_SOURCE_DIR}/perceptualdiff-.*"
-"^${PROJECT_SOURCE_DIR}/Testing"
-"^${PROJECT_SOURCE_DIR}/coverage_output"
+    "~$"
+    "/\\\\.gitignore$"
+    "/\\\\..*\\\\.swp$"
+    "^${PROJECT_SOURCE_DIR}/\\\\.git/"
+    "^${PROJECT_SOURCE_DIR}/CMakeFiles/"
+    "^${PROJECT_SOURCE_DIR}/CMakeCache.txt"
+    "^${PROJECT_SOURCE_DIR}/CPackSourceConfig.cmake"
+    "^${PROJECT_SOURCE_DIR}/CPackConfig.cmake"
+    "^${PROJECT_SOURCE_DIR}/CTestTestfile.cmake"
+    "^${PROJECT_SOURCE_DIR}/Makefile"
+    "^${PROJECT_SOURCE_DIR}/_CPack_Packages"
+    "^${PROJECT_SOURCE_DIR}/cmake_install.cmake"
+    "^${PROJECT_SOURCE_DIR}/install_manifest.txt"
+    "^${PROJECT_SOURCE_DIR}/perceptualdiff"
+    "^${PROJECT_SOURCE_DIR}/perceptualdiff-.*"
+    "^${PROJECT_SOURCE_DIR}/Testing"
+    "^${PROJECT_SOURCE_DIR}/coverage_output"
 )
 include(CPack)
 
