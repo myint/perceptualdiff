@@ -240,7 +240,7 @@ bool CompareArgs::parse_args(const int argc, char **argv)
 
     if (not image_a_ or not image_b_)
     {
-        error_string_ = "Not enough image files specified\n";
+        std::cerr << "Not enough image files specified\n";
         return false;
     }
 

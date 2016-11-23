@@ -21,6 +21,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #define PERCEPTUALDIFF_METRIC_H
 
 #include <ostream>
+#include <string>
 
 
 class CompareArgs;
@@ -29,7 +30,8 @@ class CompareArgs;
 // Image comparison metric using Yee's method.
 // References: A Perceptual Metric for Production Testing, Hector Yee, Journal
 // of Graphics Tools 2004
-bool yee_compare(CompareArgs &args,
+bool yee_compare(const CompareArgs &args,
+                 std::string &output_error_string,
                  std::ostream *output_verbose=NULL);
 
 #endif

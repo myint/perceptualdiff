@@ -60,8 +60,6 @@ public:
     // How many pixels different to ignore.
     unsigned int threshold_pixels_;
 
-    std::string error_string_;
-
     // How much color to use in the metric.
     // 0.0 is the same as luminance_only_ = true,
     // 1.0 means full strength.

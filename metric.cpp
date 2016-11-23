@@ -194,13 +194,14 @@ static unsigned int adaptation(const float num_one_degree_pixels)
 }
 
 
-bool yee_compare(CompareArgs &args,
+bool yee_compare(const CompareArgs &args,
+                 std::string &output_error_string,
                  std::ostream *output_verbose)
 {
     if ((args.image_a_->get_width()  != args.image_b_->get_width()) or
         (args.image_a_->get_height() != args.image_b_->get_height()))
     {
-        args.error_string_ = "Image dimensions do not match\n";
+        output_error_string = "Image dimensions do not match\n";
         return false;
     }
 
@@ -219,7 +220,7 @@ bool yee_compare(CompareArgs &args,
     }
     if (identical)
     {
-        args.error_string_ = "Images are binary identical\n";
+        output_error_string = "Images are binary identical\n";
         return true;
     }
 
@@ -425,23 +426,23 @@ bool yee_compare(CompareArgs &args,
     {
         args.image_difference_->write_to_file(args.image_difference_->get_name());
 
-        args.error_string_ += "Wrote difference image to ";
-        args.error_string_ += args.image_difference_->get_name();
-        args.error_string_ += "\n";
+        output_error_string += "Wrote difference image to ";
+        output_error_string += args.image_difference_->get_name();
+        output_error_string += "\n";
     }
 
     if (pixels_failed < args.threshold_pixels_)
     {
-        args.error_string_ = "Images are perceptually indistinguishable\n";
-        args.error_string_ += different;
+        output_error_string = "Images are perceptually indistinguishable\n";
+        output_error_string += different;
         return true;
     }
 
-    args.error_string_ = "Images are visibly different\n";
-    args.error_string_ += different;
+    output_error_string = "Images are visibly different\n";
+    output_error_string += different;
     if (args.sum_errors_)
     {
-        args.error_string_ += error_sum_buff;
+        output_error_string += error_sum_buff;
     }
 
     return false;
