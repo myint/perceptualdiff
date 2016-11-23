@@ -24,9 +24,6 @@ after_success:
     - if [ "$CC" == "gcc" ];
       then PATH="$PATH:$HOME/.local/bin" ./coveralls.bash; fi
 
-    # Ignore header files in a stupid way.
-    - rm -f *.h
-
 addons:
     apt:
         packages:
