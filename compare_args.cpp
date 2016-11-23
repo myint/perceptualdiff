@@ -1,7 +1,7 @@
 /*
 Compare Args
 Copyright (C) 2006-2011 Yangli Hector Yee
-Copyright (C) 2011-2015 Steven Myint, Jeff Terrace
+Copyright (C) 2011-2016 Steven Myint, Jeff Terrace
 
 This program is free software; you can redistribute it and/or modify it under
 the terms of the GNU General Public License as published by the Free Software
