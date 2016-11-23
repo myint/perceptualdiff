@@ -151,7 +151,7 @@ namespace pdiff
                 }
                 else if (option_matches(argv[i], "sum-errors"))
                 {
-                    parameters_.sum_errors = true;
+                    sum_errors_ = true;
                 }
                 else if (option_matches(argv[i], "colorfactor"))
                 {

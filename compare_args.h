@@ -45,6 +45,9 @@ namespace pdiff
         std::shared_ptr<RGBAImage> image_difference_;
         bool verbose_;
 
+        // Print a sum of the luminance and color differences of each pixel.
+        bool sum_errors_;
+
         PerceptualDiffParameters parameters_;
     };
 

@@ -198,7 +198,6 @@ namespace pdiff
     PerceptualDiffParameters::PerceptualDiffParameters()
     {
         luminance_only = false;
-        sum_errors = false;
         field_of_view = 45.0f;
         gamma = 2.2f;
         threshold_pixels = 100;
@@ -211,16 +210,18 @@ namespace pdiff
     bool yee_compare(const PerceptualDiffParameters &args,
                      const RGBAImage &image_a,
                      const RGBAImage &image_b,
-                     std::string *output_error_string,
+                     size_t *output_num_pixels_failed,
+                     float *output_error_sum,
+                     std::string *output_reason,
                      RGBAImage *output_image_difference,
                      std::ostream *output_verbose)
     {
         if ((image_a.get_width()  != image_b.get_width()) or
             (image_a.get_height() != image_b.get_height()))
         {
-            if (output_error_string)
+            if (output_reason)
             {
-                *output_error_string = "Image dimensions do not match\n";
+                *output_reason = "Image dimensions do not match\n";
             }
             return false;
         }
@@ -240,9 +241,9 @@ namespace pdiff
         }
         if (identical)
         {
-            if (output_error_string)
+            if (output_reason)
             {
-                *output_error_string = "Images are binary identical\n";
+                *output_reason = "Images are binary identical\n";
             }
             return true;
         }
@@ -445,36 +446,31 @@ namespace pdiff
         const auto different =
             std::to_string(pixels_failed) + " pixels are different\n";
 
-        if (pixels_failed < args.threshold_pixels)
+        const auto passed = pixels_failed < args.threshold_pixels;
+
+        if (output_reason)
         {
-            if (output_error_string)
+            if (passed)
             {
-                *output_error_string =
+                *output_reason =
                     "Images are perceptually indistinguishable\n" + different;
             }
-            return true;
-        }
-
-        if (output_error_string)
-        {
-            *output_error_string =
-                "Images are visibly different\n" + different;
-        }
-        if (args.sum_errors)
-        {
-            if (output_error_string)
+            else
             {
-                const auto normalized =
-                    error_sum /
-                    (image_a.get_width() * image_a.get_height() * 255.);
-
-                *output_error_string +=
-                    std::to_string(error_sum) + " error sum (" +
-                    std::to_string(normalized) + ")\n";
-
+                *output_reason = "Images are visibly different\n" + different;
             }
         }
 
-        return false;
+        if (output_num_pixels_failed)
+        {
+            *output_num_pixels_failed = pixels_failed;
+        }
+
+        if (output_error_sum)
+        {
+            *output_error_sum = error_sum;
+        }
+
+        return passed;
     }
 }

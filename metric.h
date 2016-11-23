@@ -20,6 +20,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #ifndef PERCEPTUALDIFF_METRIC_H
 #define PERCEPTUALDIFF_METRIC_H
 
+#include <cstdint>
 #include <ostream>
 #include <string>
 
@@ -35,9 +36,6 @@ namespace pdiff
 
         // Only consider luminance; ignore chroma channels in the comparison.
         bool luminance_only;
-
-        // Print a sum of the luminance and color differences of each pixel.
-        bool sum_errors;
 
         // Field of view in degrees.
         float field_of_view;
@@ -68,7 +66,9 @@ namespace pdiff
     bool yee_compare(const PerceptualDiffParameters &parameters,
                      const RGBAImage &image_a,
                      const RGBAImage &image_b,
-                     std::string *output_error_string=NULL,
+                     size_t *output_num_pixels_failed=NULL,
+                     float *output_sum_errors=NULL,
+                     std::string *output_reason=NULL,
                      RGBAImage *output_image_difference=NULL,
                      std::ostream *output_verbose=NULL);
 }
