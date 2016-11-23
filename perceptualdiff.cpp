@@ -33,7 +33,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 int main(const int argc, char **const argv)
 {
-    CompareArgs args;
+    pdiff::CompareArgs args;
 
     try
     {
@@ -50,9 +50,22 @@ int main(const int argc, char **const argv)
         }
 
         std::string error_string;
-        const auto passed = yee_compare(args,
+        const auto passed = yee_compare(args.parameters_,
+                                        *args.image_a_,
+                                        *args.image_b_,
                                         error_string,
+                                        args.image_difference_.get(),
                                         args.verbose_ ? &std::cout : NULL);
+
+        if (args.image_difference_.get())
+        {
+            args.image_difference_->write_to_file(args.image_difference_->get_name());
+
+            std::cerr << "Wrote difference image to "
+                      << args.image_difference_->get_name()
+                      << "\n";
+        }
+
         if (passed)
         {
             if (args.verbose_)
@@ -67,12 +80,12 @@ int main(const int argc, char **const argv)
 
         return passed ? EXIT_SUCCESS : EXIT_FAILURE;
     }
-    catch (const ParseException &exception)
+    catch (const pdiff::ParseException &exception)
     {
         std::cerr << exception.what() << "\n";
         return EXIT_FAILURE;
     }
-    catch (const RGBImageException &exception)
+    catch (const pdiff::RGBImageException &exception)
     {
         std::cerr << exception.what() << "\n";
         return EXIT_FAILURE;

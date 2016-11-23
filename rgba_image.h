@@ -26,118 +26,122 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <vector>
 
 
-/** Class encapsulating an image containing R, G, B, and A channels.
- *
- * Internal representation assumes data is in the ABGR format, with the RGB
- * color channels premultiplied by the alpha value. Premultiplied alpha is
- * often also called "associated alpha" - see the tiff 6 specification for some
- * discussion - http://partners.adobe.com/asn/developer/PDFS/TN/TIFF6.pdf
- *
- */
-class RGBAImage
+namespace pdiff
 {
-public:
-
-    RGBAImage(const unsigned int w, const unsigned int h, const std::string &name="")
-        : width_(w), weight_(h), name_(name), data_(w * h)
+    /** Class encapsulating an image containing R, G, B, and A channels.
+     *
+     * Internal representation assumes data is in the ABGR format, with the RGB
+     * color channels premultiplied by the alpha value. Premultiplied alpha is
+     * often also called "associated alpha" - see the tiff 6 specification for
+     * some discussion -
+     * http://partners.adobe.com/asn/developer/PDFS/TN/TIFF6.pdf
+     *
+     */
+    class RGBAImage
     {
-    }
+    public:
 
-    unsigned char get_red(const unsigned int i) const
+        RGBAImage(const unsigned int w, const unsigned int h, const std::string &name="")
+            : width_(w), weight_(h), name_(name), data_(w * h)
+        {
+        }
+
+        unsigned char get_red(const unsigned int i) const
+        {
+            return (data_[i] & 0xff);
+        }
+
+        unsigned char get_green(const unsigned int i) const
+        {
+            return ((data_[i] >> 8) & 0xff);
+        }
+
+        unsigned char get_blue(const unsigned int i) const
+        {
+            return ((data_[i] >> 16) & 0xff);
+        }
+
+        unsigned char get_alpha(const unsigned int i) const
+        {
+            return ((data_[i] >> 24) & 0xff);
+        }
+
+        void set(const unsigned char r, const unsigned char g, const unsigned char b,
+                 const unsigned char a, const unsigned int i)
+        {
+            data_[i] = r | (g << 8) | (b << 16) | (a << 24);
+        }
+
+        unsigned int get_width() const
+        {
+            return width_;
+        }
+
+        unsigned int get_height() const
+        {
+            return weight_;
+        }
+
+        void set(const unsigned int x, const unsigned int y, const unsigned int d)
+        {
+            data_[x + y * width_] = d;
+        }
+
+        unsigned int get(const unsigned int x, const  unsigned int y) const
+        {
+            return data_[x + y * width_];
+        }
+
+        unsigned int get(const unsigned int i) const
+        {
+            return data_[i];
+        }
+
+        const std::string &get_name() const
+        {
+            return name_;
+        }
+
+        unsigned int *get_data()
+        {
+            return &data_[0];
+        }
+
+        const unsigned int *get_data() const
+        {
+            return &data_[0];
+        }
+
+        // By default down sample to half of each original dimension.
+        std::shared_ptr<RGBAImage> down_sample(unsigned int w=0,
+                                               unsigned int h=0) const;
+
+        void write_to_file(const std::string &filename) const;
+
+    private:
+
+        RGBAImage(const RGBAImage &);
+        RGBAImage &operator=(const RGBAImage &);
+
+        const unsigned int width_;
+        const unsigned int weight_;
+        const std::string name_;
+        std::vector<unsigned int> data_;
+    };
+
+
+    std::shared_ptr<RGBAImage> read_from_file(const std::string &filename);
+
+
+    class RGBImageException : public virtual std::invalid_argument
     {
-        return (data_[i] & 0xff);
-    }
+    public:
 
-    unsigned char get_green(const unsigned int i) const
-    {
-        return ((data_[i] >> 8) & 0xff);
-    }
-
-    unsigned char get_blue(const unsigned int i) const
-    {
-        return ((data_[i] >> 16) & 0xff);
-    }
-
-    unsigned char get_alpha(const unsigned int i) const
-    {
-        return ((data_[i] >> 24) & 0xff);
-    }
-
-    void set(const unsigned char r, const unsigned char g, const unsigned char b,
-             const unsigned char a, const unsigned int i)
-    {
-        data_[i] = r | (g << 8) | (b << 16) | (a << 24);
-    }
-
-    unsigned int get_width() const
-    {
-        return width_;
-    }
-
-    unsigned int get_height() const
-    {
-        return weight_;
-    }
-
-    void set(const unsigned int x, const unsigned int y, const unsigned int d)
-    {
-        data_[x + y * width_] = d;
-    }
-
-    unsigned int get(const unsigned int x, const  unsigned int y) const
-    {
-        return data_[x + y * width_];
-    }
-
-    unsigned int get(const unsigned int i) const
-    {
-        return data_[i];
-    }
-
-    const std::string &get_name() const
-    {
-        return name_;
-    }
-
-    unsigned int *get_data()
-    {
-        return &data_[0];
-    }
-
-    const unsigned int *get_data() const
-    {
-        return &data_[0];
-    }
-
-    // By default down sample to half of each original dimension.
-    std::shared_ptr<RGBAImage> down_sample(unsigned int w=0,
-                                           unsigned int h=0) const;
-
-    void write_to_file(const std::string &filename) const;
-
-private:
-
-    RGBAImage(const RGBAImage &);
-    RGBAImage &operator=(const RGBAImage &);
-
-    const unsigned int width_;
-    const unsigned int weight_;
-    const std::string name_;
-    std::vector<unsigned int> data_;
-};
-
-
-std::shared_ptr<RGBAImage> read_from_file(const std::string &filename);
-
-
-class RGBImageException : public virtual std::invalid_argument
-{
-public:
-
-    explicit RGBImageException(const std::string &message)
-        : std::invalid_argument(message)
-    {
-    }
-};
+        explicit RGBImageException(const std::string &message)
+            : std::invalid_argument(message)
+        {
+        }
+    };
+}
 
 #endif

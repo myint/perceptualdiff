@@ -21,31 +21,35 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 #include <vector>
 
+
+namespace pdiff
+{
 #if _MSC_VER >= 1900
-constexpr auto MAX_PYR_LEVELS = 8u;
+    constexpr auto MAX_PYR_LEVELS = 8u;
 #else
 #define MAX_PYR_LEVELS 8u
 #endif
 
-class LPyramid
-{
-public:
+    class LPyramid
+    {
+    public:
 
-    LPyramid(const std::vector<float> &image,
-             unsigned int width,
-             unsigned int height);
+        LPyramid(const std::vector<float> &image,
+                 unsigned int width,
+                 unsigned int height);
 
-    float get_value(unsigned int x, unsigned int y, unsigned int level) const;
+        float get_value(unsigned int x, unsigned int y, unsigned int level) const;
 
-private:
+    private:
 
-    void convolve(std::vector<float> &a, const std::vector<float> &b) const;
+        void convolve(std::vector<float> &a, const std::vector<float> &b) const;
 
-    // Successively blurred versions of the original image.
-    std::vector<float> levels_[MAX_PYR_LEVELS];
+        // Successively blurred versions of the original image.
+        std::vector<float> levels_[MAX_PYR_LEVELS];
 
-    unsigned int width_;
-    unsigned int weight_;
-};
+        unsigned int width_;
+        unsigned int weight_;
+    };
+}
 
 #endif

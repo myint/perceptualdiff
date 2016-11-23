@@ -25,72 +25,75 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <cstddef>
 
 
-LPyramid::LPyramid(const std::vector<float> &image,
-                   const unsigned int width, const unsigned int height)
-    : width_(width), weight_(height)
+namespace pdiff
 {
-    // Make the Laplacian pyramid by successively
-    // copying the earlier levels and blurring them
-    for (auto i = 0u; i < MAX_PYR_LEVELS; i++)
+    LPyramid::LPyramid(const std::vector<float> &image,
+                       const unsigned int width, const unsigned int height)
+        : width_(width), weight_(height)
     {
-        if (i == 0 or width * height <= 1)
+        // Make the Laplacian pyramid by successively
+        // copying the earlier levels and blurring them
+        for (auto i = 0u; i < MAX_PYR_LEVELS; i++)
         {
-            levels_[i] = image;
-        }
-        else
-        {
-            levels_[i].resize(width_ * weight_);
-            convolve(levels_[i], levels_[i - 1]);
-        }
-    }
-}
-
-// Convolves image b with the filter kernel and stores it in a.
-void LPyramid::convolve(std::vector<float> &a,
-                        const std::vector<float> &b) const
-{
-    assert(a.size() > 1);
-    assert(b.size() > 1);
-
-    #pragma omp parallel for shared(a, b)
-    for (auto y = 0; y < static_cast<ptrdiff_t>(weight_); y++)
-    {
-        for (auto x = 0u; x < width_; x++)
-        {
-            const auto index = y * width_ + x;
-            auto result = 0.0f;
-            for (auto i = -2; i <= 2; i++)
+            if (i == 0 or width * height <= 1)
             {
-                for (auto j = -2; j <= 2; j++)
-                {
-                    int nx = x + i;
-                    int ny = y + j;
-                    nx = std::max(nx, -nx);
-                    ny = std::max(ny, -ny);
-                    if (nx >= static_cast<long>(width_))
-                    {
-                        nx = 2 * width_ - nx - 1;
-                    }
-                    if (ny >= static_cast<long>(weight_))
-                    {
-                        ny = 2 * weight_ - ny - 1;
-                    }
-
-                    const float kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
-
-                    result +=
-                        kernel[i + 2] * kernel[j + 2] * b[ny * width_ + nx];
-                }
+                levels_[i] = image;
             }
-            a[index] = result;
+            else
+            {
+                levels_[i].resize(width_ * weight_);
+                convolve(levels_[i], levels_[i - 1]);
+            }
         }
     }
-}
 
-float LPyramid::get_value(const unsigned int x, const unsigned int y,
-                          const unsigned int level) const
-{
-    const auto index = x + y * width_;
-    assert(level < MAX_PYR_LEVELS);
-    return levels_[level][index];
+    // Convolves image b with the filter kernel and stores it in a.
+    void LPyramid::convolve(std::vector<float> &a,
+                            const std::vector<float> &b) const
+    {
+        assert(a.size() > 1);
+        assert(b.size() > 1);
+
+        #pragma omp parallel for shared(a, b)
+        for (auto y = 0; y < static_cast<ptrdiff_t>(weight_); y++)
+        {
+            for (auto x = 0u; x < width_; x++)
+            {
+                const auto index = y * width_ + x;
+                auto result = 0.0f;
+                for (auto i = -2; i <= 2; i++)
+                {
+                    for (auto j = -2; j <= 2; j++)
+                    {
+                        int nx = x + i;
+                        int ny = y + j;
+                        nx = std::max(nx, -nx);
+                        ny = std::max(ny, -ny);
+                        if (nx >= static_cast<long>(width_))
+                        {
+                            nx = 2 * width_ - nx - 1;
+                        }
+                        if (ny >= static_cast<long>(weight_))
+                        {
+                            ny = 2 * weight_ - ny - 1;
+                        }
+
+                        const float kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
+
+                        result +=
+                            kernel[i + 2] * kernel[j + 2] * b[ny * width_ + nx];
+                    }
+                }
+                a[index] = result;
+            }
+        }
+    }
+
+    float LPyramid::get_value(const unsigned int x, const unsigned int y,
+                              const unsigned int level) const
+    {
+        const auto index = x + y * width_;
+        assert(level < MAX_PYR_LEVELS);
+        return levels_[level][index];
+    }
 }

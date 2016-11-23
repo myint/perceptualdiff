@@ -24,14 +24,53 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 #include <string>
 
 
-class CompareArgs;
+namespace pdiff
+{
+    class RGBAImage;
 
 
-// Image comparison metric using Yee's method.
-// References: A Perceptual Metric for Production Testing, Hector Yee, Journal
-// of Graphics Tools 2004
-bool yee_compare(const CompareArgs &args,
-                 std::string &output_error_string,
-                 std::ostream *output_verbose=NULL);
+    struct PerceptualDiffParameters
+    {
+        PerceptualDiffParameters();
+
+        // Only consider luminance; ignore chroma channels in the comparison.
+        bool luminance_only;
+
+        // Print a sum of the luminance and color differences of each pixel.
+        bool sum_errors;
+
+        // Field of view in degrees.
+        float field_of_view;
+
+        // The gamma to convert to linear color space
+        float gamma;
+
+        float luminance;
+
+        // How many pixels different to ignore.
+        unsigned int threshold_pixels;
+
+        // How much color to use in the metric.
+        // 0.0 is the same as luminance_only_ = true,
+        // 1.0 means full strength.
+        float color_factor;
+
+        // How much to down sample image before comparing, in powers of 2.
+        unsigned int down_sample;
+    };
+
+
+    // Image comparison metric using Yee's method.
+    // References: A Perceptual Metric for Production Testing, Hector Yee, Journal
+    // of Graphics Tools 2004
+    //
+    // Return true if the images are perceptually the same.
+    bool yee_compare(const PerceptualDiffParameters &parameters,
+                     const RGBAImage &image_a,
+                     const RGBAImage &image_b,
+                     std::string &output_error_string,
+                     RGBAImage *output_image_difference=NULL,
+                     std::ostream *output_verbose=NULL);
+}
 
 #endif
