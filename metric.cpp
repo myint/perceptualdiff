@@ -374,12 +374,16 @@ namespace pdiff
                 for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
                 {
                     const auto n1 =
-                        fabsf(la.get_value(x, y, i) - la.get_value(x, y, i + 1));
+                        std::abs(la.get_value(x, y, i) -
+                                 la.get_value(x, y, i + 1));
+
                     const auto n2 =
-                        fabsf(lb.get_value(x, y, i) - lb.get_value(x, y, i + 1));
+                        std::abs(lb.get_value(x, y, i) -
+                                 lb.get_value(x, y, i + 1));
+
                     const auto numerator = std::max(n1, n2);
-                    const auto d1 = fabsf(la.get_value(x, y, i + 2));
-                    const auto d2 = fabsf(lb.get_value(x, y, i + 2));
+                    const auto d1 = std::abs(la.get_value(x, y, i + 2));
+                    const auto d2 = std::abs(lb.get_value(x, y, i + 2));
                     const auto denominator = std::max(std::max(d1, d2), 1e-5f);
                     const auto contrast = numerator / denominator;
                     const auto f_mask = mask(contrast * csf(cpd[i], adapt));
@@ -390,7 +394,7 @@ namespace pdiff
                 factor /= sum_contrast;
                 factor = std::min(std::max(factor, 1.f), 10.f);
                 const auto delta =
-                    fabsf(la.get_value(x, y, 0) - lb.get_value(x, y, 0));
+                    std::abs(la.get_value(x, y, 0) - lb.get_value(x, y, 0));
                 error_sum += delta;
                 auto pass = true;
 
