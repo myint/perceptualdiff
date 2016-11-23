@@ -272,11 +272,11 @@ namespace pdiff
             {
                 const auto i = x + y * w;
 
-                // perceptualdiff used to use premultiplied alphas when loading the
-                // image. This is no longer the case since the switch to FreeImage.
-                // We need to do the multiplication here now. As was the case with
-                // premultiplied alphas, differences in alphas won't be detected
-                // where the color is black.
+                // perceptualdiff used to use premultiplied alphas when loading
+                // the image. This is no longer the case since the switch to
+                // FreeImage. We need to do the multiplication here now. As was
+                // the case with premultiplied alphas, differences in alphas
+                // won't be detected where the color is black.
 
                 const auto a_alpha = image_a.get_alpha(i) / 255.f;
 
@@ -293,7 +293,8 @@ namespace pdiff
                 float a_x;
                 float a_y;
                 float a_z;
-                adobe_rgb_to_xyz(a_color_r, a_color_g, a_color_b, a_x, a_y, a_z);
+                adobe_rgb_to_xyz(a_color_r, a_color_g, a_color_b,
+                                 a_x, a_y, a_z);
                 float l;
                 xyz_to_lab(a_x, a_y, a_z, l, a_a[i], a_b[i]);
 
@@ -312,7 +313,8 @@ namespace pdiff
                 float b_x;
                 float b_y;
                 float b_z;
-                adobe_rgb_to_xyz(b_color_r, b_color_g, b_color_b, b_x, b_y, b_z);
+                adobe_rgb_to_xyz(b_color_r, b_color_g, b_color_b,
+                                 b_x, b_y, b_z);
                 xyz_to_lab(b_x, b_y, b_z, l, b_a[i], b_b[i]);
 
                 a_lum[i] = a_y * luminance;
@@ -367,11 +369,15 @@ namespace pdiff
             for (auto x = 0u; x < w; x++)
             {
                 const auto index = y * w + x;
-                const auto adapt = std::max((la.get_value(x, y, adaptation_level) +
-                                             lb.get_value(x, y, adaptation_level)) * 0.5f,
-                                            1e-5f);
+
+                const auto adapt = std::max(
+                    (la.get_value(x, y, adaptation_level) +
+                     lb.get_value(x, y, adaptation_level)) * 0.5f,
+                    1e-5f);
+
                 auto sum_contrast = 0.f;
                 auto factor = 0.f;
+
                 for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
                 {
                     const auto n1 =
@@ -399,7 +405,7 @@ namespace pdiff
                 error_sum += delta;
                 auto pass = true;
 
-                // pure luminance test
+                // Pure luminance test.
                 if (delta > factor * tvi(adapt))
                 {
                     pass = false;
@@ -407,14 +413,16 @@ namespace pdiff
 
                 if (not args.luminance_only)
                 {
-                    // CIE delta E test with modifications
+                    // CIE delta E test with modifications.
                     auto color_scale = args.color_factor;
-                    // ramp down the color test in scotopic regions
+
+                    // Ramp down the color test in scotopic regions.
                     if (adapt < 10.0f)
                     {
                         // Don't do color test at all.
                         color_scale = 0.0;
                     }
+
                     const auto da = a_a[index] - b_a[index];
                     const auto db = a_b[index] - b_b[index];
                     const auto delta_e = (da * da + db * db) * color_scale;
