@@ -108,6 +108,7 @@ Version History
 - 1.4 - Detect differences due to the alpha channel. This was lost in 1.0.2
   when FreeImage was introduced.
 - 2.0 - Support usage as a library.
+- 2.1 - Allow accessing stats directly when used as a library.
 
 
 Links

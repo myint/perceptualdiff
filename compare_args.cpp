@@ -32,7 +32,7 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 namespace pdiff
 {
-    static const auto VERSION = "1.2";
+    static const auto VERSION = "2.1";
 
 
     static const auto USAGE =
@@ -67,10 +67,11 @@ namespace pdiff
     }
 
 
-    CompareArgs::CompareArgs()
+    CompareArgs::CompareArgs(int argc, char **argv)
         : verbose_(false),
           sum_errors_(false)
     {
+        parse_args(argc, argv);
     }
 
 
@@ -86,12 +87,12 @@ namespace pdiff
 #endif
     }
 
-    bool CompareArgs::parse_args(const int argc, char **argv)
+    void CompareArgs::parse_args(const int argc, char **argv)
     {
         if (argc <= 1)
         {
             print_help();
-            return false;
+            exit(EXIT_FAILURE);
         }
 
         auto image_count = 0u;
@@ -233,7 +234,7 @@ namespace pdiff
         if (not image_a_ or not image_b_)
         {
             std::cerr << "Not enough image files specified\n";
-            return false;
+            exit(EXIT_FAILURE);
         }
 
         for (auto i = 0u; i < parameters_.down_sample; i++)
@@ -295,7 +296,6 @@ namespace pdiff
                                                             image_a_->get_height(),
                                                             output_file_name);
         }
-        return true;
     }
 
     void CompareArgs::print_args() const

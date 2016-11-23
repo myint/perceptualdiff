@@ -33,20 +33,13 @@ Place, Suite 330, Boston, MA 02111-1307 USA
 
 int main(const int argc, char **const argv)
 {
-    pdiff::CompareArgs args;
-
     try
     {
-        if (not args.parse_args(argc, argv))
+        const pdiff::CompareArgs args(argc, argv);
+
+        if (args.verbose_)
         {
-            return EXIT_FAILURE;
-        }
-        else
-        {
-            if (args.verbose_)
-            {
-                args.print_args();
-            }
+            args.print_args();
         }
 
         std::string reason;

@@ -35,9 +35,8 @@ namespace pdiff
     {
     public:
 
-        CompareArgs();
+        CompareArgs(int argc, char **argv);
 
-        bool parse_args(int argc, char **argv);
         void print_args() const;
 
         std::shared_ptr<RGBAImage> image_a_;
@@ -49,6 +48,10 @@ namespace pdiff
         bool sum_errors_;
 
         PerceptualDiffParameters parameters_;
+
+    private:
+
+        void parse_args(int argc, char **argv);
     };
 
 
