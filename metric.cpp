@@ -432,19 +432,19 @@ namespace pdiff
                     }
                 }
 
-                if (not pass)
+                if (pass)
+                {
+                    if (output_image_difference)
+                    {
+                        output_image_difference->set(0, 0, 0, 255, index);
+                    }
+                }
+                else
                 {
                     pixels_failed++;
                     if (output_image_difference)
                     {
                         output_image_difference->set(255, 0, 0, 255, index);
-                    }
-                }
-                else
-                {
-                    if (output_image_difference)
-                    {
-                        output_image_difference->set(0, 0, 0, 255, index);
                     }
                 }
             }
