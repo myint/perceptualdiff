@@ -211,14 +211,17 @@ namespace pdiff
     bool yee_compare(const PerceptualDiffParameters &args,
                      const RGBAImage &image_a,
                      const RGBAImage &image_b,
-                     std::string &output_error_string,
+                     std::string *output_error_string,
                      RGBAImage *output_image_difference,
                      std::ostream *output_verbose)
     {
         if ((image_a.get_width()  != image_b.get_width()) or
             (image_a.get_height() != image_b.get_height()))
         {
-            output_error_string = "Image dimensions do not match\n";
+            if (output_error_string)
+            {
+                *output_error_string = "Image dimensions do not match\n";
+            }
             return false;
         }
 
@@ -237,7 +240,10 @@ namespace pdiff
         }
         if (identical)
         {
-            output_error_string = "Images are binary identical\n";
+            if (output_error_string)
+            {
+                *output_error_string = "Images are binary identical\n";
+            }
             return true;
         }
 
@@ -440,16 +446,25 @@ namespace pdiff
 
         if (pixels_failed < args.threshold_pixels)
         {
-            output_error_string = "Images are perceptually indistinguishable\n";
-            output_error_string += different;
+            if (output_error_string)
+            {
+                *output_error_string =
+                    "Images are perceptually indistinguishable\n" + different;
+            }
             return true;
         }
 
-        output_error_string = "Images are visibly different\n";
-        output_error_string += different;
+        if (output_error_string)
+        {
+            *output_error_string =
+                "Images are visibly different\n" + different;
+        }
         if (args.sum_errors)
         {
-            output_error_string += error_sum_buff;
+            if (output_error_string)
+            {
+                *output_error_string += error_sum_buff;
+            }
         }
 
         return false;

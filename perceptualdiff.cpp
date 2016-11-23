@@ -54,7 +54,7 @@ int main(const int argc, char **const argv)
             args.parameters_,
             *args.image_a_,
             *args.image_b_,
-            error_string,
+            &error_string,
             args.image_difference_.get(),
             args.verbose_ ? &std::cout : NULL);
 
