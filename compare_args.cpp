@@ -100,7 +100,8 @@ namespace pdiff
         {
             try
             {
-                if (option_matches(argv[i], "help"))
+                if (option_matches(argv[i], "help") or
+                    option_matches(argv[i], "h"))
                 {
                     print_help();
                     exit(EXIT_SUCCESS);
