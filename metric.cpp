@@ -196,24 +196,24 @@ namespace pdiff
 
 
     PerceptualDiffParameters::PerceptualDiffParameters()
+        : luminance_only(false),
+          field_of_view(45.0f),
+          gamma(2.2f),
+          luminance(100.0f),
+          threshold_pixels(100),
+          color_factor(1.0f)
     {
-        luminance_only = false;
-        field_of_view = 45.0f;
-        gamma = 2.2f;
-        threshold_pixels = 100;
-        luminance = 100.0f;
-        color_factor = 1.0f;
     }
 
 
     bool yee_compare(const PerceptualDiffParameters &args,
                      const RGBAImage &image_a,
                      const RGBAImage &image_b,
-                     size_t *output_num_pixels_failed,
-                     float *output_error_sum,
-                     std::string *output_reason,
-                     RGBAImage *output_image_difference,
-                     std::ostream *output_verbose)
+                     size_t *const output_num_pixels_failed,
+                     float *const output_error_sum,
+                     std::string *const output_reason,
+                     RGBAImage *const output_image_difference,
+                     std::ostream *const output_verbose)
     {
         if ((image_a.get_width()  != image_b.get_width()) or
             (image_a.get_height() != image_b.get_height()))
