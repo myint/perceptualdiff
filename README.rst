@@ -59,19 +59,20 @@ Command line::
     Compares image1 and image2 using a perceptually based image metric.
 
     Options:
-      --verbose        Turn on verbose mode
-      --fov deg        Field of view in degrees [0.1, 89.9] (default: 45.0)
-      --threshold p    Number of pixels p below which differences are ignored
-      --gamma g        Value to convert rgb into linear space (default: 2.2)
-      --luminance l    White luminance (default: 100.0 cdm^-2)
-      --luminanceonly  Only consider luminance; ignore chroma (color) in the
-                       comparison
-      --colorfactor    How much of color to use [0.0, 1.0] (default: 1.0)
-      --downsample     How many powers of two to down sample the image
-                       (default: 0)
-      --scale          Scale images to match each other's dimensions
-      --sum-errors     Print a sum of the luminance and color differences
-      --output o       Write difference to the file o
+      --verbose         Turn on verbose mode
+      --fov deg         Field of view in degrees [0.1, 89.9] (default: 45.0)
+      --threshold p     Number of pixels p below which differences are ignored
+      --gamma g         Value to convert rgb into linear space (default: 2.2)
+      --luminance l     White luminance (default: 100.0 cdm^-2)
+      --luminance-only  Only consider luminance; ignore chroma (color) in the
+                        comparison
+      --color-factor    How much of color to use [0.0, 1.0] (default: 1.0)
+      --down-sample     How many powers of two to down sample the image
+                        (default: 0)
+      --scale           Scale images to match each other's dimensions
+      --sum-errors      Print a sum of the luminance and color differences
+      --output o        Write difference to the file o
+      --version         Print version
 
 
 Check that perceptualdiff is built with OpenMP support::
