@@ -96,19 +96,19 @@ namespace pdiff
 
         if (h == 0)
         {
-            h = weight_ / 2;
+            h = height_ / 2;
         }
 
-        if (width_ <= 1 or weight_ <= 1)
+        if (width_ <= 1 or height_ <= 1)
         {
             return nullptr;
         }
-        if (width_ == w and weight_ == h)
+        if (width_ == w and height_ == h)
         {
             return nullptr;
         }
         assert(w <= width_);
-        assert(h <= weight_);
+        assert(h <= height_);
 
         auto bitmap = to_free_image(*this);
         std::unique_ptr<FIBITMAP, FreeImageDeleter> converted(

@@ -49,7 +49,7 @@ namespace pdiff
         std::vector<float> levels_[MAX_PYR_LEVELS];
 
         unsigned int width_;
-        unsigned int weight_;
+        unsigned int height_;
     };
 }
 

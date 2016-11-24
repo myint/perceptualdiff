@@ -29,7 +29,7 @@ namespace pdiff
 {
     LPyramid::LPyramid(const std::vector<float> &image,
                        const unsigned int width, const unsigned int height)
-        : width_(width), weight_(height)
+        : width_(width), height_(height)
     {
         // Make the Laplacian pyramid by successively
         // copying the earlier levels and blurring them
@@ -41,7 +41,7 @@ namespace pdiff
             }
             else
             {
-                levels_[i].resize(width_ * weight_);
+                levels_[i].resize(width_ * height_);
                 convolve(levels_[i], levels_[i - 1]);
             }
         }
@@ -55,7 +55,7 @@ namespace pdiff
         assert(b.size() > 1);
 
         #pragma omp parallel for shared(a, b)
-        for (auto y = 0; y < static_cast<ptrdiff_t>(weight_); y++)
+        for (auto y = 0; y < static_cast<ptrdiff_t>(height_); y++)
         {
             for (auto x = 0u; x < width_; x++)
             {
@@ -73,9 +73,9 @@ namespace pdiff
                         {
                             nx = 2 * width_ - nx - 1;
                         }
-                        if (ny >= static_cast<long>(weight_))
+                        if (ny >= static_cast<long>(height_))
                         {
-                            ny = 2 * weight_ - ny - 1;
+                            ny = 2 * height_ - ny - 1;
                         }
 
                         const float kernel[] = {0.05f, 0.25f, 0.4f, 0.25f, 0.05f};
