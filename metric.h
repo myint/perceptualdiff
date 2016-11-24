@@ -56,8 +56,8 @@ namespace pdiff
 
 
     // Image comparison metric using Yee's method.
-    // References: A Perceptual Metric for Production Testing, Hector Yee, Journal
-    // of Graphics Tools 2004
+    // References: A Perceptual Metric for Production Testing, Hector Yee,
+    // Journal of Graphics Tools 2004
     //
     // Return true if the images are perceptually the same.
     bool yee_compare(const PerceptualDiffParameters &parameters,
