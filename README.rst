@@ -117,8 +117,8 @@ Usage as a library
 
 .. code:: cpp
 
-    #include <metric.h>
-    #include <rgba_image.h>
+    #include <perceptualdiff/metric.h>
+    #include <perceptualdiff/rgba_image.h>
 
     int main()
     {
