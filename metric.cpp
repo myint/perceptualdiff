@@ -206,9 +206,9 @@ namespace pdiff
     }
 
 
-    bool yee_compare(const PerceptualDiffParameters &args,
-                     const RGBAImage &image_a,
+    bool yee_compare(const RGBAImage &image_a,
                      const RGBAImage &image_b,
+                     const PerceptualDiffParameters &args,
                      size_t *const output_num_pixels_failed,
                      float *const output_error_sum,
                      std::string *const output_reason,

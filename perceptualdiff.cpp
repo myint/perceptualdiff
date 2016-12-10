@@ -45,9 +45,9 @@ int main(const int argc, char **const argv)
         std::string reason;
         float error_sum = 0;
         const auto passed = pdiff::yee_compare(
-            args.parameters_,
             *args.image_a_,
             *args.image_b_,
+            args.parameters_,
             NULL,
             &error_sum,
             &reason,

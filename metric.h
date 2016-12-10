@@ -60,14 +60,15 @@ namespace pdiff
     // Journal of Graphics Tools 2004
     //
     // Return true if the images are perceptually the same.
-    bool yee_compare(const PerceptualDiffParameters &parameters,
-                     const RGBAImage &image_a,
-                     const RGBAImage &image_b,
-                     size_t *output_num_pixels_failed=NULL,
-                     float *output_sum_errors=NULL,
-                     std::string *output_reason=NULL,
-                     RGBAImage *output_image_difference=NULL,
-                     std::ostream *output_verbose=NULL);
+    bool yee_compare(
+        const RGBAImage &image_a,
+        const RGBAImage &image_b,
+        const PerceptualDiffParameters &parameters=PerceptualDiffParameters(),
+        size_t *output_num_pixels_failed=NULL,
+        float *output_sum_errors=NULL,
+        std::string *output_reason=NULL,
+        RGBAImage *output_image_difference=NULL,
+        std::ostream *output_verbose=NULL);
 }
 
 #endif
