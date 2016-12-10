@@ -112,6 +112,25 @@ Version History
 - 2.1 - Allow accessing stats directly when used as a library.
 
 
+Usage as a library
+==================
+
+.. code:: cpp
+
+    #include <metric.h>
+    #include <rgba_image.h>
+
+    int main()
+    {
+        const auto a = pdiff::read_from_file("a.png");
+        const auto b = pdiff::read_from_file("b.png");
+
+        pdiff::PerceptualDiffParameters parameters;
+
+        const bool same = pdiff::yee_compare(parameters, *a, *b);
+    }
+
+
 Links
 =====
 
