@@ -1,4 +1,6 @@
-#!/bin/bash -eux
+#!/bin/bash
+
+set -eux
 
 # Script to run pdiff against a set of image file pairs, and check that the
 # PASS or FAIL status is as expected.
