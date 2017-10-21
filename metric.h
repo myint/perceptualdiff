@@ -64,11 +64,11 @@ namespace pdiff
         const RGBAImage &image_a,
         const RGBAImage &image_b,
         const PerceptualDiffParameters &parameters=PerceptualDiffParameters(),
-        size_t *output_num_pixels_failed=NULL,
-        float *output_sum_errors=NULL,
-        std::string *output_reason=NULL,
-        RGBAImage *output_image_difference=NULL,
-        std::ostream *output_verbose=NULL);
+        size_t *output_num_pixels_failed=nullptr,
+        float *output_sum_errors=nullptr,
+        std::string *output_reason=nullptr,
+        RGBAImage *output_image_difference=nullptr,
+        std::ostream *output_verbose=nullptr);
 }
 
 #endif

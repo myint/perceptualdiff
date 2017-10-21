@@ -48,11 +48,11 @@ int main(const int argc, char **const argv)
             *args.image_a_,
             *args.image_b_,
             args.parameters_,
-            NULL,
+            nullptr,
             &error_sum,
             &reason,
             args.image_difference_.get(),
-            args.verbose_ ? &std::cout : NULL);
+            args.verbose_ ? &std::cout : nullptr);
 
         if (passed)
         {
