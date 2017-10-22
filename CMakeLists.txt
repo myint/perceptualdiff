@@ -33,10 +33,15 @@ if(SANITIZERS)
     set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address,undefined")
 endif()
 
+set(WARNING_FLAGS
+    -Wall -Wextra -pedantic -Wcast-qual -Wpointer-arith -Winit-self
+    -Wswitch-default -Wmissing-include-dirs -Wold-style-cast
+    -Wnon-virtual-dtor -Wshadow -Wno-unknown-pragmas)
+
 if(MSVC)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Wcast-qual -Wpointer-arith -Winit-self -Wswitch-default -Wmissing-include-dirs -Wold-style-cast -Wnon-virtual-dtor -Wshadow -Wno-unknown-pragmas")
+    target_compile_options(pdiff PRIVATE ${WARNING_FLAGS})
+    target_compile_options(perceptualdiff PRIVATE ${WARNING_FLAGS})
 endif(MSVC)
 
 # Packing stuff.
