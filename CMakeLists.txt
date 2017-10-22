@@ -32,13 +32,13 @@ endif()
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 set(FREEIMAGE_FIND_REQUIRED, TRUE)
 find_package(FreeImage)
-include_directories(SYSTEM ${FREEIMAGE_INCLUDE_DIRS})
 
 add_library(pdiff lpyramid.cpp rgba_image.cpp metric.cpp)
-target_link_libraries(pdiff ${FREEIMAGE_LIBRARIES})
+target_include_directories(pdiff SYSTEM PRIVATE ${FREEIMAGE_INCLUDE_DIRS})
+target_link_libraries(pdiff PRIVATE ${FREEIMAGE_LIBRARIES})
 
 add_executable(perceptualdiff compare_args.cpp perceptualdiff.cpp)
-target_link_libraries(perceptualdiff pdiff)
+target_link_libraries(perceptualdiff PRIVATE pdiff)
 
 install(TARGETS perceptualdiff DESTINATION bin)
 
