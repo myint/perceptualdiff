@@ -22,6 +22,13 @@ if(OPENMP_FOUND)
     endif(NOT MSVC)
 endif()
 
+option(SANITIZERS "Enable sanitizers" FALSE)
+if(SANITIZERS)
+    add_compile_options(-fsanitize=address,undefined -fno-omit-frame-pointer)
+    set(CMAKE_EXE_LINKER_FLAGS
+        "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address,undefined")
+endif()
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 set(FREEIMAGE_FIND_REQUIRED, TRUE)
 find_package(FreeImage)
@@ -34,14 +41,6 @@ add_executable(perceptualdiff compare_args.cpp perceptualdiff.cpp)
 target_link_libraries(perceptualdiff pdiff)
 
 install(TARGETS perceptualdiff DESTINATION bin)
-
-option(SANITIZERS "Enable sanitizers" FALSE)
-if(SANITIZERS)
-    set(SANITIZER_FLAGS -fsanitize=address,undefined -fno-omit-frame-pointer)
-    target_compile_options(pdiff PRIVATE ${SANITIZER_FLAGS})
-    target_compile_options(perceptualdiff PRIVATE ${SANITIZER_FLAGS})
-    target_link_libraries(pdiff -fsanitize=address,undefined)
-endif()
 
 # Packing stuff.
 set(CPACK_PACKAGE_VERSION_MAJOR "1")

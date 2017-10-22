@@ -7,6 +7,11 @@ build:
 	cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=Release
 	$(MAKE) --directory=build --jobs=$(NUM_JOBS)
 
+sanitizer:
+	mkdir -p build
+	cmake -H. -Bbuild -DCMAKE_BUILD_TYPE=Release -DSANITIZERS=ON
+	$(MAKE) --directory=build --jobs=$(NUM_JOBS) check
+
 clean:
 	rm -rf build
 
