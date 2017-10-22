@@ -6,8 +6,23 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
+if(NOT MSVC)
+    add_compile_options(
+        -Wall -Wextra -pedantic -Wcast-qual -Wpointer-arith -Winit-self
+        -Wswitch-default -Wmissing-include-dirs -Wold-style-cast
+        -Wnon-virtual-dtor -Wshadow -Wno-unknown-pragmas)
+endif(NOT MSVC)
 
+find_package(OpenMP)
+if(OPENMP_FOUND)
+    add_compile_options(${OpenMP_CXX_FLAGS})
+    if(NOT MSVC)
+        set(CMAKE_EXE_LINKER_FLAGS
+            "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_CXX_FLAGS}")
+    endif(NOT MSVC)
+endif()
+
+set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 set(FREEIMAGE_FIND_REQUIRED, TRUE)
 find_package(FreeImage)
 include_directories(SYSTEM ${FREEIMAGE_INCLUDE_DIRS})
@@ -20,13 +35,6 @@ target_link_libraries(perceptualdiff pdiff)
 
 install(TARGETS perceptualdiff DESTINATION bin)
 
-find_package(OpenMP)
-if(OPENMP_FOUND)
-    target_compile_options(pdiff PRIVATE ${OpenMP_CXX_FLAGS})
-    target_compile_options(perceptualdiff PRIVATE ${OpenMP_CXX_FLAGS})
-    target_link_libraries(pdiff ${OpenMP_CXX_FLAGS})
-endif()
-
 option(SANITIZERS "Enable sanitizers" FALSE)
 if(SANITIZERS)
     set(SANITIZER_FLAGS -fsanitize=address,undefined -fno-omit-frame-pointer)
@@ -34,17 +42,6 @@ if(SANITIZERS)
     target_compile_options(perceptualdiff PRIVATE ${SANITIZER_FLAGS})
     target_link_libraries(pdiff -fsanitize=address,undefined)
 endif()
-
-set(WARNING_FLAGS
-    -Wall -Wextra -pedantic -Wcast-qual -Wpointer-arith -Winit-self
-    -Wswitch-default -Wmissing-include-dirs -Wold-style-cast
-    -Wnon-virtual-dtor -Wshadow -Wno-unknown-pragmas)
-
-if(MSVC)
-else()
-    target_compile_options(pdiff PRIVATE ${WARNING_FLAGS})
-    target_compile_options(perceptualdiff PRIVATE ${WARNING_FLAGS})
-endif(MSVC)
 
 # Packing stuff.
 set(CPACK_PACKAGE_VERSION_MAJOR "1")
