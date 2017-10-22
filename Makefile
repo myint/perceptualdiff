@@ -19,6 +19,6 @@ install: build
 	$(MAKE) --directory=build install
 
 test: build
-	$(MAKE) --directory=build check
+	./test/run_tests.bash
 
 .PHONY: build clean
