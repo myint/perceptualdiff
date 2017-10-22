@@ -2,6 +2,10 @@ project(perceptualdiff)
 
 cmake_minimum_required(VERSION 3.1)
 
+set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
 set(FREEIMAGE_FIND_REQUIRED, TRUE)
@@ -9,14 +13,9 @@ find_package(FreeImage)
 include_directories(SYSTEM ${FREEIMAGE_INCLUDE_DIRS})
 
 add_library(pdiff lpyramid.cpp rgba_image.cpp metric.cpp)
-target_compile_features(pdiff PRIVATE cxx_auto_type cxx_nullptr cxx_range_for)
 target_link_libraries(pdiff ${FREEIMAGE_LIBRARIES})
 
 add_executable(perceptualdiff compare_args.cpp perceptualdiff.cpp)
-target_compile_features(
-    perceptualdiff
-    PRIVATE
-    cxx_auto_type cxx_nullptr cxx_range_for)
 target_link_libraries(perceptualdiff pdiff)
 
 install(TARGETS perceptualdiff DESTINATION bin)
