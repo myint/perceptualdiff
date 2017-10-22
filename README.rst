@@ -32,13 +32,11 @@ Build Instructions
 
 #. Download CMake from http://www.cmake.org if you do not already have it on
    your system.
+
 #. Download FreeImage from https://sourceforge.net/projects/freeimage.
     - On OS X with MacPorts: ``port install freeimage``
     - On OS X with Brew: ``brew install freeimage``
     - On Ubuntu: ``apt-get install libfreeimage-dev``
-#. Type::
-
-    $ cmake .
 
 #. Type::
 
