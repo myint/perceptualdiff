@@ -30,8 +30,10 @@ endif()
 
 option(SANITIZERS "Enable sanitizers" FALSE)
 if(SANITIZERS)
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address,undefined -fno-omit-frame-pointer")
-    set(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} -fsanitize=address,undefined")
+    set(SANITIZER_FLAGS -fsanitize=address,undefined -fno-omit-frame-pointer)
+    target_compile_options(pdiff PRIVATE ${SANITIZER_FLAGS})
+    target_compile_options(perceptualdiff PRIVATE ${SANITIZER_FLAGS})
+    target_link_libraries(pdiff -fsanitize=address,undefined)
 endif()
 
 set(WARNING_FLAGS

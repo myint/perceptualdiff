@@ -7,16 +7,14 @@ compiler:
 
 env:
     -
-    - EXTRA_CMAKE_FLAGS='-DOPTIMIZATION=FALSE'
     - OMP_NUM_THREADS=1
     - OMP_NUM_THREADS=4
 
 script:
     - cppcheck --error-exitcode=2 .
-    - cmake "$EXTRA_CMAKE_FLAGS" .
-    - make VERBOSE=1 check
+    - make VERBOSE=1 test
     - ./memcheck.bash
-    - bash -c './perceptualdiff | grep -i openmp'
+    - bash -c './build/perceptualdiff | grep -i openmp'
 
 after_success:
     - pip install --user cpp-coveralls
