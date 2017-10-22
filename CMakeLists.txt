@@ -1,6 +1,6 @@
 project(perceptualdiff)
 
-cmake_minimum_required(VERSION 2.4)
+cmake_minimum_required(VERSION 3.1)
 
 set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR})
 
@@ -8,15 +8,15 @@ set(FREEIMAGE_FIND_REQUIRED, TRUE)
 find_package(FreeImage)
 include_directories(SYSTEM ${FREEIMAGE_INCLUDE_DIRS})
 
-add_library(
-    pdiff
-    lpyramid.cpp rgba_image.cpp metric.cpp)
-
+add_library(pdiff lpyramid.cpp rgba_image.cpp metric.cpp)
+target_compile_features(pdiff PRIVATE cxx_auto_type cxx_nullptr cxx_range_for)
 target_link_libraries(pdiff ${FREEIMAGE_LIBRARIES})
 
-add_executable(
+add_executable(perceptualdiff compare_args.cpp perceptualdiff.cpp)
+target_compile_features(
     perceptualdiff
-    compare_args.cpp perceptualdiff.cpp)
+    PRIVATE
+    cxx_auto_type cxx_nullptr cxx_range_for)
 target_link_libraries(perceptualdiff pdiff)
 
 install(TARGETS perceptualdiff DESTINATION bin)
@@ -45,7 +45,7 @@ endif()
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall")
 else()
-    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x -Wall -Wextra -pedantic -Wcast-qual -Wpointer-arith -Winit-self -Wswitch-default -Wmissing-include-dirs -Wold-style-cast -Wnon-virtual-dtor -Wshadow -Wno-unknown-pragmas")
+    set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -Wall -Wextra -pedantic -Wcast-qual -Wpointer-arith -Winit-self -Wswitch-default -Wmissing-include-dirs -Wold-style-cast -Wnon-virtual-dtor -Wshadow -Wno-unknown-pragmas")
 endif(MSVC)
 
 # Packing stuff.
