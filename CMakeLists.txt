@@ -11,7 +11,7 @@ if(NOT MSVC)
         -Wall -Wextra -pedantic -Wcast-qual -Wpointer-arith -Winit-self
         -Wswitch-default -Wmissing-include-dirs -Wold-style-cast
         -Wnon-virtual-dtor -Wshadow -Wno-unknown-pragmas)
-endif(NOT MSVC)
+endif()
 
 find_package(OpenMP)
 if(OPENMP_FOUND)
@@ -19,7 +19,7 @@ if(OPENMP_FOUND)
     if(NOT MSVC)
         set(CMAKE_EXE_LINKER_FLAGS
             "${CMAKE_EXE_LINKER_FLAGS} ${OpenMP_CXX_FLAGS}")
-    endif(NOT MSVC)
+    endif()
 endif()
 
 option(SANITIZERS "Enable sanitizers" FALSE)
