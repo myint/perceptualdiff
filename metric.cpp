@@ -332,6 +332,15 @@ namespace pdiff
         const auto num_one_degree_pixels =
             to_degrees(2 *
                        std::tan(args.field_of_view * to_radians(.5f)));
+        if (num_one_degree_pixels <= 0)
+        {
+            if (output_verbose)
+            {
+                *output_verbose
+                    << "`num_one_degree_pixels` must be greater than zero\n";
+            }
+            return false;
+        }
         const auto pixels_per_degree = w / num_one_degree_pixels;
 
         if (output_verbose)
