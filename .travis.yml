@@ -2,8 +2,9 @@ sudo: false
 
 language: cpp
 
-compiler:
-    - gcc
+os:
+    - linux
+    - osx
 
 env:
     -
