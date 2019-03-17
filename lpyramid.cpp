@@ -41,7 +41,7 @@ namespace pdiff
             }
             else
             {
-                levels_[i].resize(width_ * height_);
+                levels_[i].resize(static_cast<size_t>(width_) * height_);
                 convolve(levels_[i], levels_[i - 1]);
             }
         }

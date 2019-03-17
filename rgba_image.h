@@ -44,7 +44,10 @@ namespace pdiff
     public:
 
         RGBAImage(const unsigned int w, const unsigned int h, const std::string &name="")
-            : width_(w), height_(h), name_(name), data_(w * h)
+            : width_(w),
+              height_(h),
+              name_(name),
+              data_(static_cast<size_t>(w) * h)
         {
         }
 
