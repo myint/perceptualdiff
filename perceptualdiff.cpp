@@ -63,27 +63,27 @@ int main(const int argc, char **const argv)
         }
         else
         {
-                std::cout << "FAIL: " + reason;
-        }
+            std::cout << "FAIL: " + reason;
 
-        if (args.sum_errors_)
-        {
-            const auto normalized =
-                error_sum /
-                (args.image_a_->get_width() *
-                 args.image_a_->get_height() * 255.);
+            if (args.sum_errors_)
+            {
+                const auto normalized =
+                    error_sum /
+                    (args.image_a_->get_width() *
+                     args.image_a_->get_height() * 255.);
 
-            std::cout << error_sum << " error sum\n";
-            std::cout << normalized << " normalzied error sum\n";
-        }
+                std::cout << error_sum << " error sum\n";
+                std::cout << normalized << " normalzied error sum\n";
+            }
 
-        if (args.image_difference_.get())
-        {
-            args.image_difference_->write_to_file(args.image_difference_->get_name());
+            if (args.image_difference_.get())
+            {
+                args.image_difference_->write_to_file(args.image_difference_->get_name());
 
-            std::cerr << "Wrote difference image to "
-                      << args.image_difference_->get_name()
-                      << "\n";
+                std::cerr << "Wrote difference image to "
+                          << args.image_difference_->get_name()
+                          << "\n";
+            }
         }
 
         return passed ? EXIT_SUCCESS : EXIT_FAILURE;
