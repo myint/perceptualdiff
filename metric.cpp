@@ -321,14 +321,6 @@ namespace pdiff
             }
         }
 
-        if (output_verbose)
-        {
-            *output_verbose << "Constructing Laplacian Pyramids\n";
-        }
-
-        const LPyramid la(a_lum, w, h);
-        const LPyramid lb(b_lum, w, h);
-
         const auto num_one_degree_pixels =
             to_degrees(2 *
                        std::tan(args.field_of_view * to_radians(.5f)));
@@ -361,92 +353,114 @@ namespace pdiff
         auto pixels_failed = 0u;
         auto error_sum = 0.;
 
-        #pragma omp parallel for reduction(+ : pixels_failed, error_sum) \
-            shared(args, a_a, a_b, b_a, b_b, cpd, f_freq)
-        for (auto y = 0; y < static_cast<ptrdiff_t>(h); y++)
+        if (output_verbose)
         {
-            for (auto x = 0u; x < w; x++)
+            *output_verbose << "Constructing Laplacian Pyramids\n";
+        }
+        try
+        {
+            const LPyramid la(a_lum, w, h);
+            const LPyramid lb(b_lum, w, h);
+
+            #pragma omp parallel for reduction(+ : pixels_failed, error_sum) \
+            shared(args, a_a, a_b, b_a, b_b, cpd, f_freq)
+            for (auto y = 0; y < static_cast<ptrdiff_t>(h); y++)
             {
-                const auto index = y * w + x;
-
-                const auto adapt = std::max(
-                    (la.get_value(x, y, adaptation_level) +
-                     lb.get_value(x, y, adaptation_level)) * 0.5f,
-                    1e-5f);
-
-                auto sum_contrast = 0.f;
-                auto factor = 0.f;
-
-                for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
+                for (auto x = 0u; x < w; x++)
                 {
-                    const auto n1 =
-                        std::abs(la.get_value(x, y, i) -
-                                 la.get_value(x, y, i + 1));
+                    const auto index = y * w + x;
 
-                    const auto n2 =
-                        std::abs(lb.get_value(x, y, i) -
-                                 lb.get_value(x, y, i + 1));
+                    const auto adapt =
+                        std::max((la.get_value(x, y, adaptation_level) +
+                                  lb.get_value(x, y, adaptation_level)) *
+                                     0.5f,
+                                 1e-5f);
 
-                    const auto numerator = std::max(n1, n2);
-                    const auto d1 = std::abs(la.get_value(x, y, i + 2));
-                    const auto d2 = std::abs(lb.get_value(x, y, i + 2));
-                    const auto denominator = std::max(std::max(d1, d2), 1e-5f);
-                    const auto contrast = numerator / denominator;
-                    const auto f_mask = mask(contrast * csf(cpd[i], adapt));
-                    factor += contrast * f_freq[i] * f_mask;
-                    sum_contrast += contrast;
-                }
-                sum_contrast = std::max(sum_contrast, 1e-5f);
-                factor /= sum_contrast;
-                factor = std::min(std::max(factor, 1.f), 10.f);
-                const auto delta =
-                    std::abs(la.get_value(x, y, 0) - lb.get_value(x, y, 0));
-                error_sum += delta;
-                auto pass = true;
+                    auto sum_contrast = 0.f;
+                    auto factor = 0.f;
 
-                // Pure luminance test.
-                if (delta > factor * tvi(adapt))
-                {
-                    pass = false;
-                }
-
-                if (not args.luminance_only)
-                {
-                    // CIE delta E test with modifications.
-                    auto color_scale = args.color_factor;
-
-                    // Ramp down the color test in scotopic regions.
-                    if (adapt < 10.0f)
+                    for (auto i = 0u; i < MAX_PYR_LEVELS - 2; i++)
                     {
-                        // Don't do color test at all.
-                        color_scale = 0.0;
-                    }
+                        const auto n1 = std::abs(la.get_value(x, y, i) -
+                                                 la.get_value(x, y, i + 1));
 
-                    const auto da = a_a[index] - b_a[index];
-                    const auto db = a_b[index] - b_b[index];
-                    const auto delta_e = (da * da + db * db) * color_scale;
-                    error_sum += delta_e;
-                    if (delta_e > factor)
+                        const auto n2 = std::abs(lb.get_value(x, y, i) -
+                                                 lb.get_value(x, y, i + 1));
+
+                        const auto numerator = std::max(n1, n2);
+                        const auto d1 = std::abs(la.get_value(x, y, i + 2));
+                        const auto d2 = std::abs(lb.get_value(x, y, i + 2));
+                        const auto denominator =
+                            std::max(std::max(d1, d2), 1e-5f);
+                        const auto contrast = numerator / denominator;
+                        const auto f_mask =
+                            mask(contrast * csf(cpd[i], adapt));
+                        factor += contrast * f_freq[i] * f_mask;
+                        sum_contrast += contrast;
+                    }
+                    sum_contrast = std::max(sum_contrast, 1e-5f);
+                    factor /= sum_contrast;
+                    factor = std::min(std::max(factor, 1.f), 10.f);
+                    const auto delta = std::abs(la.get_value(x, y, 0) -
+                                                lb.get_value(x, y, 0));
+                    error_sum += delta;
+                    auto pass = true;
+
+
+                    // Pure luminance test.
+                    if (delta > factor * tvi(adapt))
                     {
                         pass = false;
                     }
-                }
 
-                if (pass)
-                {
-                    if (output_image_difference)
+                    if (not args.luminance_only)
                     {
-                        output_image_difference->set(0, 0, 0, 255, index);
+                        // CIE delta E test with modifications.
+                        auto color_scale = args.color_factor;
+
+                        // Ramp down the color test in scotopic regions.
+                        if (adapt < 10.0f)
+                        {
+                            // Don't do color test at all.
+                            color_scale = 0.0;
+                        }
+
+                        const auto da = a_a[index] - b_a[index];
+                        const auto db = a_b[index] - b_b[index];
+                        const auto delta_e = (da * da + db * db) * color_scale;
+                        error_sum += delta_e;
+                        if (delta_e > factor)
+                        {
+                            pass = false;
+                        }
+                    }
+
+                    if (pass)
+                    {
+                        if (output_image_difference)
+                        {
+                            output_image_difference->set(0, 0, 0, 255, index);
+                        }
+                    }
+                    else
+                    {
+                        pixels_failed++;
+                        if (output_image_difference)
+                        {
+                            output_image_difference->set(255, 0, 0, 255,
+                                                         index);
+                        }
                     }
                 }
-                else
-                {
-                    pixels_failed++;
-                    if (output_image_difference)
-                    {
-                        output_image_difference->set(255, 0, 0, 255, index);
-                    }
-                }
+            }
+        }
+        catch (const std::bad_alloc &)
+        {
+            if (output_reason)
+            {
+                *output_reason = "Failed to Construct Laplacian pyramids. Out "
+                                 "of memory.\n";
+                return false;
             }
         }
 
