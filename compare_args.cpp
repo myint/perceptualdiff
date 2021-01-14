@@ -36,9 +36,10 @@ namespace pdiff
 
 
     static const auto USAGE =
-"Usage: perceptualdiff image1 image2\n"
+"Usage: perceptualdiff [options] image1 image2\n"
 "\n"
 "Compares image1 and image2 using a perceptually based image metric.\n"
+"Images can be in any FreeImage-supported format: TIF, PNG, etc.\n"
 "\n"
 "Options:\n"
 "  --verbose         Turn on verbose mode\n"
