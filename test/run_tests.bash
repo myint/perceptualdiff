@@ -24,6 +24,8 @@ FAIL alpha1.png alpha2.png
 EOF
 }
 
+echo "*** tmpdir: ${tmpdir:=/tmp}"
+
 # Change to test directory
 echo "*** script_directory: ${script_directory:=$(dirname "$0")}"
 cd "$script_directory"
@@ -78,19 +80,19 @@ fi
 "$pdiff" --help | grep -i 'usage'
 
 rm -f diff.png
-"$pdiff" --output diff.png --verbose fish{1,2}.png 2>&1 | grep -q 'FAIL'
-ls diff.png
-rm -f diff.png
+"$pdiff" --output ${tmpdir}/diff.png --verbose fish{1,2}.png 2>&1 | grep -q 'FAIL'
+ls ${tmpdir}/diff.png
+rm -f ${tmpdir}/diff.png
 
-head fish1.png > fake.png
-"$pdiff" --verbose fish1.png fake.png 2>&1 | grep -q 'Failed to load'
-rm -f fake.png
+head fish1.png > ${tmpdir}/fake.png
+"$pdiff" --verbose fish1.png ${tmpdir}/fake.png 2>&1 | grep -q 'Failed to load'
+rm -f ${tmpdir}/fake.png
 
-mkdir -p unwritable.png
-"$pdiff" --output unwritable.png --verbose fish{1,2}.png 2>&1 | grep -q 'Failed to save'
-rmdir unwritable.png
+mkdir -p ${tmpdir}/unwritable.png
+"$pdiff" --output ${tmpdir}/unwritable.png --verbose fish{1,2}.png 2>&1 | grep -q 'Failed to save'
+rmdir ${tmpdir}/unwritable.png
 
-"$pdiff" fish{1,2}.png --output foo 2>&1 | grep -q 'unknown filetype'
+"$pdiff" fish{1,2}.png --output ${tmpdir}/foo 2>&1 | grep -q 'unknown filetype'
 "$pdiff" --verbose fish1.png 2>&1 | grep -q 'Not enough'
 "$pdiff" --down-sample -3 fish1.png Aqsis_vase.png 2>&1 | grep -q 'Invalid'
 "$pdiff" --threshold -3 fish1.png Aqsis_vase.png 2>&1 | grep -q 'Invalid'
