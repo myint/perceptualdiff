@@ -25,7 +25,7 @@ EOF
 }
 
 # Change to test directory
-readonly script_directory=$(dirname "$0")
+echo "*** script_directory: ${script_directory:=$(dirname "$0")}"
 cd "$script_directory"
 
 if [ -z "${pdiff:=}" ]; then
