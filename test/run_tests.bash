@@ -28,6 +28,7 @@ EOF
 readonly script_directory=$(dirname "$0")
 cd "$script_directory"
 
+if [ -z "${pdiff:=}" ]; then
 found=0
 for d in ../build .. ../obj*; do
     pdiff="$d/perceptualdiff"
@@ -40,9 +41,9 @@ done
 if [ $found = 0 ]; then
     echo 'perceptualdiff must be built and exist in the repository root or the "build" directory'
     exit 1
-else
-    echo "*** testing executable binary $pdiff"
 fi
+fi
+echo "*** testing executable binary $pdiff"
 
 #------------------------------------------------------------------------------
 
