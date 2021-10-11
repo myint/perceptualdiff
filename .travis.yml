@@ -2,6 +2,12 @@ sudo: false
 
 language: cpp
 
+arch:
+   - amd64
+   - arm64
+   - ppc64le
+   - s390x
+
 compiler:
     - gcc
 
