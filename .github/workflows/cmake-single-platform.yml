@@ -24,7 +24,7 @@ jobs:
 
     - name: Install freeimage
       run: |
-        apt install libfreeimage-dev
+        sudo apt install -y libfreeimage-dev
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
